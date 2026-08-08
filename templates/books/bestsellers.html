@@ -1,0 +1,895 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+    /* =========================================================
+       BESTSELLERS — ULTRA PRO MAX PAGE
+       ========================================================= */
+
+    .bestseller-page {
+        background:
+            radial-gradient(circle at 5% 10%, rgba(108, 99, 255, .08), transparent 28%),
+            radial-gradient(circle at 95% 30%, rgba(255, 101, 132, .07), transparent 28%),
+            #f0f2f5;
+        min-height: 100vh;
+        padding-bottom: 80px;
+    }
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    .bestseller-hero {
+        position: relative;
+        overflow: hidden;
+        margin: 0 0 65px;
+        padding: 85px 0 95px;
+        background:
+            linear-gradient(
+                135deg,
+                #11111f 0%,
+                #1a1a2e 35%,
+                #16213e 65%,
+                #0f3460 100%
+            );
+        color: white;
+        border-radius: 0 0 60px 60px;
+        box-shadow: 0 25px 70px rgba(26, 26, 46, .22);
+    }
+
+    .bestseller-hero::before {
+        content: "";
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        right: -180px;
+        top: -300px;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle,
+            rgba(108, 99, 255, .35),
+            transparent 68%
+        );
+        animation: bestFloat 10s ease-in-out infinite;
+    }
+
+    .bestseller-hero::after {
+        content: "";
+        position: absolute;
+        width: 450px;
+        height: 450px;
+        left: -180px;
+        bottom: -280px;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle,
+            rgba(255, 101, 132, .22),
+            transparent 70%
+        );
+        animation: bestFloatReverse 12s ease-in-out infinite;
+    }
+
+    @keyframes bestFloat {
+        0%, 100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(-30px, 30px) scale(1.08);
+        }
+    }
+
+    @keyframes bestFloatReverse {
+        0%, 100% {
+            transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+            transform: translate(30px, -20px) scale(1.1);
+        }
+    }
+
+    .bestseller-hero-content {
+        position: relative;
+        z-index: 5;
+        text-align: center;
+    }
+
+    .hero-crown {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 76px;
+        height: 76px;
+        border-radius: 24px;
+        margin-bottom: 22px;
+        font-size: 2.1rem;
+        background: rgba(255, 255, 255, .08);
+        border: 1px solid rgba(255, 255, 255, .14);
+        box-shadow:
+            0 15px 40px rgba(0, 0, 0, .25),
+            inset 0 1px 0 rgba(255, 255, 255, .12);
+        backdrop-filter: blur(15px);
+        animation: crownFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes crownFloat {
+        0%, 100% {
+            transform: translateY(0) rotate(-2deg);
+        }
+
+        50% {
+            transform: translateY(-8px) rotate(2deg);
+        }
+    }
+
+    .bestseller-hero h1 {
+        margin: 0;
+        font-size: clamp(2.5rem, 6vw, 4.5rem);
+        line-height: 1.05;
+        font-weight: 900;
+        letter-spacing: -2.5px;
+    }
+
+    .bestseller-gradient-text {
+        background: linear-gradient(
+            135deg,
+            #ffffff 0%,
+            #b7b1ff 35%,
+            #ff6584 70%,
+            #ffb07c 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .bestseller-hero p {
+        max-width: 650px;
+        margin: 22px auto 0;
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: rgba(255,255,255,.72);
+    }
+
+    .hero-pills {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+    }
+
+    .hero-pill {
+        padding: 9px 18px;
+        border-radius: 50px;
+        color: rgba(255,255,255,.88);
+        background: rgba(255,255,255,.07);
+        border: 1px solid rgba(255,255,255,.12);
+        backdrop-filter: blur(10px);
+        font-size: .88rem;
+        font-weight: 600;
+    }
+
+    .hero-pill i {
+        color: #ffb36b;
+        margin-right: 6px;
+    }
+
+    /* =========================================================
+       SECTION HEADER
+       ========================================================= */
+
+    .bestseller-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .bestseller-section-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 32px;
+    }
+
+    .bestseller-section-title {
+        position: relative;
+        margin: 0;
+        color: #1a1a2e;
+        font-size: 2.2rem;
+        font-weight: 900;
+        letter-spacing: -1px;
+    }
+
+    .bestseller-section-title::after {
+        content: "";
+        display: block;
+        width: 65px;
+        height: 4px;
+        margin-top: 11px;
+        border-radius: 10px;
+        background: linear-gradient(
+            90deg,
+            #6C63FF,
+            #FF6584
+        );
+    }
+
+    .bestseller-section-subtitle {
+        margin: 8px 0 0;
+        color: #77788c;
+        font-size: .95rem;
+    }
+
+    .bestseller-count {
+        padding: 9px 17px;
+        border-radius: 50px;
+        background: white;
+        color: #6C63FF;
+        border: 1px solid rgba(108, 99, 255, .12);
+        font-size: .85rem;
+        font-weight: 700;
+        box-shadow: 0 8px 25px rgba(0,0,0,.06);
+        white-space: nowrap;
+    }
+
+    /* =========================================================
+       BOOK GRID
+       ========================================================= */
+
+    .bestseller-grid {
+        row-gap: 30px;
+    }
+
+    /* =========================================================
+       BOOK CARD
+       ========================================================= */
+
+    .bestseller-card {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.8);
+        border-radius: 26px;
+        background: rgba(255,255,255,.95);
+        box-shadow:
+            0 12px 40px rgba(20,20,50,.07),
+            0 2px 8px rgba(20,20,50,.03);
+        transition:
+            transform .45s cubic-bezier(.175,.885,.32,1.275),
+            box-shadow .45s ease,
+            border-color .45s ease;
+    }
+
+    .bestseller-card:hover {
+        transform: translateY(-12px);
+        border-color: rgba(108,99,255,.22);
+        box-shadow:
+            0 30px 65px rgba(108,99,255,.16),
+            0 8px 20px rgba(0,0,0,.06);
+    }
+
+    /* =========================================================
+       IMAGE
+       ========================================================= */
+
+    .bestseller-image {
+        position: relative;
+        overflow: hidden;
+        height: 390px;
+        background:
+            linear-gradient(
+                145deg,
+                #f3f2ff,
+                #f8f8fb
+            );
+    }
+
+    .bestseller-image::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            180deg,
+            rgba(0,0,0,.02),
+            transparent 45%,
+            rgba(0,0,0,.12)
+        );
+    }
+
+    .bestseller-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition:
+            transform .7s cubic-bezier(.175,.885,.32,1.275);
+    }
+
+    .bestseller-card:hover .bestseller-image img {
+        transform: scale(1.07);
+    }
+
+    /* =========================================================
+       BADGES
+       ========================================================= */
+
+    .best-rank {
+        position: absolute;
+        z-index: 5;
+        top: 15px;
+        left: 15px;
+        min-width: 48px;
+        height: 48px;
+        padding: 0 12px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(17,17,31,.78);
+        color: white;
+        font-size: .85rem;
+        font-weight: 900;
+        border: 1px solid rgba(255,255,255,.18);
+        box-shadow: 0 8px 25px rgba(0,0,0,.2);
+        backdrop-filter: blur(12px);
+    }
+
+    .best-rank i {
+        color: #ffb347;
+        margin-right: 4px;
+    }
+
+    .best-badge {
+        position: absolute;
+        z-index: 5;
+        top: 15px;
+        right: 15px;
+        padding: 7px 13px;
+        border-radius: 50px;
+        background: linear-gradient(
+            135deg,
+            #ff8a5c,
+            #ff6584
+        );
+        color: white;
+        font-size: .68rem;
+        font-weight: 800;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        box-shadow: 0 7px 20px rgba(255,101,132,.35);
+    }
+
+    /* =========================================================
+       CARD BODY
+       ========================================================= */
+
+    .bestseller-body {
+        padding: 22px 22px 23px;
+    }
+
+    .bestseller-title {
+        margin: 0 0 5px;
+        color: #1a1a2e;
+        font-size: 1.08rem;
+        font-weight: 800;
+        line-height: 1.45;
+        min-height: 47px;
+
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .bestseller-author {
+        margin: 0 0 12px;
+        color: #88899a;
+        font-size: .84rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .bestseller-author i {
+        color: #6C63FF;
+        margin-right: 4px;
+    }
+
+    /* =========================================================
+       RATING
+       ========================================================= */
+
+    .bestseller-rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 15px;
+        font-size: .82rem;
+    }
+
+    .bestseller-rating-stars {
+        color: #f59e0b;
+        letter-spacing: 1px;
+    }
+
+    .bestseller-rating-text {
+        color: #999aaa;
+    }
+
+    /* =========================================================
+       PRICE
+       ========================================================= */
+
+    .bestseller-price-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 9px;
+    }
+
+    .bestseller-current-price {
+        color: #1a1a2e;
+        font-size: 1.35rem;
+        font-weight: 900;
+    }
+
+    .bestseller-original-price {
+        color: #aaa;
+        font-size: .86rem;
+        text-decoration: line-through;
+    }
+
+    .bestseller-discount {
+        padding: 4px 9px;
+        border-radius: 20px;
+        background: rgba(255,101,132,.09);
+        color: #ff6584;
+        font-size: .7rem;
+        font-weight: 800;
+    }
+
+    /* =========================================================
+       ACTIONS
+       ========================================================= */
+
+    .bestseller-actions {
+        display: flex;
+        gap: 9px;
+        margin-top: 18px;
+    }
+
+    .bestseller-add-btn {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 11px 15px;
+        border: none;
+        border-radius: 50px;
+        background: linear-gradient(
+            135deg,
+            #6C63FF,
+            #5a52d5
+        );
+        color: white;
+        text-decoration: none;
+        font-size: .84rem;
+        font-weight: 700;
+        box-shadow: 0 7px 20px rgba(108,99,255,.22);
+        transition: all .3s ease;
+    }
+
+    .bestseller-add-btn:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(108,99,255,.35);
+    }
+
+    .bestseller-view-btn {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 2px solid #e7e7ee;
+        background: white;
+        color: #6C63FF;
+        text-decoration: none;
+        transition: all .3s ease;
+    }
+
+    .bestseller-view-btn:hover {
+        color: white;
+        background: linear-gradient(
+            135deg,
+            #6C63FF,
+            #FF6584
+        );
+        border-color: transparent;
+        transform: rotate(8deg) scale(1.08);
+        box-shadow: 0 8px 20px rgba(108,99,255,.25);
+    }
+
+    /* =========================================================
+       EMPTY STATE
+       ========================================================= */
+
+    .bestseller-empty {
+        max-width: 650px;
+        margin: 30px auto 0;
+        padding: 65px 30px;
+        text-align: center;
+        border-radius: 30px;
+        background: rgba(255,255,255,.85);
+        border: 1px solid rgba(108,99,255,.08);
+        box-shadow: 0 20px 60px rgba(0,0,0,.07);
+    }
+
+    .bestseller-empty-icon {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 28px;
+        background: linear-gradient(
+            135deg,
+            rgba(108,99,255,.1),
+            rgba(255,101,132,.1)
+        );
+        color: #6C63FF;
+        font-size: 2.7rem;
+    }
+
+    .bestseller-empty h3 {
+        color: #1a1a2e;
+        font-weight: 900;
+        margin-bottom: 8px;
+    }
+
+    .bestseller-empty p {
+        color: #88899a;
+        margin-bottom: 22px;
+    }
+
+    .bestseller-home-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 24px;
+        border-radius: 50px;
+        background: linear-gradient(
+            135deg,
+            #6C63FF,
+            #5a52d5
+        );
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+        box-shadow: 0 8px 25px rgba(108,99,255,.25);
+        transition: all .3s ease;
+    }
+
+    .bestseller-home-btn:hover {
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px rgba(108,99,255,.35);
+    }
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @media (max-width: 991px) {
+        .bestseller-hero {
+            padding: 65px 0 75px;
+            border-radius: 0 0 40px 40px;
+        }
+
+        .bestseller-image {
+            height: 350px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .bestseller-hero {
+            padding: 55px 0 65px;
+            margin-bottom: 45px;
+        }
+
+        .hero-crown {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            font-size: 1.7rem;
+        }
+
+        .bestseller-hero p {
+            font-size: 1rem;
+            padding: 0 15px;
+        }
+
+        .bestseller-section-head {
+            align-items: flex-start;
+            flex-direction: column;
+            margin-bottom: 25px;
+        }
+
+        .bestseller-section-title {
+            font-size: 1.7rem;
+        }
+
+        .bestseller-image {
+            height: 360px;
+        }
+    }
+
+    @media (max-width: 575px) {
+        .bestseller-container {
+            padding: 0 14px;
+        }
+
+        .bestseller-hero {
+            border-radius: 0 0 30px 30px;
+        }
+
+        .hero-pills {
+            gap: 8px;
+        }
+
+        .hero-pill {
+            padding: 7px 13px;
+            font-size: .75rem;
+        }
+
+        .bestseller-image {
+            height: 400px;
+        }
+
+        .bestseller-body {
+            padding: 19px;
+        }
+    }
+</style>
+
+
+<div class="bestseller-page">
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="bestseller-hero">
+        <div class="container">
+            <div class="bestseller-hero-content">
+
+                <div class="hero-crown">
+                    🏆
+                </div>
+
+                <h1>
+                    <span class="bestseller-gradient-text">
+                        Bestselling Books
+                    </span>
+                </h1>
+
+                <p>
+                    Discover the books everyone is talking about.
+                    Handpicked favourites, popular reads and stories
+                    that readers simply can't put down.
+                </p>
+
+                <div class="hero-pills">
+                    <span class="hero-pill">
+                        <i class="bi bi-fire"></i>
+                        Most Popular
+                    </span>
+
+                    <span class="hero-pill">
+                        <i class="bi bi-star-fill"></i>
+                        Reader Favourite
+                    </span>
+
+                    <span class="hero-pill">
+                        <i class="bi bi-lightning-fill"></i>
+                        Trending Now
+                    </span>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- =====================================================
+         BOOKS
+         ===================================================== -->
+
+    <div class="bestseller-container">
+
+        {% if books %}
+
+        <div class="bestseller-section-head">
+
+            <div>
+                <h2 class="bestseller-section-title">
+                    🔥 Top Picks
+                </h2>
+
+                <p class="bestseller-section-subtitle">
+                    The books our readers are loving right now.
+                </p>
+            </div>
+
+            <div class="bestseller-count">
+                <i class="bi bi-book-fill me-1"></i>
+                {{ books|length }} Books
+            </div>
+
+        </div>
+
+
+        <div class="row g-4 bestseller-grid">
+
+            {% for book in books %}
+
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6">
+
+                <div class="bestseller-card">
+
+                    <!-- BOOK IMAGE -->
+
+                    <div class="bestseller-image">
+
+                        <!-- Rank -->
+
+                        <div class="best-rank">
+                            <i class="bi bi-trophy-fill"></i>
+                            #{{ forloop.counter }}
+                        </div>
+
+                        <!-- Bestseller Badge -->
+
+                        <span class="best-badge">
+                            ⭐ Bestseller
+                        </span>
+
+                        <img
+                            src="{% if book.image %}{{ book.image.url }}{% else %}https://via.placeholder.com/300x400/6C63FF/ffffff?text=Book{% endif %}"
+                            alt="{{ book.title }}"
+                            loading="lazy"
+                        >
+
+                    </div>
+
+
+                    <!-- CARD BODY -->
+
+                    <div class="bestseller-body">
+
+                        <h5 class="bestseller-title">
+                            {{ book.title|truncatechars:45 }}
+                        </h5>
+
+                        <p class="bestseller-author">
+                            <i class="bi bi-person-fill"></i>
+                            {{ book.author }}
+                        </p>
+
+
+                        <!-- Rating -->
+
+                        <div class="bestseller-rating">
+
+                            <span class="bestseller-rating-stars">
+                                ★★★★★
+                            </span>
+
+                            <span class="bestseller-rating-text">
+                                Popular choice
+                            </span>
+
+                        </div>
+
+
+                        <!-- Price -->
+
+                        <div class="bestseller-price-row">
+
+                            <span class="bestseller-current-price">
+                                ₹{{ book.final_price }}
+                            </span>
+
+                            {% if book.discount_percent > 0 %}
+
+                            <span class="bestseller-original-price">
+                                ₹{{ book.price }}
+                            </span>
+
+                            <span class="bestseller-discount">
+                                {{ book.discount_percent }}% OFF
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Actions -->
+
+                        <div class="bestseller-actions">
+
+                            <a
+                                href="{% url 'cart:add' book.id %}"
+                                class="bestseller-add-btn"
+                            >
+                                <i class="bi bi-cart-plus"></i>
+                                Add to Cart
+                            </a>
+
+                            <a
+                                href="{% url 'books:detail' book.slug %}"
+                                class="bestseller-view-btn"
+                                title="View Book"
+                            >
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY -->
+
+        <div class="bestseller-empty">
+
+            <div class="bestseller-empty-icon">
+                <i class="bi bi-fire"></i>
+            </div>
+
+            <h3>
+                No Bestsellers Yet
+            </h3>
+
+            <p>
+                We're curating the best books for you.
+                Check back soon!
+            </p>
+
+            <a
+                href="{% url 'books:list' %}"
+                class="bestseller-home-btn"
+            >
+                <i class="bi bi-book"></i>
+                Explore All Books
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

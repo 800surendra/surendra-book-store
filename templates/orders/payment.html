@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card p-4" style="border-radius: 20px;">
+                <h2 class="fw-bold text-center">💳 Complete Payment</h2>
+                <p class="text-center text-muted">Order: <strong>{{ order.order_id }}</strong></p>
+                <hr>
+                
+                <div class="alert alert-info">
+                    <h6>📌 Payment Instructions:</h6>
+                    <ul>
+                        <li>Make payment via UPI / Net Banking / Bank Transfer</li>
+                        <li><strong>Total Amount:</strong> ₹{{ order.total_amount }}</li>
+                        <li><strong>Bank Details:</strong> (Add your bank details here)</li>
+                        <li>Upload payment screenshot and enter UTR number</li>
+                    </ul>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">UTR Number / Transaction ID</label>
+                        <input type="text" name="utr_number" class="form-control" required placeholder="Enter UTR or Transaction ID">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Payment Screenshot</label>
+                        <input type="file" name="payment_screenshot" class="form-control" accept="image/*" required>
+                        <small class="text-muted">Upload screenshot of successful payment</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Payment Remarks (Optional)</label>
+                        <textarea name="payment_remarks" class="form-control" rows="3" placeholder="Any additional info..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-ultra-primary w-100 py-3">
+                        Submit Payment Details <i class="bi bi-check-circle ms-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

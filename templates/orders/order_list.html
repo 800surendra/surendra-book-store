@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="section-title mb-4">📦 My Orders</h1>
+    
+    {% if orders %}
+    <div class="row">
+        {% for order in orders %}
+        <div class="col-12 mb-3">
+            <div class="card p-3">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <strong>Order #{{ order.order_id }}</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <span class="badge {% if order.status == 'pending' %}bg-warning{% elif order.status == 'verified' %}bg-info{% elif order.status == 'shipped' %}bg-primary{% elif order.status == 'delivered' %}bg-success{% else %}bg-danger{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                    <div class="col-md-3">
+                        ₹{{ order.total_amount }}
+                    </div>
+                    <div class="col-md-3">
+                        <a href="{% url 'orders:order_detail' order.order_id %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-box-seam display-1 text-muted"></i>
+        <h3>No orders yet</h3>
+        <a href="{% url 'books:list' %}" class="btn btn-ultra-primary mt-3">Start Shopping</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

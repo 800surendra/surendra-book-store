@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-5">
+                <h1 class="gold-title">💳 Payment Details</h1>
+                <p class="text-muted">Complete your payment using the instructions below</p>
+
+                <div class="order-summary mt-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="label">Order ID</span>
+                                <span class="value">#{{ order.id }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-box">
+                                <span class="label">Amount</span>
+                                <span class="value gold-text">₹{{ grand_total|floatformat:2 }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gold my-4">
+
+                <div class="payment-instructions">
+                    <h4 class="gold-title">{{ instructions.title }}</h4>
+                    <pre class="instruction-text">{{ instructions.details }}</pre>
+
+                    {% if instructions.qr %}
+                    <div class="text-center my-4">
+                        <img src="{{ instructions.qr }}" alt="QR Code" class="qr-code">
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="mt-4 d-flex gap-3">
+                    <a href="{% url 'orders:payment_method' %}" class="btn-gold-outline">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                    <a href="{% url 'orders:payment_submit' order.id %}" class="btn-gold flex-grow-1">
+                        I have made payment <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card { background: rgba(20,20,30,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,215,0,0.15); border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.gold-title { color: #d4af37; font-weight: 900; }
+.text-muted { color: rgba(255,255,255,0.6) !important; }
+.border-gold { border-color: rgba(212,175,55,0.2); }
+.info-box { background: rgba(255,255,255,0.04); padding: 12px 16px; border-radius: 12px; border-left: 3px solid #d4af37; }
+.info-box .label { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+.info-box .value { display: block; font-size: 1.2rem; font-weight: 700; color: white; }
+.gold-text { color: #d4af37; }
+.instruction-text { background: rgba(255,255,255,0.04); padding: 16px; border-radius: 12px; color: #ccc; white-space: pre-wrap; font-family: monospace; }
+.qr-code { max-width: 200px; border: 2px solid rgba(255,215,0,0.2); border-radius: 16px; padding: 8px; background: white; }
+.btn-gold { background: linear-gradient(135deg, #d4af37, #f9d976); border: none; color: #1a1a2e; font-weight: 700; padding: 14px 24px; border-radius: 50px; transition: all 0.3s ease; text-decoration: none; text-align: center; }
+.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,175,55,0.3); color: #1a1a2e; }
+.btn-gold-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; font-weight: 600; padding: 12px 24px; border-radius: 50px; transition: all 0.3s ease; text-decoration: none; }
+.btn-gold-outline:hover { background: #d4af37; color: #1a1a2e; }
+</style>
+{% endblock %}

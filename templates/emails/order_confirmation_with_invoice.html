@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Surendra BookStore</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f8f9fa; margin: 0; padding: 40px 0; }
+        .container { max-width: 700px; margin: 0 auto; background: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.08); }
+        .header { background: linear-gradient(135deg, #1a1a2e, #16213e); padding: 40px 30px; text-align: center; border-bottom: 3px solid #d4af37; }
+        .header h1 { color: #d4af37; font-size: 28px; font-weight: 900; margin: 0; letter-spacing: 1px; }
+        .header h1 span { color: white; }
+        .header p { color: rgba(255,255,255,0.6); margin: 8px 0 0; font-size: 14px; }
+        .content { padding: 40px 35px; }
+        .greeting { font-size: 18px; color: #1a1a2e; margin-bottom: 10px; }
+        .greeting strong { color: #d4af37; }
+        .order-details { background: #f8f9fa; border-radius: 16px; padding: 20px 25px; margin: 20px 0; border-left: 4px solid #d4af37; }
+        .order-details h3 { margin: 0 0 10px 0; color: #1a1a2e; font-weight: 700; }
+        .order-details .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; }
+        .order-details .row:last-child { border-bottom: none; }
+        .order-details .label { color: #6c757d; }
+        .order-details .value { font-weight: 600; color: #1a1a2e; }
+        .invoice-box { background: white; border: 2px solid #e8ecf4; border-radius: 16px; padding: 25px; margin: 25px 0; }
+        .invoice-box h3 { color: #d4af37; font-weight: 800; margin: 0 0 15px 0; }
+        .invoice-box table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .invoice-box th { background: #f1f3f8; padding: 10px 12px; text-align: left; font-weight: 700; color: #1a1a2e; }
+        .invoice-box td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; }
+        .invoice-box .total-row td { font-weight: 800; font-size: 16px; border-top: 2px solid #d4af37; }
+        .total-amount { font-size: 24px; font-weight: 900; color: #d4af37; }
+        .status-badge { background: #28a745; color: white; padding: 6px 18px; border-radius: 50px; font-size: 14px; font-weight: 700; display: inline-block; }
+        .footer { background: #1a1a2e; padding: 20px 30px; text-align: center; }
+        .footer p { color: rgba(255,255,255,0.4); font-size: 14px; margin: 0; }
+        .footer a { color: #d4af37; text-decoration: none; }
+        .gold { color: #d4af37; }
+        .status-icon { font-size: 48px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><span>Surendra</span>BookStore</h1>
+            <p>Luxury Book Reading Experience</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">
+                🎉 <strong>{{ order.full_name }}</strong>, thank you for your order!
+            </div>
+            <p style="color: #6c757d; margin-top: 5px;">Your order has been confirmed and is being processed.</p>
+
+            <!-- Order Status -->
+            <div style="text-align: center; margin: 25px 0;">
+                <span class="status-badge">✅ Order Confirmed</span>
+                <div style="margin-top: 10px; font-size: 14px; color: #6c757d;">
+                    Order ID: <strong>#{{ order.id }}</strong> &nbsp;|&nbsp; Placed on {{ order.created_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-details">
+                <h3>📦 Order Summary</h3>
+                <div class="row"><span class="label">Order ID</span><span class="value">#{{ order.id }}</span></div>
+                <div class="row"><span class="label">Date</span><span class="value">{{ order.created_at|date:"d M Y, h:i A" }}</span></div>
+                <div class="row"><span class="label">Payment Method</span><span class="value">{{ order.get_payment_method_display }}</span></div>
+                <div class="row"><span class="label">Payment Status</span><span class="value gold">✅ Verified</span></div>
+                <div class="row"><span class="label">Delivery Address</span><span class="value">{{ order.address }}, {{ order.city }}, {{ order.state }} - {{ order.pincode }}</span></div>
+            </div>
+
+            <!-- Invoice -->
+            <div class="invoice-box">
+                <h3>🧾 Invoice #{{ invoice_no }}</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Qty</th>
+                            <th style="text-align:right;">Price</th>
+                            <th style="text-align:right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.book.title }}<br><small style="color:#999;">{{ item.book.author }}</small></td>
+                            <td>{{ item.quantity }}</td>
+                            <td style="text-align:right;">₹{{ item.price }}</td>
+                            <td style="text-align:right;">₹{{ item.get_total }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align:right;">Subtotal</td>
+                            <td style="text-align:right;">₹{{ order.total_amount }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align:right;">Delivery Charges</td>
+                            <td style="text-align:right;">{% if order.delivery_charges == 0 %}FREE{% else %}₹{{ order.delivery_charges }}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align:right;">GST (5%)</td>
+                            <td style="text-align:right;">₹{{ order.tax }}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td colspan="3" style="text-align:right; font-size:18px;">Grand Total</td>
+                            <td style="text-align:right; font-size:20px; font-weight:900; color:#d4af37;">₹{{ order.grand_total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align:center; color:#6c757d; font-size:14px; margin-top: 20px;">
+                <p>📧 Need help? Contact us at <a href="mailto:support@surendra.com" style="color:#d4af37;">support@surendra.com</a></p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2026 SurendraBookStore. All rights reserved.</p>
+            <p style="font-size:12px; color: rgba(255,255,255,0.2);">This is an automated email. Please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>

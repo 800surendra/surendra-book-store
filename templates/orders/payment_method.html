@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% csrf_token %}
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="glass-card p-5">
+                <h1 class="gold-title">💳 Payment Method</h1>
+                <p class="text-muted">Choose your preferred payment option</p>
+
+                <form method="POST" action="{% url 'orders:payment_method' %}" class="mt-4">
+                    {% csrf_token %}
+                    <div class="row g-4">
+                        {% for key, label in methods.items %}
+                        <div class="col-md-6">
+                            <div class="payment-option" onclick="selectPayment('{{ key }}')">
+                                <input type="radio" name="payment_method" value="{{ key }}" id="method_{{ key }}" class="d-none">
+                                <label for="method_{{ key }}" class="payment-label">
+                                    <div class="payment-card">
+                                        <div class="payment-icon">
+                                            {% if key == 'upi' %}
+                                            <i class="bi bi-phone"></i>
+                                            {% elif key == 'qr' %}
+                                            <i class="bi bi-qr-code"></i>
+                                            {% elif key == 'netbanking' %}
+                                            <i class="bi bi-bank"></i>
+                                            {% elif key == 'banktransfer' %}
+                                            <i class="bi bi-building"></i>
+                                            {% elif key == 'cod' %}
+                                            <i class="bi bi-cash-stack"></i>
+                                            {% else %}
+                                            <i class="bi bi-credit-card"></i>
+                                            {% endif %}
+                                        </div>
+                                        <div class="payment-details">
+                                            <h5 class="fw-bold">{{ label }}</h5>
+                                            <small class="text-muted">
+                                                {% if key == 'upi' %}Pay via UPI ID{% elif key == 'qr' %}Scan QR code{% elif key == 'banktransfer' %}Bank transfer{% elif key == 'netbanking' %}Net banking{% elif key == 'cod' %}Pay on delivery{% endif %}
+                                            </small>
+                                        </div>
+                                        <div class="payment-check">
+                                            <i class="bi bi-check-circle-fill text-gold"></i>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mt-4 d-flex gap-3">
+                        <a href="{% url 'orders:checkout_delivery' %}" class="btn-gold-outline">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                        <button type="submit" class="btn-gold flex-grow-1">
+                            Continue to Payment <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card {
+    background: rgba(20, 20, 30, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.gold-title {
+    color: #d4af37;
+    font-weight: 900;
+}
+.text-muted {
+    color: rgba(255,255,255,0.6) !important;
+}
+.payment-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.payment-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.04);
+    border: 2px solid rgba(255,215,0,0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+.payment-option input:checked + .payment-label .payment-card {
+    border-color: #d4af37;
+    background: rgba(212, 175, 55, 0.08);
+    box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+}
+.payment-option:hover .payment-card {
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+.payment-icon {
+    font-size: 2rem;
+    color: #d4af37;
+    width: 50px;
+    text-align: center;
+}
+.payment-details {
+    flex: 1;
+}
+.payment-details h5 {
+    color: white;
+    margin: 0;
+}
+.payment-check {
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.payment-option input:checked + .payment-label .payment-check {
+    opacity: 1;
+}
+.text-gold {
+    color: #d4af37;
+}
+.btn-gold {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 14px 24px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    color: #1a1a2e;
+}
+.btn-gold-outline {
+    background: transparent;
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.btn-gold-outline:hover {
+    background: #d4af37;
+    color: #1a1a2e;
+}
+</style>
+
+<script>
+function selectPayment(method) {
+    document.getElementById('method_' + method).checked = true;
+}
+</script>
+{% endblock %}

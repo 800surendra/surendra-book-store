@@ -1,0 +1,328 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="gold-title">🛒 Your Cart</h1>
+                    <p class="text-muted">Review your items before checkout</p>
+                </div>
+                <span class="badge bg-gold-dark text-dark px-3 py-2 rounded-pill">
+                    {{ cart.get_total_items }} items
+                </span>
+            </div>
+
+            {% if cart and cart.items.all %}
+                <div class="cart-items">
+                    {% for item in cart.items.all %}
+                    <div class="cart-item glass-card p-3 mb-3">
+                        <div class="row align-items-center g-3">
+                            <div class="col-2 col-md-2">
+                                <div class="book-thumb">
+                                    <img src="{% if item.book.image %}{{ item.book.image.url }}{% else %}https://via.placeholder.com/80x100/6C63FF/ffffff?text=Book{% endif %}" alt="{{ item.book.title }}" class="img-fluid rounded">
+                                </div>
+                            </div>
+                            <div class="col-5 col-md-4">
+                                <h5 class="fw-bold text-white">{{ item.book.title }}</h5>
+                                <p class="text-muted small mb-0">{{ item.book.author }}</p>
+                                <span class="badge bg-gold-light text-dark mt-1">₹{{ item.book.final_price }}</span>
+                            </div>
+                            <div class="col-3 col-md-3">
+                                <form method="POST" action="{% url 'cart:update' item.id %}" class="d-flex align-items-center gap-2">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control qty-input" style="width: 65px;">
+                                    <button type="submit" class="btn-gold-sm">Update</button>
+                                </form>
+                            </div>
+                            <div class="col-1 col-md-2 text-end">
+                                <span class="fw-bold gold-text">₹{{ item.get_total_price }}</span>
+                            </div>
+                            <div class="col-1 text-end">
+                                <a href="{% url 'cart:remove' item.id %}" class="text-danger" onclick="return confirm('Remove this item?')">
+                                    <i class="bi bi-trash3 fs-5"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Continue Shopping -->
+                <div class="mt-3">
+                    <a href="{% url 'books:list' %}" class="btn-gold-outline">
+                        <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                    </a>
+                </div>
+            {% else %}
+                <div class="empty-cart glass-card p-5 text-center">
+                    <i class="bi bi-cart-x display-1 text-muted"></i>
+                    <h3 class="mt-3">Your cart is empty</h3>
+                    <p class="text-muted">Browse our collection and add your favorite books.</p>
+                    <a href="{% url 'books:list' %}" class="btn-gold mt-3">Start Shopping</a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 sticky-top" style="top: 100px;">
+                <h4 class="gold-title mb-3">Order Summary</h4>
+                <hr class="border-gold">
+
+                {% if cart and cart.items.all %}
+                    <div class="summary-item d-flex justify-content-between">
+                        <span>Subtotal ({{ cart.get_total_items }} items)</span>
+                        <span>₹{{ subtotal|floatformat:2 }}</span>
+                    </div>
+                    <div class="summary-item d-flex justify-content-between">
+                        <span>Delivery Charges</span>
+                        <span>{% if delivery_charge == 0 %}FREE{% else %}₹{{ delivery_charge|floatformat:2 }}{% endif %}</span>
+                    </div>
+                    <div class="summary-item d-flex justify-content-between">
+                        <span>GST (5%)</span>
+                        <span>₹{{ gst|floatformat:2 }}</span>
+                    </div>
+                    <div class="summary-item d-flex justify-content-between">
+                        <span>Discount</span>
+                        <span class="text-success">-₹{{ discount|floatformat:2 }}</span>
+                    </div>
+                    <hr class="border-gold">
+                    <div class="summary-item d-flex justify-content-between fs-5">
+                        <span class="fw-bold">Grand Total</span>
+                        <span class="fw-bold gold-text">₹{{ grand_total|floatformat:2 }}</span>
+                    </div>
+
+                    <!-- Coupon Code -->
+                    <div class="coupon-section mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control coupon-input" placeholder="Coupon Code" id="couponInput">
+                            <button class="btn-coupon-apply" id="applyCoupon">Apply</button>
+                        </div>
+                        <small class="text-muted">Enter coupon code for extra discount</small>
+                    </div>
+
+                    <!-- Proceed Button -->
+                    <a href="{% url 'orders:checkout_delivery' %}" class="btn-gold w-100 mt-3 py-3">
+                        Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+
+                    <!-- Trust Badges -->
+                    <div class="trust-badges mt-3 text-center">
+                        <i class="bi bi-shield-lock me-2"></i> Secure Checkout
+                        <span class="mx-2">|</span>
+                        <i class="bi bi-credit-card me-2"></i> 100% Payment Protection
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center py-3">Your cart is empty</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* ===== Global ===== */
+.glass-card {
+    background: rgba(20, 20, 30, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+.gold-title {
+    color: #d4af37;
+    font-weight: 900;
+    font-size: 2rem;
+}
+.gold-text {
+    color: #d4af37;
+}
+.text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+.border-gold {
+    border-color: rgba(212, 175, 55, 0.2) !important;
+}
+.bg-gold-dark {
+    background: rgba(212, 175, 55, 0.2);
+    color: #d4af37;
+}
+.bg-gold-light {
+    background: rgba(212, 175, 55, 0.15);
+    color: #d4af37;
+}
+
+/* ===== Cart Items ===== */
+.cart-item {
+    transition: all 0.3s ease;
+}
+.cart-item:hover {
+    border-color: rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+.book-thumb {
+    width: 70px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.book-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.qty-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    color: white;
+    border-radius: 30px;
+    padding: 4px 8px;
+    text-align: center;
+}
+.qty-input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+}
+.btn-gold-sm {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+.btn-gold-sm:hover {
+    transform: scale(1.05);
+}
+
+/* ===== Summary ===== */
+.summary-item {
+    padding: 6px 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+.summary-item .fw-bold {
+    color: white;
+}
+
+/* ===== Coupon ===== */
+.coupon-section .input-group {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 50px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+}
+.coupon-input {
+    background: transparent !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 16px;
+}
+.coupon-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+.coupon-input:focus {
+    box-shadow: none !important;
+}
+.btn-coupon-apply {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 0 24px;
+    transition: all 0.3s ease;
+}
+.btn-coupon-apply:hover {
+    opacity: 0.85;
+}
+
+/* ===== Buttons ===== */
+.btn-gold {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+    color: #1a1a2e;
+}
+.btn-gold-outline {
+    background: transparent;
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+.btn-gold-outline:hover {
+    background: #d4af37;
+    color: #1a1a2e;
+}
+.trust-badges {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+}
+.trust-badges i {
+    color: #d4af37;
+}
+
+/* ===== Empty Cart ===== */
+.empty-cart {
+    background: rgba(20, 20, 30, 0.5);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .gold-title {
+        font-size: 1.6rem;
+    }
+    .cart-item .row {
+        flex-wrap: wrap;
+    }
+    .cart-item .col-2, .cart-item .col-5, .cart-item .col-3, .cart-item .col-1 {
+        flex: 0 0 auto;
+        width: auto;
+    }
+    .book-thumb {
+        width: 50px;
+        height: 65px;
+    }
+    .btn-gold-sm {
+        font-size: 0.75rem;
+        padding: 2px 10px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Coupon apply placeholder
+    document.getElementById('applyCoupon').addEventListener('click', function() {
+        const input = document.getElementById('couponInput');
+        const code = input.value.trim();
+        if (code) {
+            alert('Coupon "' + code + '" applied! (Coming soon)');
+        } else {
+            alert('Please enter a coupon code.');
+        }
+    });
+});
+</script>
+{% endblock %}

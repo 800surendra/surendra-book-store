@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <div class="card bg-dark text-white border-0 shadow-lg" style="border-radius: 30px; backdrop-filter: blur(20px); background: rgba(26, 26, 46, 0.95);">
+                <div class="card-body p-5">
+                    <div class="text-center mb-5">
+                        <div class="position-relative d-inline-block">
+                            <div class="bg-gradient-primary rounded-circle p-3" style="background: linear-gradient(135deg, #6C63FF, #FF6584);">
+                                <i class="bi bi-person-plus fs-1 text-white"></i>
+                            </div>
+                            <span class="position-absolute top-0 start-100 translate-middle p-2 bg-success border border-light rounded-circle">
+                                <span class="visually-hidden">New</span>
+                            </span>
+                        </div>
+                        <h2 class="fw-bold mt-3">Create Account</h2>
+                        <p class="text-muted">Join the luxury book reading experience</p>
+                    </div>
+                    
+                    <form method="POST" action="{% url 'accounts:register' %}" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" name="first_name" class="form-control bg-dark text-white border-secondary" id="firstName" placeholder="First Name" required>
+                                    <label for="firstName" class="text-muted">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" name="last_name" class="form-control bg-dark text-white border-secondary" id="lastName" placeholder="Last Name" required>
+                                    <label for="lastName" class="text-muted">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" name="username" class="form-control bg-dark text-white border-secondary" id="username" placeholder="Username" required>
+                                    <label for="username" class="text-muted">Username</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="email" name="email" class="form-control bg-dark text-white border-secondary" id="email" placeholder="Email" required>
+                                    <label for="email" class="text-muted">Email Address</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="tel" name="phone" class="form-control bg-dark text-white border-secondary" id="phone" placeholder="Phone" required>
+                                    <label for="phone" class="text-muted">Phone Number</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="password" name="password1" class="form-control bg-dark text-white border-secondary" id="password1" placeholder="Password" required>
+                                    <label for="password1" class="text-muted">Password</label>
+                                </div>
+                                <div class="mt-2" id="password-strength"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="password" name="password2" class="form-control bg-dark text-white border-secondary" id="password2" placeholder="Confirm Password" required>
+                                    <label for="password2" class="text-muted">Confirm Password</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" name="country" class="form-control bg-dark text-white border-secondary" id="country" placeholder="Country" required>
+                                    <label for="country" class="text-muted">Country</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" name="state" class="form-control bg-dark text-white border-secondary" id="state" placeholder="State" required>
+                                    <label for="state" class="text-muted">State</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" name="city" class="form-control bg-dark text-white border-secondary" id="city" placeholder="City" required>
+                                    <label for="city" class="text-muted">City</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" name="referral_code" class="form-control bg-dark text-white border-secondary" id="referral" placeholder="Referral">
+                                    <label for="referral" class="text-muted">Referral Code (Optional)</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="terms" id="terms" required>
+                                    <label class="form-check-label text-muted" for="terms">
+                                        I agree to the <a href="#" class="text-primary">Terms & Conditions</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="newsletter" id="newsletter">
+                                    <label class="form-check-label text-muted" for="newsletter">
+                                        Subscribe to our newsletter for exclusive offers
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary w-100 py-3 mt-4" style="border-radius: 50px; background: linear-gradient(135deg, #6C63FF, #FF6584); border: none; font-weight: 700; font-size: 1.1rem;">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Create Account
+                        </button>
+                    </form>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-muted">Already have an account? <a href="{% url 'accounts:login' %}" class="text-primary fw-bold text-decoration-none">Login here</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-floating > .form-control:focus {
+        border-color: #6C63FF;
+        box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+    }
+    .form-floating > .form-control {
+        border-radius: 12px;
+        min-height: 58px;
+    }
+    .form-floating > label {
+        padding: 16px 12px;
+        color: #6c757d !important;
+    }
+    .form-control::placeholder {
+        color: #6c757d;
+        opacity: 0.5;
+    }
+    .form-check-input:checked {
+        background-color: #6C63FF;
+        border-color: #6C63FF;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #6C63FF, #FF6584);
+    }
+</style>
+
+<script>
+// Password strength meter
+document.getElementById('password1').addEventListener('input', function() {
+    const password = this.value;
+    const strengthDiv = document.getElementById('password-strength');
+    let strength = 0;
+    let suggestions = [];
+    
+    if (password.length >= 8) strength++;
+    else suggestions.push('At least 8 characters');
+    
+    if (/[A-Z]/.test(password)) strength++;
+    else suggestions.push('One uppercase letter');
+    
+    if (/[a-z]/.test(password)) strength++;
+    else suggestions.push('One lowercase letter');
+    
+    if (/\d/.test(password)) strength++;
+    else suggestions.push('One number');
+    
+    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+    else suggestions.push('One special character');
+    
+    const levels = ['Very Weak', 'Weak', 'Medium', 'Strong', 'Very Strong'];
+    const colors = ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#198754'];
+    const width = (strength / 5) * 100;
+    
+    strengthDiv.innerHTML = `
+        <div class="progress" style="height: 6px;">
+            <div class="progress-bar" style="width: ${width}%; background: ${colors[strength-1] || '#6c757d'}; transition: width 0.3s;"></div>
+        </div>
+        <small class="text-${strength > 2 ? 'success' : 'warning'}">${levels[strength-1] || 'No password'}</small>
+        ${suggestions.length > 0 ? `<small class="text-muted d-block">${suggestions.join(', ')}</small>` : '<small class="text-success">✓ Strong password</small>'}
+    `;
+});
+</script>
+{% endblock %}

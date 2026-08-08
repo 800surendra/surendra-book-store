@@ -1,0 +1,2098 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}SurendraBookStore{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* =========================================================
+           SURENDRA BOOK STORE — PREMIUM DARK THEME
+        ========================================================= */
+
+        :root {
+            --bg-main: #080912;
+            --bg-secondary: #0d1020;
+            --bg-card: #111525;
+            --bg-card-2: #151a2d;
+
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(124, 92, 255, 0.45);
+
+            --text: #f7f7fb;
+            --text-secondary: #aeb4c7;
+            --text-muted: #737a91;
+
+            --primary: #7c5cff;
+            --primary-dark: #6045df;
+            --secondary: #9b6cff;
+            --pink: #ff5c8a;
+            --orange: #ff9a62;
+            --green: #25d69a;
+
+            --gradient:
+                linear-gradient(135deg,
+                    #7c5cff 0%,
+                    #9b6cff 45%,
+                    #ff5c8a 100%);
+
+            --gradient-soft:
+                linear-gradient(135deg,
+                    rgba(124, 92, 255, 0.18),
+                    rgba(255, 92, 138, 0.10));
+
+            --shadow:
+                0 20px 60px rgba(0, 0, 0, 0.35);
+
+            --shadow-purple:
+                0 20px 60px rgba(124, 92, 255, 0.18);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%,
+                    rgba(124, 92, 255, 0.07),
+                    transparent 28%),
+                radial-gradient(circle at 90% 20%,
+                    rgba(255, 92, 138, 0.045),
+                    transparent 25%),
+                var(--bg-main);
+
+            color: var(--text);
+            padding-top: 82px;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        ::selection {
+            background: rgba(124, 92, 255, 0.45);
+            color: white;
+        }
+
+        /* =========================================================
+           SCROLLBAR
+        ========================================================= */
+
+        ::-webkit-scrollbar {
+            width: 9px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #070810;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(
+                180deg,
+                var(--primary),
+                var(--pink)
+            );
+            border-radius: 20px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
+
+        .navbar-ultra {
+            background: rgba(8, 9, 18, 0.78);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+
+            padding: 13px 0;
+
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.18);
+
+            transition: all 0.3s ease;
+
+            z-index: 1050;
+        }
+
+        .navbar-ultra.scrolled {
+            background: rgba(8, 9, 18, 0.95);
+
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.4);
+
+            border-bottom-color:
+                rgba(124, 92, 255, 0.15);
+        }
+
+        /* Brand */
+
+        .navbar-ultra .navbar-brand {
+            font-weight: 900;
+            font-size: 1.65rem;
+
+            background: var(--gradient);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            letter-spacing: -0.7px;
+            padding: 0;
+
+            white-space: nowrap;
+        }
+
+        .navbar-ultra .navbar-brand i {
+            background: var(--gradient);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            font-size: 1.8rem;
+        }
+
+        /* Nav links */
+
+        .navbar-ultra .nav-link {
+            color: #b8bdd0 !important;
+
+            font-weight: 600;
+            font-size: 0.92rem;
+
+            padding: 9px 15px !important;
+
+            border-radius: 12px;
+
+            position: relative;
+
+            transition: all 0.3s ease;
+        }
+
+        .navbar-ultra .nav-link:hover {
+            color: white !important;
+
+            background:
+                rgba(124, 92, 255, 0.10);
+
+            transform: translateY(-1px);
+        }
+
+        .navbar-ultra .nav-link::after {
+            content: '';
+
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+
+            width: 0;
+            height: 2px;
+
+            background: var(--gradient);
+
+            border-radius: 10px;
+
+            transform: translateX(-50%);
+
+            transition: width 0.3s ease;
+        }
+
+        .navbar-ultra .nav-link:hover::after,
+        .navbar-ultra .nav-link.active::after {
+            width: 45%;
+        }
+
+        .navbar-ultra .nav-link.active {
+            color: #ffffff !important;
+
+            background:
+                rgba(124, 92, 255, 0.08);
+        }
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        .search-bar {
+            background:
+                rgba(255, 255, 255, 0.055);
+
+            border: 1px solid rgba(255, 255, 255, 0.09);
+
+            color: white;
+
+            border-radius: 14px;
+
+            padding: 9px 16px;
+
+            min-width: 190px;
+
+            outline: none;
+
+            transition: all 0.3s ease;
+        }
+
+        .search-bar::placeholder {
+            color: #747b91;
+        }
+
+        .search-bar:focus {
+            background:
+                rgba(255, 255, 255, 0.08);
+
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px rgba(124, 92, 255, 0.12);
+
+            color: white;
+        }
+
+        .search-btn {
+            background: var(--gradient);
+
+            border: none;
+
+            color: white;
+
+            border-radius: 13px;
+
+            padding: 9px 17px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 25px rgba(124, 92, 255, 0.25);
+
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 30px rgba(124, 92, 255, 0.38);
+
+            color: white;
+        }
+
+        /* =========================================================
+           CART
+        ========================================================= */
+
+        .cart-btn {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 45px;
+            height: 45px;
+
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            border: 1px solid rgba(255, 255, 255, 0.09);
+
+            border-radius: 14px;
+
+            color: #d9dcef;
+
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            color: white;
+
+            border-color: var(--primary);
+
+            background:
+                rgba(124, 92, 255, 0.12);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 25px rgba(124, 92, 255, 0.18);
+        }
+
+        .cart-badge {
+            position: absolute;
+
+            top: -7px;
+            right: -7px;
+
+            min-width: 21px;
+            height: 21px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(135deg,
+                    var(--pink),
+                    var(--orange));
+
+            color: white;
+
+            border-radius: 50%;
+
+            font-size: 10px;
+            font-weight: 800;
+
+            border: 2px solid var(--bg-main);
+
+            box-shadow:
+                0 4px 12px rgba(255, 92, 138, 0.35);
+        }
+
+        /* =========================================================
+           LOGIN / SIGNUP
+        ========================================================= */
+
+        .btn-login {
+            background: var(--gradient);
+
+            border: none;
+
+            color: white;
+
+            border-radius: 13px;
+
+            padding: 9px 21px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 25px rgba(124, 92, 255, 0.25);
+
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            color: white;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 35px rgba(124, 92, 255, 0.4);
+        }
+
+        .btn-signup {
+            background:
+                rgba(124, 92, 255, 0.07);
+
+            border: 1px solid rgba(124, 92, 255, 0.45);
+
+            color: #c8c1ff;
+
+            border-radius: 13px;
+
+            padding: 8px 20px;
+
+            font-weight: 700;
+
+            transition: all 0.3s ease;
+        }
+
+        .btn-signup:hover {
+            background:
+                rgba(124, 92, 255, 0.15);
+
+            border-color: var(--primary);
+
+            color: white;
+
+            transform: translateY(-2px);
+        }
+
+        /* =========================================================
+           USER DROPDOWN
+        ========================================================= */
+
+        .user-dropdown .dropdown-toggle {
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            border: 1px solid rgba(255, 255, 255, 0.09);
+
+            border-radius: 13px;
+
+            padding: 6px 14px;
+
+            color: #d5d8e5;
+
+            font-weight: 600;
+
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown .dropdown-toggle:hover {
+            border-color: var(--primary);
+            color: white;
+
+            background:
+                rgba(124, 92, 255, 0.09);
+        }
+
+        .user-dropdown .dropdown-menu {
+            margin-top: 12px;
+
+            background:
+                rgba(17, 21, 37, 0.97);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 17px;
+
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.5);
+
+            padding: 8px;
+
+            min-width: 220px;
+        }
+
+        .user-dropdown .dropdown-item {
+            color: #b9bfd1;
+
+            border-radius: 10px;
+
+            padding: 10px 14px;
+
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .user-dropdown .dropdown-item:hover {
+            background:
+                rgba(124, 92, 255, 0.10);
+
+            color: white;
+        }
+
+        .user-dropdown .dropdown-item i {
+            width: 25px;
+
+            color: var(--primary);
+        }
+
+        .user-dropdown .dropdown-divider {
+            border-color:
+                rgba(255, 255, 255, 0.07);
+        }
+
+        .user-dropdown .dropdown-item.text-danger {
+            color: #ff668e !important;
+        }
+
+        /* =========================================================
+           GENERAL BUTTONS
+        ========================================================= */
+
+        .btn-ultra-primary {
+            background: var(--gradient);
+
+            border: none;
+
+            color: white;
+
+            border-radius: 13px;
+
+            padding: 11px 27px;
+
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 25px rgba(124, 92, 255, 0.25);
+
+            transition: all 0.3s ease;
+        }
+
+        .btn-ultra-primary:hover {
+            color: white;
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 35px rgba(124, 92, 255, 0.38);
+        }
+
+        .btn-ultra-secondary {
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            border: 1px solid rgba(255, 255, 255, 0.10);
+
+            color: #d4d7e5;
+
+            border-radius: 13px;
+
+            padding: 11px 27px;
+
+            font-weight: 600;
+
+            transition: all 0.3s ease;
+        }
+
+        .btn-ultra-secondary:hover {
+            background:
+                rgba(124, 92, 255, 0.09);
+
+            border-color: var(--primary);
+
+            color: white;
+
+            transform: translateY(-2px);
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero-section {
+            position: relative;
+
+            background:
+                radial-gradient(
+                    circle at 85% 25%,
+                    rgba(124, 92, 255, 0.28),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 15% 80%,
+                    rgba(255, 92, 138, 0.12),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    135deg,
+                    #0d1020,
+                    #11152a 50%,
+                    #090b16
+                );
+
+            padding: 85px 0;
+
+            border-bottom:
+                1px solid rgba(124, 92, 255, 0.14);
+
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+
+            position: absolute;
+
+            width: 500px;
+            height: 500px;
+
+            top: -250px;
+            right: -100px;
+
+            border-radius: 50%;
+
+            border:
+                1px solid rgba(124, 92, 255, 0.12);
+
+            box-shadow:
+                0 0 100px rgba(124, 92, 255, 0.08);
+        }
+
+        .hero-section .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-section h1 {
+            font-size: 4rem;
+
+            font-weight: 900;
+
+            line-height: 1.1;
+
+            letter-spacing: -2px;
+
+            color: white;
+        }
+
+        .hero-section h1 .gradient-text {
+            background: var(--gradient);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p {
+            color: #aeb4c7;
+
+            font-size: 1.15rem;
+
+            line-height: 1.8;
+
+            max-width: 570px;
+        }
+
+        .hero-stats {
+            display: flex;
+
+            gap: 45px;
+
+            margin-top: 30px;
+        }
+
+        .hero-stats .stat {
+            text-align: center;
+        }
+
+        .hero-stats .stat h3 {
+            font-size: 2rem;
+
+            font-weight: 900;
+
+            background: var(--gradient);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+
+            margin: 0;
+        }
+
+        .hero-stats .stat p {
+            color: #777e94;
+
+            font-size: 0.82rem;
+
+            margin: 4px 0 0;
+        }
+
+        /* =========================================================
+           SECTION TITLES
+        ========================================================= */
+
+        .section-title {
+            color: white;
+
+            font-weight: 900;
+
+            font-size: 2.15rem;
+
+            position: relative;
+
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+
+            position: absolute;
+
+            left: 0;
+            bottom: -10px;
+
+            width: 60px;
+            height: 4px;
+
+            background: var(--gradient);
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 3px 15px rgba(124, 92, 255, 0.35);
+        }
+
+        /* =========================================================
+           BOOK CARDS
+        ========================================================= */
+
+        .card-book {
+            border: 1px solid rgba(255, 255, 255, 0.06);
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(21, 26, 45, 0.96),
+                    rgba(13, 16, 32, 0.98)
+                );
+
+            overflow: hidden;
+
+            box-shadow:
+                0 15px 45px rgba(0, 0, 0, 0.25);
+
+            position: relative;
+
+            height: 100%;
+
+            transition:
+                transform 0.4s ease,
+                box-shadow 0.4s ease,
+                border-color 0.4s ease;
+        }
+
+        .card-book:hover {
+            transform: translateY(-10px);
+
+            border-color:
+                rgba(124, 92, 255, 0.35);
+
+            box-shadow:
+                0 25px 65px rgba(0, 0, 0, 0.42),
+                0 10px 40px rgba(124, 92, 255, 0.10);
+        }
+
+        .card-book .book-image-wrapper {
+            position: relative;
+
+            overflow: hidden;
+
+            padding-top: 140%;
+
+            background:
+                #0b0e19;
+        }
+
+        .card-book .book-image-wrapper img {
+            position: absolute;
+
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            transition:
+                transform 0.6s ease;
+        }
+
+        .card-book:hover .book-image-wrapper img {
+            transform: scale(1.07);
+        }
+
+        .card-book .card-body {
+            padding: 19px 20px 21px;
+        }
+
+        .card-book .book-title {
+            color: #f5f6fb;
+
+            font-weight: 750;
+
+            font-size: 1.05rem;
+
+            margin-bottom: 5px;
+
+            display: -webkit-box;
+
+            -webkit-line-clamp: 2;
+
+            -webkit-box-orient: vertical;
+
+            overflow: hidden;
+        }
+
+        .card-book .book-author {
+            color: #858ca1;
+
+            font-size: 0.83rem;
+
+            margin-bottom: 10px;
+        }
+
+        .card-book .book-rating {
+            color: #ffb84d;
+
+            font-size: 0.83rem;
+
+            margin-bottom: 10px;
+        }
+
+        .card-book .book-rating .rating-text {
+            color: #777e92;
+
+            margin-left: 5px;
+        }
+
+        .card-book .book-price .current {
+            color: white;
+
+            font-weight: 850;
+
+            font-size: 1.25rem;
+        }
+
+        .card-book .book-price .original {
+            color: #676e82;
+
+            font-size: 0.88rem;
+
+            text-decoration: line-through;
+        }
+
+        .card-book .book-price .discount-percent {
+            color: #ff6d96;
+
+            background:
+                rgba(255, 92, 138, 0.10);
+
+            padding: 3px 9px;
+
+            border-radius: 20px;
+
+            font-size: 0.7rem;
+
+            font-weight: 800;
+        }
+
+        .card-book .book-actions {
+            display: flex;
+
+            gap: 8px;
+
+            margin-top: 14px;
+        }
+
+        .card-book .book-actions .btn-add {
+            flex: 1;
+
+            background: var(--gradient);
+
+            color: white;
+
+            border: none;
+
+            border-radius: 11px;
+
+            padding: 9px 15px;
+
+            font-weight: 700;
+
+            font-size: 0.82rem;
+
+            transition: all 0.3s ease;
+        }
+
+        .card-book .book-actions .btn-add:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 8px 22px rgba(124, 92, 255, 0.3);
+        }
+
+        .card-book .book-actions .btn-wishlist {
+            background:
+                rgba(255, 255, 255, 0.04);
+
+            border: 1px solid rgba(255, 255, 255, 0.10);
+
+            border-radius: 11px;
+
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #7d8497;
+
+            transition: all 0.3s ease;
+        }
+
+        .card-book .book-actions .btn-wishlist:hover {
+            border-color: #ff5c8a;
+
+            color: #ff5c8a;
+
+            background:
+                rgba(255, 92, 138, 0.08);
+
+            transform: scale(1.06);
+        }
+
+        /* Book badges */
+
+        .card-book .book-badge {
+            position: absolute;
+
+            top: 12px;
+            right: 12px;
+
+            padding: 5px 12px;
+
+            border-radius: 20px;
+
+            font-size: 0.65rem;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            z-index: 2;
+
+            backdrop-filter: blur(10px);
+        }
+
+        .card-book .book-badge.bestseller {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff9a62,
+                    #ff5c8a
+                );
+
+            color: white;
+        }
+
+        .card-book .book-badge.new {
+            background: var(--gradient);
+
+            color: white;
+        }
+
+        .card-book .book-badge.discount {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff6464,
+                    #ff3864
+                );
+
+            color: white;
+        }
+
+        /* =========================================================
+           CATEGORY BADGES
+        ========================================================= */
+
+        .category-badge {
+            padding: 8px 18px;
+
+            border-radius: 30px;
+
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.09);
+
+            color: #b8bdd0;
+
+            font-weight: 600;
+
+            font-size: 0.88rem;
+
+            transition: all 0.3s ease;
+
+            display: inline-block;
+        }
+
+        .category-badge:hover {
+            background:
+                rgba(124, 92, 255, 0.10);
+
+            border-color:
+                rgba(124, 92, 255, 0.45);
+
+            color: white;
+
+            transform: translateY(-2px);
+        }
+
+        .category-badge.active {
+            background: var(--gradient);
+
+            border-color: transparent;
+
+            color: white;
+
+            box-shadow:
+                0 8px 22px rgba(124, 92, 255, 0.25);
+        }
+
+        /* =========================================================
+           ALERTS
+        ========================================================= */
+
+        .alert-ultra {
+            border-radius: 14px;
+
+            padding: 14px 20px;
+
+            font-weight: 500;
+
+            border: 1px solid rgba(255, 255, 255, 0.07);
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert-ultra.alert-success {
+            background:
+                rgba(37, 214, 154, 0.10);
+
+            color: #66e7bd;
+
+            border-color:
+                rgba(37, 214, 154, 0.20);
+        }
+
+        .alert-ultra.alert-danger,
+        .alert-ultra.alert-error {
+            background:
+                rgba(255, 92, 138, 0.10);
+
+            color: #ff7da0;
+
+            border-color:
+                rgba(255, 92, 138, 0.20);
+        }
+
+        .alert-ultra.alert-warning {
+            background:
+                rgba(255, 180, 77, 0.10);
+
+            color: #ffc56e;
+
+            border-color:
+                rgba(255, 180, 77, 0.20);
+        }
+
+        .alert-ultra.alert-info {
+            background:
+                rgba(91, 180, 255, 0.10);
+
+            color: #78c8ff;
+
+            border-color:
+                rgba(91, 180, 255, 0.20);
+        }
+
+        /* =========================================================
+           FORMS — GLOBAL DARK
+        ========================================================= */
+
+        .form-control,
+        .form-select {
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.09);
+
+            color: #f5f6fb;
+
+            border-radius: 12px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            border-color: var(--primary);
+
+            color: white;
+
+            box-shadow:
+                0 0 0 4px rgba(124, 92, 255, 0.11);
+        }
+
+        .form-control::placeholder {
+            color: #6e7589;
+        }
+
+        .form-label {
+            color: #c5cad8;
+
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           TABLES
+        ========================================================= */
+
+        .table {
+            --bs-table-bg: transparent;
+
+            color: #c8ccda;
+        }
+
+        .table > :not(caption) > * > * {
+            background: transparent;
+
+            color: #c8ccda;
+
+            border-bottom-color:
+                rgba(255, 255, 255, 0.07);
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer-ultra {
+            position: relative;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #0c0f1d 0%,
+                    #070810 100%
+                );
+
+            color: #858ca0;
+
+            padding: 65px 0 30px;
+
+            margin-top: 80px;
+
+            border-top:
+                1px solid rgba(124, 92, 255, 0.15);
+
+            overflow: hidden;
+        }
+
+        .footer-ultra::before {
+            content: '';
+
+            position: absolute;
+
+            width: 500px;
+            height: 250px;
+
+            left: 50%;
+            top: -220px;
+
+            transform: translateX(-50%);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(124, 92, 255, 0.12),
+                    transparent 70%
+                );
+
+            pointer-events: none;
+        }
+
+        .footer-ultra h5,
+        .footer-ultra h6 {
+            color: white;
+
+            font-weight: 800;
+        }
+
+        .footer-ultra p {
+            color: #858ca0;
+
+            line-height: 1.7;
+        }
+
+        .footer-ultra a {
+            color: #858ca0;
+
+            text-decoration: none;
+
+            transition: all 0.25s ease;
+        }
+
+        .footer-ultra a:hover {
+            color: #a995ff;
+
+            transform: translateX(2px);
+        }
+
+        .footer-ultra .social-icons a {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255, 255, 255, 0.045);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            color: #969caf;
+
+            margin-right: 8px;
+
+            transition: all 0.3s ease;
+        }
+
+        .footer-ultra .social-icons a:hover {
+            background: var(--gradient);
+
+            border-color: transparent;
+
+            color: white;
+
+            transform:
+                translateY(-4px);
+        }
+
+        .footer-ultra .divider {
+            border-color:
+                rgba(255, 255, 255, 0.06);
+
+            margin: 35px 0;
+        }
+
+        /* Newsletter */
+
+        .footer-ultra .input-group .form-control {
+            background:
+                rgba(255, 255, 255, 0.07);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.08);
+
+            color: white;
+        }
+
+        /* =========================================================
+           SCROLL TO TOP
+        ========================================================= */
+
+        .scroll-top {
+            position: fixed;
+
+            bottom: 28px;
+            right: 28px;
+
+            width: 52px;
+            height: 52px;
+
+            border-radius: 16px;
+
+            background: var(--gradient);
+
+            color: white;
+
+            border: none;
+
+            font-size: 1.15rem;
+
+            box-shadow:
+                0 10px 30px rgba(124, 92, 255, 0.30);
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transition: all 0.3s ease;
+
+            z-index: 999;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 15px 40px rgba(124, 92, 255, 0.40);
+        }
+
+        /* =========================================================
+           LOADING
+        ========================================================= */
+
+        .spinner-ultra {
+            display: inline-block;
+
+            width: 20px;
+            height: 20px;
+
+            border:
+                3px solid rgba(124, 92, 255, 0.15);
+
+            border-radius: 50%;
+
+            border-top-color: var(--primary);
+
+            animation:
+                spin 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================================================
+           MOBILE
+        ========================================================= */
+
+        @media (max-width: 991px) {
+
+            .navbar-ultra .navbar-collapse {
+                margin-top: 15px;
+
+                padding: 15px;
+
+                background:
+                    rgba(13, 16, 32, 0.98);
+
+                border:
+                    1px solid rgba(255, 255, 255, 0.07);
+
+                border-radius: 18px;
+
+                box-shadow:
+                    0 20px 50px rgba(0, 0, 0, 0.35);
+            }
+
+            .navbar-ultra .navbar-nav {
+                padding: 5px 0;
+            }
+
+            .navbar-ultra .nav-link {
+                margin: 2px 0;
+            }
+
+            .navbar-ultra .nav-link::after {
+                display: none;
+            }
+
+            .hero-section h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-stats {
+                gap: 25px;
+            }
+
+            .navbar-toggler {
+                background:
+                    rgba(255, 255, 255, 0.06);
+
+                border-radius: 10px !important;
+
+                padding: 7px 10px;
+            }
+
+            .navbar-toggler:focus {
+                box-shadow:
+                    0 0 0 3px rgba(124, 92, 255, 0.15);
+            }
+
+            .navbar-toggler-icon {
+                filter: invert(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            body {
+                padding-top: 72px;
+            }
+
+            .hero-section {
+                padding: 55px 0;
+            }
+
+            .hero-section h1 {
+                font-size: 2.2rem;
+
+                letter-spacing: -1px;
+            }
+
+            .hero-section p {
+                font-size: 1rem;
+            }
+
+            .hero-stats {
+                gap: 18px;
+
+                flex-wrap: wrap;
+            }
+
+            .hero-stats .stat h3 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.65rem;
+            }
+
+            .search-bar {
+                min-width: 130px;
+            }
+
+            .footer-ultra {
+                margin-top: 50px;
+            }
+
+            .scroll-top {
+                width: 46px;
+                height: 46px;
+
+                right: 18px;
+                bottom: 18px;
+
+                border-radius: 14px;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .navbar-ultra .navbar-brand {
+                font-size: 1.35rem;
+            }
+
+            .navbar-ultra .navbar-brand i {
+                font-size: 1.5rem;
+            }
+
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero-stats {
+                gap: 15px;
+            }
+
+            .hero-stats .stat h3 {
+                font-size: 1.2rem;
+            }
+
+            .btn-login,
+            .btn-signup {
+                padding: 7px 15px;
+
+                font-size: 0.82rem;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- =========================================================
+         NAVBAR
+    ========================================================= -->
+
+    <nav class="navbar navbar-expand-lg navbar-ultra fixed-top" id="mainNav">
+
+        <div class="container">
+
+            <!-- Brand -->
+            <a class="navbar-brand" href="{% url 'core:home' %}">
+                <i class="bi bi-book-fill me-2"></i>
+                SurendraStore
+            </a>
+
+            <!-- Mobile -->
+            <button class="navbar-toggler border-0"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent">
+
+                <span class="navbar-toggler-icon"></span>
+
+            </button>
+
+            <!-- Navbar Content -->
+            <div class="collapse navbar-collapse" id="navbarContent">
+
+                <!-- Links -->
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}"
+                            href="{% url 'core:home' %}">
+
+                            <i class="bi bi-house-fill me-1"></i>
+                            Home
+
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/books/' %}active{% endif %}"
+                            href="{% url 'books:list' %}">
+
+                            <i class="bi bi-book me-1"></i>
+                            Books
+
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{% url 'books:bestsellers' %}">
+
+                            <i class="bi bi-fire me-1"></i>
+                            Bestsellers
+
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{% url 'orders:my_orders' %}">
+
+                            <i class="bi bi-box-seam me-1"></i>
+                            My Orders
+
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            href="{% url 'core:support' %}">
+
+                            <i class="bi bi-headset me-1"></i>
+                            Support
+
+                        </a>
+                    </li>
+
+                </ul>
+
+                <!-- Right -->
+                <div class="d-flex align-items-center gap-2 gap-lg-3 flex-wrap flex-lg-nowrap">
+
+                    <!-- Search -->
+                    <form class="d-flex me-1"
+                        action="{% url 'books:list' %}"
+                        method="GET">
+
+                        <div class="d-flex align-items-center">
+
+                            <input class="search-bar"
+                                type="search"
+                                name="q"
+                                placeholder="Search books..."
+                                aria-label="Search">
+
+                            <button class="search-btn ms-2"
+                                type="submit">
+
+                                <i class="bi bi-search"></i>
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                    <!-- Cart -->
+                    <a href="{% url 'cart:view' %}"
+                        class="cart-btn">
+
+                        <i class="bi bi-cart3 fs-5"></i>
+
+                        <span class="cart-badge">
+                            {{ cart_count|default:0 }}
+                        </span>
+
+                    </a>
+
+                    <!-- User -->
+                    {% if user.is_authenticated %}
+
+                    <div class="dropdown user-dropdown">
+
+                        <button class="dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
+
+                            <i class="bi bi-person-circle fs-5 me-1"></i>
+
+                            <span class="d-none d-md-inline">
+                                {{ user.first_name|default:user.username }}
+                            </span>
+
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+
+                            <li>
+                                <a class="dropdown-item"
+                                    href="{% url 'accounts:my_profile' %}">
+
+                                    <i class="bi bi-person"></i>
+                                    My Profile
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item"
+                                    href="{% url 'orders:my_orders' %}">
+
+                                    <i class="bi bi-box-seam"></i>
+                                    My Orders
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item"
+                                    href="#">
+
+                                    <i class="bi bi-heart"></i>
+                                    Wishlist
+
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+
+                            <li>
+                                <a class="dropdown-item text-danger"
+                                    href="{% url 'accounts:logout' %}">
+
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Logout
+
+                                </a>
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+                    {% else %}
+
+                    <a href="{% url 'accounts:login' %}"
+                        class="btn-login">
+
+                        Login
+
+                    </a>
+
+                    <a href="{% url 'accounts:register' %}"
+                        class="btn-signup d-none d-sm-inline-block">
+
+                        Sign Up
+
+                    </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- =========================================================
+         MESSAGES
+    ========================================================= -->
+
+    {% if messages %}
+
+    <div class="container mt-3">
+
+        {% for message in messages %}
+
+        <div class="alert alert-ultra alert-{{ message.tags }} alert-dismissible fade show"
+            role="alert">
+
+            <i class="bi
+                {% if message.tags == 'success' %}
+                    bi-check-circle
+                {% elif message.tags == 'error' %}
+                    bi-exclamation-circle
+                {% elif message.tags == 'warning' %}
+                    bi-exclamation-triangle
+                {% else %}
+                    bi-info-circle
+                {% endif %}
+                me-2">
+            </i>
+
+            {{ message }}
+
+            <button type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="alert">
+            </button>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================= -->
+
+    {% block content %}
+    {% endblock %}
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================= -->
+
+    <footer class="footer-ultra">
+
+        <div class="container">
+
+            <div class="row g-4">
+
+                <!-- Brand -->
+                <div class="col-lg-4 col-md-6">
+
+                    <h5 class="mb-3">
+
+                        <i class="bi bi-book-fill me-2"
+                            style="color:#8b72ff;">
+                        </i>
+
+                        SurendraBookStore
+
+                    </h5>
+
+                    <p class="mb-3">
+                        India's ultimate destination for book lovers.
+                        Read, Learn, and Grow with us.
+                    </p>
+
+                    <div class="social-icons">
+
+                        <a href="#">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-twitter-x"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+
+                        <a href="#">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+
+                    <h6 class="mb-3">
+                        Quick Links
+                    </h6>
+
+                    <a href="#" class="d-block mb-2">
+                        About Us
+                    </a>
+
+                    <a href="#" class="d-block mb-2">
+                        Blog
+                    </a>
+
+                    <a href="#" class="d-block mb-2">
+                        Careers
+                    </a>
+
+                    <a href="#" class="d-block mb-2">
+                        Privacy Policy
+                    </a>
+
+                </div>
+
+                <!-- Support -->
+                <div class="col-lg-2 col-md-6">
+
+                    <h6 class="mb-3">
+                        Support
+                    </h6>
+
+                    <a href="#" class="d-block mb-2">
+                        Help Center
+                    </a>
+
+                    <a href="#" class="d-block mb-2">
+                        Returns
+                    </a>
+
+                    <a href="#" class="d-block mb-2">
+                        Shipping
+                    </a>
+
+                    <a href="{% url 'core:support' %}"
+                        class="d-block mb-2">
+
+                        Contact Us
+
+                    </a>
+
+                </div>
+
+                <!-- Newsletter -->
+                <div class="col-lg-4 col-md-6">
+
+                    <h6 class="mb-3">
+                        Stay Updated
+                    </h6>
+
+                    <p>
+                        Subscribe to get latest books and offers.
+                    </p>
+
+                    <div class="input-group">
+
+                        <input type="email"
+                            class="form-control rounded-start-pill"
+                            placeholder="Your email"
+                            style="padding:12px 20px;">
+
+                        <button class="btn btn-ultra-primary rounded-end-pill"
+                            style="padding:12px 24px;">
+
+                            Subscribe
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <hr class="divider">
+
+            <div class="text-center">
+
+                <p class="mb-0">
+
+                    © 2026 SurendraBookStore.
+                    All rights reserved.
+                    Made with
+
+                    <i class="bi bi-heart-fill"
+                        style="color:#ff5c8a;">
+                    </i>
+
+                    in India
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+         SCROLL TOP
+    ========================================================= -->
+
+    <button class="scroll-top"
+        id="scrollTopBtn"
+        aria-label="Scroll to top">
+
+        <i class="bi bi-arrow-up"></i>
+
+    </button>
+
+
+    <!-- =========================================================
+         BOOTSTRAP
+    ========================================================= -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+
+    <!-- =========================================================
+         COMMON JAVASCRIPT
+    ========================================================= -->
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const navbar =
+                document.getElementById('mainNav');
+
+            const scrollBtn =
+                document.getElementById('scrollTopBtn');
+
+
+            /* Navbar scroll */
+
+            window.addEventListener('scroll', function () {
+
+                if (window.scrollY > 40) {
+
+                    navbar.classList.add('scrolled');
+
+                } else {
+
+                    navbar.classList.remove('scrolled');
+
+                }
+
+
+                /* Scroll button */
+
+                if (window.scrollY > 300) {
+
+                    scrollBtn.classList.add('visible');
+
+                } else {
+
+                    scrollBtn.classList.remove('visible');
+
+                }
+
+            });
+
+
+            /* Scroll top */
+
+            scrollBtn.addEventListener('click', function () {
+
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+
+            });
+
+        });
+
+
+        /* =====================================================
+           CART COUNT
+        ===================================================== */
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const cartCount =
+                document.getElementById('cart-count');
+
+
+            function updateCartCount() {
+
+                fetch('/cart/count/')
+
+                    .then(response => response.json())
+
+                    .then(data => {
+
+                        if (cartCount) {
+
+                            cartCount.textContent =
+                                data.count;
+
+                        }
+
+                    })
+
+                    .catch(err =>
+                        console.log(
+                            'Cart update error:',
+                            err
+                        )
+                    );
+            }
+
+
+            document
+                .querySelectorAll('.btn-add, .cart-btn')
+                .forEach(btn => {
+
+                    btn.addEventListener('click', function () {
+
+                        setTimeout(
+                            updateCartCount,
+                            500
+                        );
+
+                    });
+
+                });
+
+        });
+
+    </script>
+
+
+    {% block extra_scripts %}
+    {% endblock %}
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+
+</html>
