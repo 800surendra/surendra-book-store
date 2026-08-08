@@ -171,10 +171,6 @@ def payment_screen(request):
             'title': 'Bank Transfer',
             'details': 'Bank: Surendra BookStore\nAccount: 8000411638\nIFSC: AIRP0000001',
         },
-        'netbanking': {
-            'title': 'Net Banking',
-            'details': 'Net banking coming soon. Please use bank transfer or UPI.',
-        },
         'cod': {
             'title': 'Cash on Delivery',
             'details': 'Pay when you receive the order.',
