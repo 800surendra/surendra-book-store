@@ -159,21 +159,17 @@ def payment_screen(request):
     instructions = {
         'upi': {
             'title': 'UPI',
-            'details': 'Pay using UPI ID: surendra@upi',
-            'qr': f'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=surendra@upi&pn=Surendra%20BookStore&am={grand_total}&cu=INR',
+            'details': 'Pay using UPI ID: 8000411638@airtel',
+            'qr': f'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=8000411638@airtel&pn=Surendra%20BookStore&am={grand_total}&cu=INR',
         },
         'qr': {
             'title': 'QR Code',
             'details': 'Scan QR code below',
-            'qr': f'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=surendra@upi&pn=Surendra%20BookStore&am={grand_total}&cu=INR',
+            'qr': f'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi://pay?pa=8000411638@airtel&pn=Surendra%20BookStore&am={grand_total}&cu=INR',
         },
         'banktransfer': {
             'title': 'Bank Transfer',
-            'details': 'Bank: Surendra BookStore\nAccount: 1234567890\nIFSC: XYZB0001234',
-        },
-        'netbanking': {
-            'title': 'Net Banking',
-            'details': 'Net banking coming soon. Please use bank transfer or UPI.',
+            'details': 'Bank: Surendra BookStore\nAccount: 8000411638\nIFSC: AIRP0000001',
         },
         'cod': {
             'title': 'Cash on Delivery',
