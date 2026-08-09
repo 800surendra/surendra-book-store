@@ -2,78 +2,696 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-xl-5">
-            <div class="card bg-dark text-white border-0 shadow-lg" style="border-radius: 30px; backdrop-filter: blur(20px); background: rgba(26, 26, 46, 0.95);">
-                <div class="card-body p-5">
-                    <div class="text-center mb-5">
-                        <div class="position-relative d-inline-block">
-                            <div class="bg-gradient-primary rounded-circle p-3" style="background: linear-gradient(135deg, #6C63FF, #FF6584);">
-                                <i class="bi bi-box-arrow-in-right fs-1 text-white"></i>
-                            </div>
-                        </div>
-                        <h2 class="fw-bold mt-3">Welcome Back</h2>
-                        <p class="text-muted">Login to continue your book journey</p>
-                    </div>
-                    
-                    <form method="POST" action="{% url 'accounts:login' %}" class="needs-validation" novalidate>
-                        {% csrf_token %}
-                        <div class="form-floating mb-3">
-                            <input type="email" name="username" class="form-control bg-dark text-white border-secondary" id="email" placeholder="Email" required>
-                            <label for="email" class="text-muted">Email Address</label>
-                        </div>
-                        
-                        <div class="form-floating mb-3">
-                            <input type="password" name="password" class="form-control bg-dark text-white border-secondary" id="password" placeholder="Password" required>
-                            <label for="password" class="text-muted">Password</label>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember_me" id="remember">
-                                <label class="form-check-label text-muted" for="remember">Remember Me</label>
-                            </div>
-                            <a href="{% url 'accounts:forgot_password' %}" class="text-primary text-decoration-none">Forgot Password?</a>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100 py-3" style="border-radius: 50px; background: linear-gradient(135deg, #6C63FF, #FF6584); border: none; font-weight: 700; font-size: 1.1rem;">
-                            <i class="bi bi-key me-2"></i>Login
-                        </button>
-                    </form>
-                    
-                    <div class="text-center mt-4">
-                        <p class="text-muted">Don't have an account? <a href="{% url 'accounts:register' %}" class="text-primary fw-bold text-decoration-none">Register here</a></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <style>
-    .form-floating > .form-control:focus {
-        border-color: #6C63FF;
-        box-shadow: 0 0 0 0.25rem rgba(108, 99, 255, 0.25);
+    /* ================================
+       ULTRA PREMIUM LOGIN PAGE
+    ================================= */
+
+    .login-page {
+        min-height: calc(100vh - 90px);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 70px 20px;
+        background:
+            radial-gradient(circle at 10% 15%, rgba(108, 99, 255, .12), transparent 30%),
+            radial-gradient(circle at 90% 85%, rgba(255, 101, 132, .12), transparent 30%),
+            #ffffff;
     }
-    .form-floating > .form-control {
-        border-radius: 12px;
-        min-height: 58px;
+
+    /* 3D floating blobs */
+    .login-blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(1px);
+        opacity: .65;
+        pointer-events: none;
+        animation: floatBlob 8s ease-in-out infinite;
     }
-    .form-floating > label {
-        padding: 16px 12px;
-        color: #6c757d !important;
+
+    .blob-1 {
+        width: 180px;
+        height: 180px;
+        top: 8%;
+        left: 5%;
+        background: linear-gradient(135deg, #6C63FF, #9c6cff);
+        box-shadow:
+            inset -25px -25px 50px rgba(70, 50, 180, .25),
+            20px 25px 60px rgba(108, 99, 255, .25);
     }
-    .form-control::placeholder {
-        color: #6c757d;
-        opacity: 0.3;
+
+    .blob-2 {
+        width: 140px;
+        height: 140px;
+        bottom: 8%;
+        right: 7%;
+        background: linear-gradient(135deg, #ff6584, #ff91ae);
+        box-shadow:
+            inset -20px -20px 40px rgba(190, 40, 90, .20),
+            20px 25px 60px rgba(255, 101, 132, .25);
+        animation-delay: -3s;
     }
-    .form-check-input:checked {
-        background-color: #6C63FF;
-        border-color: #6C63FF;
+
+    .blob-3 {
+        width: 75px;
+        height: 75px;
+        top: 18%;
+        right: 17%;
+        background: linear-gradient(135deg, #6C63FF, #ff6584);
+        box-shadow: 10px 15px 35px rgba(108, 99, 255, .25);
+        animation-delay: -5s;
     }
-    .bg-gradient-primary {
+
+    @keyframes floatBlob {
+        0%, 100% {
+            transform: translate3d(0, 0, 0) rotate(0deg);
+        }
+
+        50% {
+            transform: translate3d(0, -22px, 12px) rotate(8deg);
+        }
+    }
+
+    /* Main container */
+    .login-container {
+        width: 100%;
+        max-width: 1080px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .login-card {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: rgba(255, 255, 255, .94);
+        border: 1px solid rgba(108, 99, 255, .12);
+        border-radius: 32px;
+        overflow: hidden;
+        box-shadow:
+            0 35px 90px rgba(25, 20, 70, .14),
+            0 10px 35px rgba(108, 99, 255, .08);
+        backdrop-filter: blur(18px);
+    }
+
+    /* Left premium panel */
+    .login-showcase {
+        position: relative;
+        padding: 55px;
+        min-height: 620px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+        background:
+            linear-gradient(145deg, rgba(108, 99, 255, .08), rgba(255, 101, 132, .07)),
+            #fafaff;
+    }
+
+    .showcase-glow {
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
         background: linear-gradient(135deg, #6C63FF, #FF6584);
+        filter: blur(90px);
+        opacity: .12;
+        top: -100px;
+        right: -100px;
+    }
+
+    .brand-icon {
+        width: 68px;
+        height: 68px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #6C63FF, #FF6584);
+        color: white;
+        font-size: 30px;
+        box-shadow:
+            0 15px 30px rgba(108, 99, 255, .25);
+        margin-bottom: 28px;
+    }
+
+    .showcase-title {
+        font-size: 3rem;
+        line-height: 1.08;
+        font-weight: 900;
+        margin-bottom: 18px;
+        color: #171527;
+        letter-spacing: -1.5px;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #6C63FF, #FF6584);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .showcase-description {
+        color: #77748a;
+        font-size: 1.05rem;
+        line-height: 1.8;
+        max-width: 420px;
+        margin-bottom: 32px;
+    }
+
+    .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: #454154;
+        font-weight: 600;
+    }
+
+    .feature-check {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #6C63FF, #FF6584);
+        color: white;
+        font-size: 13px;
+        box-shadow: 0 7px 18px rgba(108, 99, 255, .20);
+    }
+
+    /* Right form */
+    .login-form-area {
+        padding: 55px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: white;
+    }
+
+    .form-heading {
+        font-size: 2rem;
+        font-weight: 850;
+        color: #181526;
+        margin-bottom: 8px;
+    }
+
+    .form-subheading {
+        color: #898596;
+        margin-bottom: 30px;
+    }
+
+    .premium-input {
+        position: relative;
+        margin-bottom: 18px;
+    }
+
+    .premium-input .input-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #8179a4;
+        font-size: 18px;
+        z-index: 2;
+    }
+
+    .premium-input input {
+        width: 100%;
+        height: 58px;
+        border: 1.5px solid #e8e5f0;
+        border-radius: 16px;
+        background: #fafafd;
+        padding: 0 52px 0 50px;
+        color: #262233;
+        font-size: 15px;
+        outline: none;
+        transition: .25s ease;
+    }
+
+    .premium-input input::placeholder {
+        color: #aaa6b5;
+    }
+
+    .premium-input input:focus {
+        border-color: #7b70ff;
+        background: white;
+        box-shadow:
+            0 0 0 4px rgba(108, 99, 255, .09),
+            0 10px 25px rgba(108, 99, 255, .08);
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 34px;
+        height: 34px;
+        border: none;
+        background: transparent;
+        color: #858092;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: .2s;
+    }
+
+    .password-toggle:hover {
+        background: #f1efff;
+        color: #6C63FF;
+    }
+
+    .login-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 5px 0 24px;
+        font-size: 14px;
+    }
+
+    .remember-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #777383;
+        cursor: pointer;
+    }
+
+    .remember-box input {
+        width: 17px;
+        height: 17px;
+        accent-color: #6C63FF;
+        cursor: pointer;
+    }
+
+    .forgot-link {
+        color: #6C63FF;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .forgot-link:hover {
+        color: #FF6584;
+    }
+
+    .login-btn {
+        width: 100%;
+        height: 58px;
+        border: none;
+        border-radius: 17px;
+        color: white;
+        font-size: 16px;
+        font-weight: 800;
+        letter-spacing: .2px;
+        background: linear-gradient(135deg, #6C63FF, #FF6584);
+        box-shadow:
+            0 14px 30px rgba(108, 99, 255, .24);
+        transition: .25s ease;
+        cursor: pointer;
+    }
+
+    .login-btn:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 20px 40px rgba(108, 99, 255, .30);
+    }
+
+    .login-btn:active {
+        transform: translateY(-1px);
+    }
+
+    .login-btn i {
+        margin-right: 8px;
+    }
+
+    .or-divider {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 25px 0;
+        color: #aaa6b4;
+        font-size: 13px;
+    }
+
+    .or-divider::before,
+    .or-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #ece9f1;
+    }
+
+    .register-box {
+        text-align: center;
+        padding: 17px;
+        border-radius: 16px;
+        background: #faf9ff;
+        border: 1px solid #eeeaff;
+        color: #777383;
+        font-size: 14px;
+    }
+
+    .register-box a {
+        color: #6C63FF;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    .register-box a:hover {
+        color: #FF6584;
+    }
+
+    .secure-note {
+        text-align: center;
+        margin-top: 18px;
+        color: #aaa6b4;
+        font-size: 12px;
+    }
+
+    .secure-note i {
+        color: #27ae60;
+        margin-right: 4px;
+    }
+
+    /* Django messages */
+    .login-message {
+        padding: 12px 15px;
+        border-radius: 13px;
+        margin-bottom: 18px;
+        font-size: 14px;
+        background: #fff4f4;
+        color: #d9534f;
+        border: 1px solid #ffd9d9;
+    }
+
+    /* Responsive */
+    @media (max-width: 850px) {
+        .login-card {
+            grid-template-columns: 1fr;
+        }
+
+        .login-showcase {
+            min-height: auto;
+            padding: 40px;
+        }
+
+        .showcase-title {
+            font-size: 2.3rem;
+        }
+
+        .login-form-area {
+            padding: 40px;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .login-page {
+            padding: 30px 14px;
+        }
+
+        .login-card {
+            border-radius: 24px;
+        }
+
+        .login-showcase,
+        .login-form-area {
+            padding: 30px 22px;
+        }
+
+        .showcase-title {
+            font-size: 2rem;
+        }
+
+        .login-options {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .blob-1 {
+            width: 110px;
+            height: 110px;
+        }
+
+        .blob-2 {
+            width: 90px;
+            height: 90px;
+        }
     }
 </style>
+
+
+<div class="login-page">
+
+    <!-- 3D Floating Background -->
+    <div class="login-blob blob-1"></div>
+    <div class="login-blob blob-2"></div>
+    <div class="login-blob blob-3"></div>
+
+
+    <div class="login-container">
+
+        <div class="login-card">
+
+            <!-- ================= LEFT SHOWCASE ================= -->
+            <div class="login-showcase">
+
+                <div class="showcase-glow"></div>
+
+                <div class="brand-icon">
+                    <i class="bi bi-book-half"></i>
+                </div>
+
+                <h1 class="showcase-title">
+                    Welcome back to
+                    <span class="gradient-text">SurendraStore</span>
+                </h1>
+
+                <p class="showcase-description">
+                    Login to continue your reading journey and discover
+                    amazing books curated specially for you.
+                </p>
+
+                <div class="feature-list">
+
+                    <div class="feature-item">
+                        <span class="feature-check">
+                            <i class="bi bi-check-lg"></i>
+                        </span>
+                        Premium collection of books
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-check">
+                            <i class="bi bi-check-lg"></i>
+                        </span>
+                        Track your orders easily
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-check">
+                            <i class="bi bi-check-lg"></i>
+                        </span>
+                        Exclusive offers & bestsellers
+                    </div>
+
+                    <div class="feature-item">
+                        <span class="feature-check">
+                            <i class="bi bi-check-lg"></i>
+                        </span>
+                        Secure & simple shopping
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= LOGIN FORM ================= -->
+            <div class="login-form-area">
+
+                <h2 class="form-heading">
+                    Sign in
+                </h2>
+
+                <p class="form-subheading">
+                    Enter your details to access your account.
+                </p>
+
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="login-message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+
+                <form method="POST"
+                      action="{% url 'accounts:login' %}"
+                      class="needs-validation"
+                      novalidate>
+
+                    {% csrf_token %}
+
+
+                    <!-- Email -->
+                    <div class="premium-input">
+
+                        <i class="bi bi-envelope input-icon"></i>
+
+                        <input
+                            type="email"
+                            name="username"
+                            id="email"
+                            placeholder="Email address"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="premium-input">
+
+                        <i class="bi bi-lock input-icon"></i>
+
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            placeholder="Password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="togglePassword"
+                            aria-label="Show password">
+
+                            <i class="bi bi-eye" id="passwordIcon"></i>
+
+                        </button>
+
+                    </div>
+
+
+                    <!-- Remember / Forgot -->
+                    <div class="login-options">
+
+                        <label class="remember-box">
+
+                            <input
+                                type="checkbox"
+                                name="remember_me"
+                                id="remember"
+                            >
+
+                            <span>Remember me</span>
+
+                        </label>
+
+
+                        <a
+                            href="{% url 'accounts:forgot_password' %}"
+                            class="forgot-link">
+
+                            Forgot password?
+
+                        </a>
+
+                    </div>
+
+
+                    <!-- Login -->
+                    <button type="submit" class="login-btn">
+
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Login to Account
+
+                    </button>
+
+                </form>
+
+
+                <div class="or-divider">
+                    <span>NEW TO SURENDRASTORE?</span>
+                </div>
+
+
+                <!-- Register -->
+                <div class="register-box">
+
+                    Don't have an account?
+
+                    <a href="{% url 'accounts:register' %}">
+                        Create Account
+                    </a>
+
+                </div>
+
+
+                <div class="secure-note">
+
+                    <i class="bi bi-shield-check"></i>
+                    Your information is protected and secure.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+        const passwordIcon = document.getElementById("passwordIcon");
+
+        if (togglePassword && passwordInput) {
+
+            togglePassword.addEventListener("click", function () {
+
+                const isPassword =
+                    passwordInput.getAttribute("type") === "password";
+
+                passwordInput.setAttribute(
+                    "type",
+                    isPassword ? "text" : "password"
+                );
+
+                passwordIcon.className =
+                    isPassword ? "bi bi-eye-slash" : "bi bi-eye";
+
+                togglePassword.setAttribute(
+                    "aria-label",
+                    isPassword ? "Hide password" : "Show password"
+                );
+
+            });
+
+        }
+
+    });
+</script>
+
 {% endblock %}
