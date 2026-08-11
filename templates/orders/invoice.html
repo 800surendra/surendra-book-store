@@ -1,83 +1,1336 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Invoice #{{ invoice_no }}</title>
+    <meta charset="UTF-8">
+
+    <title>{{ invoice_no }} • SurendraBookStore</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <style>
-        @page { size: A4; margin: 20mm; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: white; margin: 0; padding: 0; }
-        .invoice-box { max-width: 800px; margin: 0 auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px; }
-        .header { border-bottom: 2px solid #d4af37; padding-bottom: 20px; margin-bottom: 20px; }
-        .header h1 { color: #1a1a2e; font-weight: 900; margin: 0; }
-        .header h1 span { color: #d4af37; }
-        .details { display: flex; justify-content: space-between; margin: 20px 0; }
-        .details .left { text-align: left; }
-        .details .right { text-align: right; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th { background: #f8f9fa; padding: 10px 12px; text-align: left; font-weight: 700; border-bottom: 2px solid #d4af37; }
-        td { padding: 10px 12px; border-bottom: 1px solid #eee; }
-        .total { font-weight: 900; font-size: 18px; color: #d4af37; }
-        .footer { margin-top: 30px; text-align: center; color: #999; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px; }
+
+        /* =====================================================
+           GLOBAL
+           ===================================================== */
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f4f1eb;
+        }
+
+        body {
+            font-family:
+                "Segoe UI",
+                "Helvetica Neue",
+                Arial,
+                sans-serif;
+
+            color: #262626;
+            font-size: 13px;
+            line-height: 1.55;
+
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .invoice-page {
+            width: 210mm;
+            min-height: 297mm;
+
+            margin: 0 auto;
+
+            background: #ffffff;
+
+            position: relative;
+            overflow: hidden;
+
+            box-shadow:
+                0 20px 60px rgba(38, 31, 20, 0.12);
+        }
+
+
+        /* =====================================================
+           DECORATIVE GOLD TOP LINE
+           ===================================================== */
+
+        .luxury-top-line {
+            height: 5px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #8a6a25 0%,
+                    #c8a951 20%,
+                    #f0d889 50%,
+                    #c8a951 80%,
+                    #8a6a25 100%
+                );
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+           ===================================================== */
+
+        .page-inner {
+            padding: 32px 38px 30px;
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .header {
+            position: relative;
+
+            padding-bottom: 24px;
+
+            border-bottom:
+                1px solid #e9e3d8;
+        }
+
+        .brand {
+            display: table;
+            width: 100%;
+        }
+
+        .brand-left,
+        .brand-right {
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .brand-right {
+            width: 180px;
+            text-align: right;
+        }
+
+        .brand-mark {
+            display: inline-block;
+
+            width: 44px;
+            height: 44px;
+
+            margin-right: 11px;
+
+            vertical-align: middle;
+
+            border: 1px solid #c9a94e;
+            border-radius: 50%;
+
+            text-align: center;
+            line-height: 42px;
+
+            color: #a27d24;
+
+            font-family: Georgia, serif;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .brand-name {
+            display: inline-block;
+
+            margin: 0;
+
+            vertical-align: middle;
+
+            color: #171717;
+
+            font-family:
+                Georgia,
+                "Times New Roman",
+                serif;
+
+            font-size: 29px;
+            font-weight: 700;
+            letter-spacing: -0.7px;
+        }
+
+        .brand-name span {
+            color: #a17c28;
+        }
+
+        .tagline {
+            margin: 8px 0 0 58px;
+
+            color: #8a857c;
+
+            font-size: 9px;
+            font-weight: 600;
+
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+        }
+
+        .invoice-label {
+            margin-bottom: 5px;
+
+            color: #9b7a2c;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .invoice-number {
+            color: #171717;
+
+            font-family: Georgia, serif;
+
+            font-size: 20px;
+            font-weight: 700;
+
+            letter-spacing: 0.5px;
+        }
+
+
+        /* =====================================================
+           META STRIP
+           ===================================================== */
+
+        .meta-strip {
+            display: table;
+            width: 100%;
+
+            margin-top: 22px;
+
+            border:
+                1px solid #e7e0d3;
+
+            background: #fcfbf8;
+        }
+
+        .meta-cell {
+            display: table-cell;
+
+            width: 25%;
+
+            padding: 13px 15px;
+
+            border-right:
+                1px solid #e7e0d3;
+
+            vertical-align: middle;
+        }
+
+        .meta-cell:last-child {
+            border-right: none;
+        }
+
+        .meta-label {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #99938a;
+
+            font-size: 8px;
+            font-weight: 700;
+
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            display: block;
+
+            color: #252525;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           SECTION
+           ===================================================== */
+
+        .section-label {
+            position: relative;
+
+            margin-bottom: 12px;
+
+            color: #9b7928;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .section-label:after {
+            content: "";
+
+            display: block;
+
+            width: 34px;
+            height: 2px;
+
+            margin-top: 6px;
+
+            background: #c6a14a;
+        }
+
+
+        /* =====================================================
+           CUSTOMER / PAYMENT
+           ===================================================== */
+
+        .two-column {
+            display: table;
+            width: 100%;
+
+            margin-top: 25px;
+        }
+
+        .column {
+            display: table-cell;
+
+            width: 50%;
+
+            padding: 20px 22px;
+
+            border:
+                1px solid #e8e2d8;
+
+            vertical-align: top;
+        }
+
+        .column:first-child {
+            border-right: none;
+        }
+
+        .customer-name {
+            margin-bottom: 8px;
+
+            color: #202020;
+
+            font-family: Georgia, serif;
+
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .address {
+            color: #6e6a63;
+
+            font-size: 10.5px;
+
+            line-height: 1.75;
+        }
+
+        .payment-row {
+            display: table;
+            width: 100%;
+
+            padding: 7px 0;
+
+            border-bottom:
+                1px solid #f0ece5;
+        }
+
+        .payment-row:last-child {
+            border-bottom: none;
+        }
+
+        .payment-label {
+            display: table-cell;
+
+            width: 40%;
+
+            color: #929087;
+
+            font-size: 9.5px;
+        }
+
+        .payment-value {
+            display: table-cell;
+
+            color: #292929;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-align: right;
+        }
+
+        .verified {
+            display: table-cell;
+
+            color: #4d7d5c;
+
+            font-size: 9px;
+            font-weight: 800;
+
+            letter-spacing: 0.8px;
+
+            text-align: right;
+        }
+
+
+        /* =====================================================
+           ITEMS
+           ===================================================== */
+
+        .items-section {
+            margin-top: 29px;
+        }
+
+        .items-title {
+            margin: 0 0 12px;
+
+            color: #252525;
+
+            font-family: Georgia, serif;
+
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .items-title-wrap {
+            display: table;
+            width: 100%;
+        }
+
+        .items-title-left,
+        .items-title-right {
+            display: table-cell;
+            vertical-align: bottom;
+        }
+
+        .items-title-right {
+            color: #aaa59d;
+
+            font-size: 8px;
+
+            letter-spacing: 1px;
+
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        .items-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            border:
+                1px solid #e5dfd4;
+        }
+
+        .items-table thead th {
+            padding: 11px 12px;
+
+            background: #f8f5ef;
+
+            border-bottom:
+                2px solid #d2b363;
+
+            color: #716b61;
+
+            font-size: 8.5px;
+            font-weight: 800;
+
+            letter-spacing: 1.2px;
+
+            text-align: left;
+            text-transform: uppercase;
+        }
+
+        .items-table tbody td {
+            padding: 13px 12px;
+
+            border-bottom:
+                1px solid #eeeae3;
+
+            color: #383632;
+
+            font-size: 10.5px;
+
+            vertical-align: middle;
+        }
+
+        .items-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .items-table .number {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .items-table td:nth-child(2) {
+            text-align: center;
+        }
+
+        .book-title {
+            color: #252525;
+
+            font-family: Georgia, serif;
+
+            font-size: 11.5px;
+            font-weight: 700;
+        }
+
+        .book-author {
+            margin-top: 3px;
+
+            color: #99948b;
+
+            font-size: 8.5px;
+
+            letter-spacing: 0.2px;
+        }
+
+
+        /* =====================================================
+           TOTAL AREA
+           ===================================================== */
+
+        .summary-wrapper {
+            display: table;
+            width: 100%;
+
+            margin-top: 20px;
+        }
+
+        .summary-spacer {
+            display: table-cell;
+
+            width: 48%;
+        }
+
+        .summary {
+            display: table-cell;
+
+            width: 52%;
+
+            padding: 5px 0;
+        }
+
+        .summary-row {
+            display: table;
+            width: 100%;
+
+            padding: 7px 12px;
+
+            border-bottom:
+                1px solid #eeeae3;
+        }
+
+        .summary-label,
+        .summary-value {
+            display: table-cell;
+
+            width: 50%;
+        }
+
+        .summary-label {
+            color: #817c73;
+
+            font-size: 9.5px;
+        }
+
+        .summary-value {
+            color: #35332f;
+
+            font-size: 10px;
+            font-weight: 700;
+
+            text-align: right;
+        }
+
+        .discount {
+            color: #548263;
+        }
+
+        .grand-total {
+            margin-top: 6px;
+
+            padding: 15px 14px;
+
+            border: none;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #fbf7ed,
+                    #f7f0df
+                );
+
+            border-top:
+                1px solid #d5b76a;
+
+            border-bottom:
+                1px solid #d5b76a;
+        }
+
+        .grand-total .summary-label {
+            color: #6f5723;
+
+            font-family: Georgia, serif;
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .grand-total .summary-value {
+            color: #9b7623;
+
+            font-family: Georgia, serif;
+
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+
+        /* =====================================================
+           PAYMENT VERIFIED
+           ===================================================== */
+
+        .paid-area {
+            margin-top: 23px;
+
+            text-align: right;
+        }
+
+        .paid-seal {
+            display: inline-block;
+
+            padding: 7px 14px;
+
+            border:
+                1px solid #b9d1bf;
+
+            border-radius: 20px;
+
+            background: #f4faf5;
+
+            color: #4c7c58;
+
+            font-size: 8.5px;
+            font-weight: 800;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .footer {
+            margin-top: 32px;
+
+            padding-top: 22px;
+
+            border-top:
+                1px solid #e6e0d6;
+
+            text-align: center;
+        }
+
+        .thank-you {
+            color: #36332e;
+
+            font-family: Georgia, serif;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .gold {
+            color: #a27d28;
+        }
+
+        .footer-text {
+            margin-top: 9px;
+
+            color: #9a958c;
+
+            font-size: 8.5px;
+
+            line-height: 1.8;
+        }
+
+        .small-note {
+            margin-top: 14px;
+
+            color: #b1aca4;
+
+            font-size: 7.5px;
+
+            font-style: italic;
+        }
+
+
+        /* =====================================================
+           DECORATIVE CORNER
+           ===================================================== */
+
+        .corner-decoration {
+            position: absolute;
+
+            right: -55px;
+            bottom: -55px;
+
+            width: 150px;
+            height: 150px;
+
+            border:
+                1px solid rgba(190, 154, 67, 0.20);
+
+            border-radius: 50%;
+        }
+
+        .corner-decoration:before {
+            content: "";
+
+            position: absolute;
+
+            top: 18px;
+            left: 18px;
+
+            width: 110px;
+            height: 110px;
+
+            border:
+                1px solid rgba(190, 154, 67, 0.16);
+
+            border-radius: 50%;
+        }
+
+
+        /* =====================================================
+           PRINT
+           ===================================================== */
+
+        @media print {
+
+            html,
+            body {
+                background: #ffffff;
+            }
+
+            .invoice-page {
+                width: 210mm;
+                min-height: 297mm;
+
+                margin: 0;
+
+                box-shadow: none;
+            }
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media screen and (max-width: 700px) {
+
+            body {
+                background: #f4f1eb;
+            }
+
+            .invoice-page {
+                width: 100%;
+                min-height: 100vh;
+
+                box-shadow: none;
+            }
+
+            .page-inner {
+                padding: 24px 16px;
+            }
+
+            .brand-name {
+                font-size: 22px;
+            }
+
+            .brand-right {
+                width: 120px;
+            }
+
+            .invoice-number {
+                font-size: 15px;
+            }
+
+            .tagline {
+                margin-left: 0;
+                font-size: 7px;
+                letter-spacing: 1.4px;
+            }
+
+            .meta-strip {
+                display: block;
+            }
+
+            .meta-cell {
+                display: inline-block;
+
+                width: 50%;
+
+                border-bottom:
+                    1px solid #e7e0d3;
+            }
+
+            .two-column {
+                display: block;
+            }
+
+            .column {
+                display: block;
+
+                width: 100%;
+
+                border: 1px solid #e8e2d8 !important;
+            }
+
+            .column + .column {
+                margin-top: 10px;
+            }
+
+            .summary-wrapper {
+                display: block;
+            }
+
+            .summary-spacer {
+                display: none;
+            }
+
+            .summary {
+                display: block;
+
+                width: 100%;
+            }
+
+            .items-table {
+                font-size: 9px;
+            }
+
+            .items-table thead th,
+            .items-table tbody td {
+                padding: 9px 7px;
+            }
+
+            .book-title {
+                font-size: 10px;
+            }
+
+            .book-author {
+                font-size: 7.5px;
+            }
+
+            .items-table th:nth-child(2),
+            .items-table td:nth-child(2) {
+                width: 12%;
+            }
+        }
+
     </style>
 </head>
+
+
 <body>
-    <div class="invoice-box">
+
+<div class="invoice-page">
+
+    <div class="luxury-top-line"></div>
+
+    <div class="corner-decoration"></div>
+
+    <div class="page-inner">
+
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
         <div class="header">
-            <h1><span>Surendra</span>BookStore</h1>
-            <p>Luxury Book Reading Experience</p>
+
+            <div class="brand">
+
+                <div class="brand-left">
+
+                    <div>
+                        <span class="brand-mark">S</span>
+
+                        <h1 class="brand-name">
+                            <span>Surendra</span>BookStore
+                        </h1>
+                    </div>
+
+                    <p class="tagline">
+                        Premium Reading Experience
+                    </p>
+
+                </div>
+
+
+                <div class="brand-right">
+
+                    <div class="invoice-label">
+                        Tax Invoice
+                    </div>
+
+                    <div class="invoice-number">
+                        {{ invoice_no }}
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
-        <h2>Invoice #{{ invoice_no }}</h2>
-        <p><strong>Order ID:</strong> #{{ order.id }} | <strong>Date:</strong> {{ date }}</p>
 
-        <div class="details">
-            <div class="left">
-                <strong>Billed To:</strong><br>
-                {{ order.full_name }}<br>
-                {{ order.address }}<br>
-                {{ order.city }}, {{ order.state }} - {{ order.pincode }}<br>
-                📞 {{ order.phone }}<br>
-                ✉️ {{ order.email }}
+        <!-- =================================================
+             META
+             ================================================= -->
+
+        <div class="meta-strip">
+
+            <div class="meta-cell">
+
+                <span class="meta-label">
+                    Order ID
+                </span>
+
+                <span class="meta-value">
+                    #{{ order.id }}
+                </span>
+
             </div>
-            <div class="right">
-                <strong>Payment Details:</strong><br>
-                Method: {{ order.get_payment_method_display }}<br>
-                Status: ✅ Verified
+
+
+            <div class="meta-cell">
+
+                <span class="meta-label">
+                    Invoice Date
+                </span>
+
+                <span class="meta-value">
+                    {{ date }}
+                </span>
+
             </div>
+
+
+            <div class="meta-cell">
+
+                <span class="meta-label">
+                    Items
+                </span>
+
+                <span class="meta-value">
+                    {{ total_items }}
+                </span>
+
+            </div>
+
+
+            <div class="meta-cell">
+
+                <span class="meta-label">
+                    Payment
+                </span>
+
+                <span class="meta-value">
+                    {{ order.get_payment_method_display }}
+                </span>
+
+            </div>
+
         </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th style="text-align:right;">Price</th>
-                    <th style="text-align:right;">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in items %}
-                <tr>
-                    <td>{{ item.book.title }}<br><small style="color:#999;">{{ item.book.author }}</small></td>
-                    <td>{{ item.quantity }}</td>
-                    <td style="text-align:right;">₹{{ item.price }}</td>
-                    <td style="text-align:right;">₹{{ item.get_total }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            <tfoot>
-                <tr><td colspan="3" style="text-align:right;">Subtotal</td><td style="text-align:right;">₹{{ order.total_amount }}</td></tr>
-                <tr><td colspan="3" style="text-align:right;">Delivery</td><td style="text-align:right;">{% if order.delivery_charges == 0 %}FREE{% else %}₹{{ order.delivery_charges }}{% endif %}</td></tr>
-                <tr><td colspan="3" style="text-align:right;">GST (5%)</td><td style="text-align:right;">₹{{ order.tax }}</td></tr>
-                <tr><td colspan="3" style="text-align:right; font-weight:900;">Grand Total</td><td style="text-align:right; font-weight:900; color:#d4af37;">₹{{ order.grand_total }}</td></tr>
-            </tfoot>
-        </table>
+
+        <!-- =================================================
+             CUSTOMER + PAYMENT
+             ================================================= -->
+
+        <div class="two-column">
+
+            <div class="column">
+
+                <div class="section-label">
+                    Billed To
+                </div>
+
+                <div class="customer-name">
+                    {{ order.full_name }}
+                </div>
+
+                <div class="address">
+
+                    {{ order.address }}<br>
+
+                    {{ order.city }},
+                    {{ order.state }}
+                    - {{ order.pincode }}<br>
+
+                    Phone:
+                    {{ order.phone }}<br>
+
+                    Email:
+                    {{ order.email }}
+
+                    {% if order.landmark %}
+                        <br>
+                        Landmark:
+                        {{ order.landmark }}
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <div class="column">
+
+                <div class="section-label">
+                    Payment Details
+                </div>
+
+                <div class="payment-row">
+
+                    <span class="payment-label">
+                        Method
+                    </span>
+
+                    <span class="payment-value">
+                        {{ order.get_payment_method_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="payment-row">
+
+                    <span class="payment-label">
+                        Status
+                    </span>
+
+                    <span class="verified">
+                        ✓ VERIFIED
+                    </span>
+
+                </div>
+
+
+                {% if order.payment_verified_at %}
+
+                <div class="payment-row">
+
+                    <span class="payment-label">
+                        Verified
+                    </span>
+
+                    <span class="payment-value">
+                        {{ order.payment_verified_at|date:"d M Y, h:i A" }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ITEMS
+             ================================================= -->
+
+        <div class="items-section">
+
+            <div class="items-title-wrap">
+
+                <div class="items-title-left">
+
+                    <h2 class="items-title">
+                        Order Items
+                    </h2>
+
+                </div>
+
+                <div class="items-title-right">
+                    SurendraBookStore Collection
+                </div>
+
+            </div>
+
+
+            <table class="items-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th style="width:48%;">
+                            Book
+                        </th>
+
+                        <th style="width:12%;">
+                            Qty
+                        </th>
+
+                        <th style="width:20%; text-align:right;">
+                            Unit Price
+                        </th>
+
+                        <th style="width:20%; text-align:right;">
+                            Total
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in items %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="book-title">
+                                {{ item.book.title }}
+                            </div>
+
+                            {% if item.book.author %}
+
+                            <div class="book-author">
+                                {{ item.book.author }}
+                            </div>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+
+
+                        <td class="number">
+                            ₹{{ item.price|floatformat:2 }}
+                        </td>
+
+
+                        <td class="number">
+                            ₹{{ item.get_total|floatformat:2 }}
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="4"
+                            style="
+                                text-align:center;
+                                color:#999;
+                                padding:25px;
+                            "
+                        >
+                            No order items found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             TOTAL SUMMARY
+             ================================================= -->
+
+        <div class="summary-wrapper">
+
+            <div class="summary-spacer"></div>
+
+            <div class="summary">
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Subtotal
+                    </span>
+
+                    <span class="summary-value">
+                        ₹{{ order.total_amount|floatformat:2 }}
+                    </span>
+
+                </div>
+
+
+                {% if order.discount and order.discount > 0 %}
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Discount
+                    </span>
+
+                    <span class="summary-value discount">
+                        − ₹{{ order.discount|floatformat:2 }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        Delivery
+                    </span>
+
+                    <span class="summary-value">
+
+                        {% if order.delivery_charges == 0 %}
+
+                            FREE
+
+                        {% else %}
+
+                            ₹{{ order.delivery_charges|floatformat:2 }}
+
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span class="summary-label">
+                        GST
+                    </span>
+
+                    <span class="summary-value">
+                        ₹{{ order.tax|floatformat:2 }}
+                    </span>
+
+                </div>
+
+
+                <div class="summary-row grand-total">
+
+                    <span class="summary-label">
+                        Grand Total
+                    </span>
+
+                    <span class="summary-value">
+                        ₹{{ order.grand_total|floatformat:2 }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PAYMENT VERIFIED
+             ================================================= -->
+
+        <div class="paid-area">
+
+            <span class="paid-seal">
+                ✓ Payment Verified
+            </span>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOTER
+             ================================================= -->
 
         <div class="footer">
-            <p>Thank you for choosing Surendra BookStore!</p>
-            <p>📧 support@surendra.com | 📞 +91 98765 43210</p>
-            <p>© 2026 SurendraBookStore</p>
+
+            <div class="thank-you">
+
+                Thank you for choosing
+
+                <span class="gold">
+                    SurendraBookStore
+                </span>
+
+            </div>
+
+
+            <div class="footer-text">
+
+                Your books. Your journey. Your story.
+
+                <br>
+
+                For support:
+                support@surendra.com
+                &nbsp; • &nbsp;
+                +91 8000411638
+
+                <br>
+
+                © 2026 SurendraBookStore.
+                All rights reserved.
+
+            </div>
+
+
+            <div class="small-note">
+
+                This invoice is generated electronically
+                and is valid without a physical signature.
+
+            </div>
+
         </div>
+
+
     </div>
+
+</div>
+
 </body>
 </html>

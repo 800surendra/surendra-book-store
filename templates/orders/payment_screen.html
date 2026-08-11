@@ -2,70 +2,3411 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="glass-card p-5">
-                <h1 class="gold-title">💳 Payment Details</h1>
-                <p class="text-muted">Complete your payment using the instructions below</p>
 
-                <div class="order-summary mt-4">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="info-box">
-                                <span class="label">Order ID</span>
-                                <span class="value">#{{ order.id }}</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-box">
-                                <span class="label">Amount</span>
-                                <span class="value gold-text">₹{{ grand_total|floatformat:2 }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="border-gold my-4">
-
-                <div class="payment-instructions">
-                    <h4 class="gold-title">{{ instructions.title }}</h4>
-                    <pre class="instruction-text">{{ instructions.details }}</pre>
-
-                    {% if instructions.qr %}
-                    <div class="text-center my-4">
-                        <img src="{{ instructions.qr }}" alt="QR Code" class="qr-code">
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="mt-4 d-flex gap-3">
-                    <a href="{% url 'orders:payment_method' %}" class="btn-gold-outline">
-                        <i class="bi bi-arrow-left"></i> Back
-                    </a>
-                    <a href="{% url 'orders:payment_submit' order.id %}" class="btn-gold flex-grow-1">
-                        I have made payment <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<script>
+    document.body.classList.add('checkout-body');
+</script>
 
 <style>
-.glass-card { background: rgba(20,20,30,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(255,215,0,0.15); border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
-.gold-title { color: #d4af37; font-weight: 900; }
-.text-muted { color: rgba(255,255,255,0.6) !important; }
-.border-gold { border-color: rgba(212,175,55,0.2); }
-.info-box { background: rgba(255,255,255,0.04); padding: 12px 16px; border-radius: 12px; border-left: 3px solid #d4af37; }
-.info-box .label { display: block; font-size: 0.8rem; color: rgba(255,255,255,0.5); }
-.info-box .value { display: block; font-size: 1.2rem; font-weight: 700; color: white; }
-.gold-text { color: #d4af37; }
-.instruction-text { background: rgba(255,255,255,0.04); padding: 16px; border-radius: 12px; color: #ccc; white-space: pre-wrap; font-family: monospace; }
-.qr-code { max-width: 200px; border: 2px solid rgba(255,215,0,0.2); border-radius: 16px; padding: 8px; background: white; }
-.btn-gold { background: linear-gradient(135deg, #d4af37, #f9d976); border: none; color: #1a1a2e; font-weight: 700; padding: 14px 24px; border-radius: 50px; transition: all 0.3s ease; text-decoration: none; text-align: center; }
-.btn-gold:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(212,175,55,0.3); color: #1a1a2e; }
-.btn-gold-outline { background: transparent; border: 2px solid #d4af37; color: #d4af37; font-weight: 600; padding: 12px 24px; border-radius: 50px; transition: all 0.3s ease; text-decoration: none; }
-.btn-gold-outline:hover { background: #d4af37; color: #1a1a2e; }
+/* =========================================================
+   SURENDRA BOOKSTORE
+   ULTRA PRO MAX PAYMENT PAGE
+   Premium Gold / White Theme
+   ========================================================= */
+
+.pay-page {
+    --gold: #b8860b;
+    --gold-l: #d4af37;
+    --gold-xl: #f0d66a;
+    --gold-dark: #8f6810;
+
+    --gold-pale: #fffdf7;
+    --gold-soft: #fff9e8;
+    --gold-border: rgba(184, 134, 11, .20);
+    --gold-glow: rgba(212, 175, 55, .18);
+
+    --ink: #171717;
+    --ink-2: #3a3530;
+    --muted: #737373;
+    --muted-l: #a09890;
+
+    --white: #fff;
+
+    --green: #16a34a;
+    --green-soft: #f0fdf4;
+
+    --surface: rgba(255, 255, 255, .97);
+
+    --radius-xl: 32px;
+    --radius-lg: 22px;
+    --radius-md: 16px;
+
+    --shadow-xl:
+        0 32px 80px rgba(0,0,0,.10),
+        0 8px 24px rgba(0,0,0,.05);
+
+    --shadow-gold:
+        0 16px 40px rgba(184,134,11,.18);
+
+    --shadow-card:
+        0 10px 28px rgba(0,0,0,.06),
+        inset 0 1px 0 rgba(255,255,255,.9);
+
+    --transition: .28s cubic-bezier(.4,0,.2,1);
+
+    min-height: 100vh;
+    padding: 48px 16px 90px;
+
+    background:
+        radial-gradient(
+            ellipse at 5% 5%,
+            rgba(212,175,55,.13) 0%,
+            transparent 28%
+        ),
+        radial-gradient(
+            ellipse at 96% 8%,
+            rgba(184,134,11,.09) 0%,
+            transparent 24%
+        ),
+        radial-gradient(
+            ellipse at 50% 96%,
+            rgba(212,175,55,.07) 0%,
+            transparent 28%
+        ),
+        linear-gradient(
+            160deg,
+            #fffef9 0%,
+            #faf8f0 45%,
+            #f8f8f4 100%
+        );
+}
+
+.pay-shell {
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+/* =========================================================
+   COMMON CARD
+   ========================================================= */
+
+.lux-card {
+    position: relative;
+    overflow: hidden;
+
+    background: var(--surface);
+
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-xl);
+
+    box-shadow: var(--shadow-xl);
+
+    isolation: isolate;
+
+    transition: var(--transition);
+}
+
+.lux-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+    right: 8%;
+
+    height: 3px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            var(--gold),
+            var(--gold-l),
+            var(--gold-xl),
+            var(--gold-l),
+            var(--gold),
+            transparent
+        );
+
+    border-radius: 0 0 8px 8px;
+
+    z-index: 2;
+}
+
+.lux-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 420px;
+    height: 420px;
+
+    right: -210px;
+    top: -210px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(212,175,55,.08) 0%,
+            transparent 68%
+        );
+
+    pointer-events: none;
+
+    z-index: 0;
+}
+
+.card-body {
+    position: relative;
+    z-index: 1;
+
+    padding: clamp(26px, 4.5vw, 56px);
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.page-eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+    gap: 16px;
+
+    margin-bottom: 36px;
+}
+
+.eyebrow-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.eyebrow-icon {
+    width: 56px;
+    height: 56px;
+
+    flex-shrink: 0;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 18px;
+
+    font-size: 24px;
+    color: var(--gold);
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf7,
+            #f5e8c4
+        );
+
+    border: 1px solid rgba(184,134,11,.28);
+
+    box-shadow:
+        6px 8px 18px rgba(0,0,0,.08),
+        -3px -3px 10px rgba(255,255,255,.9),
+        inset 0 1px 3px rgba(255,255,255,.9);
+}
+
+.eyebrow-text h2 {
+    margin: 0 0 4px;
+
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 900;
+
+    letter-spacing: -.04em;
+
+    background:
+        linear-gradient(
+            120deg,
+            #9d7115,
+            #d6a82e,
+            #b98216
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+}
+
+.eyebrow-text p {
+    margin: 0;
+
+    font-size: 13px;
+    color: var(--muted);
+
+    font-weight: 500;
+}
+
+.order-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 11px 18px;
+
+    border-radius: 999px;
+
+    background: var(--gold-soft);
+
+    border: 1px solid var(--gold-border);
+
+    color: var(--gold);
+
+    font-size: 13px;
+    font-weight: 850;
+}
+
+/* =========================================================
+   HERO AMOUNT
+   ========================================================= */
+
+.hero-amount-block {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 42px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 40px;
+
+    padding: 34px;
+
+    border-radius: var(--radius-lg);
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf7,
+            #fff6d9,
+            #fffdf7
+        );
+
+    border: 1px solid rgba(184,134,11,.28);
+
+    box-shadow: var(--shadow-gold);
+}
+
+.hero-amount-block::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            transparent 28%,
+            rgba(255,255,255,.50) 50%,
+            transparent 72%
+        );
+
+    animation: shimmerSweep 4s ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+@keyframes shimmerSweep {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.amount-main {
+    position: relative;
+    z-index: 1;
+
+    text-align: center;
+}
+
+.amount-label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    font-size: 11px;
+    font-weight: 850;
+
+    text-transform: uppercase;
+    letter-spacing: .14em;
+
+    color: var(--muted-l);
+}
+
+.amount-value {
+    font-size: clamp(42px, 6vw, 68px);
+
+    font-weight: 950;
+
+    letter-spacing: -.06em;
+
+    line-height: 1;
+
+    color: var(--gold);
+
+    font-variant-numeric: tabular-nums;
+
+    text-shadow:
+        0 8px 24px rgba(184,134,11,.12);
+}
+
+.amount-divider {
+    width: 1px;
+    height: 68px;
+
+    background:
+        linear-gradient(
+            180deg,
+            transparent,
+            rgba(184,134,11,.30),
+            transparent
+        );
+}
+
+.amount-meta {
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.meta-dot {
+    width: 8px;
+    height: 8px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--gold);
+
+    box-shadow: 0 0 0 4px rgba(184,134,11,.08);
+}
+
+.meta-key {
+    font-size: 11px;
+
+    color: var(--muted-l);
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.meta-val {
+    font-size: 13px;
+
+    font-weight: 850;
+
+    color: var(--ink);
+}
+
+/* =========================================================
+   TRUST METRICS
+   ========================================================= */
+
+.trust-metrics {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 14px;
+}
+
+.tm-box {
+    padding: 17px 14px;
+
+    text-align: center;
+
+    border-radius: var(--radius-md);
+
+    background: #fafaf7;
+
+    border: 1px solid #e9e4da;
+
+    transition: var(--transition);
+
+    box-shadow: var(--shadow-card);
+}
+
+.tm-box:hover {
+    transform: translateY(-5px);
+
+    border-color: var(--gold-border);
+
+    box-shadow:
+        0 16px 36px rgba(0,0,0,.08);
+}
+
+.tm-icon {
+    width: 40px;
+    height: 40px;
+
+    margin: 0 auto 10px;
+
+    border-radius: 12px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 17px;
+
+    color: var(--gold);
+
+    background:
+        linear-gradient(
+            145deg,
+            #fff,
+            #f5e9c4
+        );
+
+    border: 1px solid rgba(184,134,11,.18);
+
+    box-shadow:
+        4px 5px 12px rgba(0,0,0,.06);
+}
+
+.tm-label {
+    display: block;
+
+    font-size: 10px;
+    font-weight: 850;
+
+    color: var(--muted-l);
+
+    text-transform: uppercase;
+    letter-spacing: .08em;
+
+    margin-bottom: 4px;
+}
+
+.tm-value {
+    font-size: 14px;
+
+    font-weight: 900;
+
+    color: var(--ink-2);
+}
+
+/* =========================================================
+   SECTION LABEL
+   ========================================================= */
+
+.s-label-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 28px;
+}
+
+.s-label-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    display: grid;
+    place-items: center;
+
+    font-size: 20px;
+
+    color: var(--gold);
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf7,
+            #f3e5c7
+        );
+
+    border: 1px solid rgba(184,134,11,.20);
+
+    box-shadow:
+        5px 6px 14px rgba(0,0,0,.07),
+        -3px -3px 10px rgba(255,255,255,.9);
+}
+
+.s-label-text h3 {
+    margin: 0 0 4px;
+
+    font-size: 21px;
+    font-weight: 900;
+
+    color: var(--ink);
+}
+
+.s-label-text span {
+    font-size: 12px;
+
+    color: var(--muted);
+
+    font-weight: 500;
+}
+
+/* =========================================================
+   PAYMENT TABS
+   ========================================================= */
+
+.method-tabs {
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 28px;
+
+    padding: 6px;
+
+    background: #f5f3ee;
+
+    border-radius: var(--radius-md);
+
+    border: 1px solid #e8e3d8;
+}
+
+.m-tab {
+    flex: 1;
+
+    min-width: 140px;
+
+    padding: 13px 16px;
+
+    border-radius: 12px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 800;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+}
+
+.m-tab:hover {
+    background: #fff;
+
+    color: var(--gold);
+}
+
+.m-tab.active {
+    background: #fff;
+
+    color: var(--gold);
+
+    box-shadow:
+        0 4px 14px rgba(0,0,0,.08);
+}
+
+.m-tab i {
+    font-size: 16px;
+}
+
+.tab-pane {
+    display: none;
+
+    animation: tabIn .35s ease;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@keyframes tabIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   UPI
+   ========================================================= */
+
+.upi-pane {
+    display: grid;
+
+    grid-template-columns:
+        260px 1fr;
+
+    gap: 42px;
+
+    align-items: start;
+}
+
+.qr-zone {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 17px;
+}
+
+.qr-frame-outer {
+    position: relative;
+
+    width: 230px;
+
+    padding: 18px;
+
+    border-radius: 24px;
+
+    background: #fff;
+
+    border: 1px solid rgba(184,134,11,.25);
+
+    box-shadow: var(--shadow-gold);
+}
+
+.qr-frame-outer::before,
+.qr-frame-outer::after {
+    content: "";
+
+    position: absolute;
+
+    width: 22px;
+    height: 22px;
+
+    border-color: var(--gold);
+
+    border-style: solid;
+}
+
+.qr-frame-outer::before {
+    top: 8px;
+    left: 8px;
+
+    border-width: 2px 0 0 2px;
+
+    border-radius: 4px 0 0 0;
+}
+
+.qr-frame-outer::after {
+    right: 8px;
+    bottom: 8px;
+
+    border-width: 0 2px 2px 0;
+
+    border-radius: 0 0 4px 0;
+}
+
+.qr-image {
+    width: 192px;
+    height: 192px;
+
+    display: block;
+
+    border-radius: 12px;
+
+    background: #fff;
+}
+
+.qr-pulse-ring {
+    position: absolute;
+
+    inset: -8px;
+
+    border-radius: 32px;
+
+    border: 2px solid rgba(184,134,11,.18);
+
+    animation:
+        qrPulse 2.4s ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+@keyframes qrPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: .5;
+    }
+
+    50% {
+        transform: scale(1.04);
+        opacity: 1;
+    }
+}
+
+.scan-label {
+    margin: 0;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: var(--muted);
+
+    text-align: center;
+}
+
+.qr-apps {
+    display: flex;
+
+    gap: 7px;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+}
+
+.qr-app-pill {
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: #fff;
+
+    border: 1px solid #e8e3d8;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    color: var(--ink-2);
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+}
+
+/* =========================================================
+   UPI RIGHT
+   ========================================================= */
+
+.upi-right {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.upi-id-card {
+    padding: 21px 22px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf7,
+            #fff6d9
+        );
+
+    border: 1px solid rgba(184,134,11,.28);
+
+    box-shadow: var(--shadow-card);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+.upi-id-left span {
+    display: block;
+
+    font-size: 10px;
+
+    font-weight: 850;
+
+    text-transform: uppercase;
+
+    letter-spacing: .1em;
+
+    color: var(--muted-l);
+
+    margin-bottom: 5px;
+}
+
+.upi-id-value {
+    font-size: 20px;
+
+    font-weight: 900;
+
+    color: var(--ink);
+
+    word-break: break-all;
+}
+
+.copy-pill {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 11px 18px;
+
+    border-radius: 12px;
+
+    border: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-l),
+            var(--gold)
+        );
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: 850;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(184,134,11,.22);
+
+    transition: var(--transition);
+
+    white-space: nowrap;
+}
+
+.copy-pill:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 24px rgba(184,134,11,.28);
+}
+
+.amount-chip {
+    display: inline-flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    width: fit-content;
+
+    padding: 14px 20px;
+
+    border-radius: 15px;
+
+    background: var(--green-soft);
+
+    border: 1px solid rgba(22,163,74,.18);
+
+    color: #166534;
+
+    font-size: 15px;
+
+    font-weight: 850;
+}
+
+.amount-chip i {
+    font-size: 18px;
+}
+
+.warn-box {
+    padding: 16px 18px;
+
+    border-radius: 16px;
+
+    background: #fffbeb;
+
+    border: 1px solid rgba(161,100,0,.20);
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: flex-start;
+}
+
+.warn-box > i {
+    color: #b45309;
+
+    font-size: 18px;
+
+    flex-shrink: 0;
+
+    margin-top: 1px;
+}
+
+.warn-box strong {
+    display: block;
+
+    color: #7c3f00;
+
+    font-size: 13px;
+
+    font-weight: 850;
+
+    margin-bottom: 4px;
+}
+
+.warn-box span {
+    color: #92400e;
+
+    font-size: 12px;
+
+    line-height: 1.6;
+
+    font-weight: 600;
+}
+
+/* =========================================================
+   NET BANKING
+   ========================================================= */
+
+.netbank-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 14px;
+}
+
+.bank-card {
+    padding: 22px 18px;
+
+    border-radius: 18px;
+
+    background: #fafaf7;
+
+    border: 1px solid #e8e3d8;
+
+    text-align: center;
+
+    transition: var(--transition);
+
+    box-shadow: var(--shadow-card);
+}
+
+.bank-card:hover {
+    transform: translateY(-4px);
+
+    border-color: var(--gold-border);
+
+    box-shadow:
+        0 16px 36px rgba(0,0,0,.08);
+}
+
+.bank-logo {
+    width: 54px;
+    height: 54px;
+
+    margin: 0 auto 12px;
+
+    border-radius: 14px;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 20px;
+
+    font-weight: 900;
+
+    color: #fff;
+
+    box-shadow:
+        0 8px 18px rgba(0,0,0,.10);
+}
+
+.bank-name {
+    font-size: 13px;
+
+    font-weight: 850;
+
+    color: var(--ink-2);
+
+    margin-bottom: 4px;
+}
+
+.bank-type {
+    font-size: 10px;
+
+    font-weight: 750;
+
+    color: var(--muted-l);
+
+    text-transform: uppercase;
+
+    letter-spacing: .08em;
+}
+
+/* =========================================================
+   BANK TRANSFER
+   ========================================================= */
+
+.bank-transfer-table {
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    border: 1px solid #e8e3d8;
+}
+
+.bt-row {
+    display: grid;
+
+    grid-template-columns:
+        180px 1fr 38px;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding: 17px 22px;
+
+    background: #fff;
+
+    border-bottom: 1px solid #f0ebe0;
+
+    transition: var(--transition);
+}
+
+.bt-row:last-child {
+    border-bottom: 0;
+}
+
+.bt-row:hover {
+    background: var(--gold-pale);
+}
+
+.bt-key {
+    font-size: 11px;
+
+    font-weight: 850;
+
+    text-transform: uppercase;
+
+    letter-spacing: .09em;
+
+    color: var(--muted-l);
+}
+
+.bt-val {
+    font-size: 15px;
+
+    font-weight: 850;
+
+    color: var(--ink);
+
+    word-break: break-word;
+}
+
+.bt-copy {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    border: 1px solid #e0d8cc;
+
+    background: #fff;
+
+    color: var(--gold);
+
+    display: grid;
+
+    place-items: center;
+
+    cursor: pointer;
+
+    transition: var(--transition);
+
+    font-size: 14px;
+}
+
+.bt-copy:hover {
+    background: var(--gold);
+
+    color: #fff;
+
+    transform: scale(1.06);
+}
+
+/* =========================================================
+   COD
+   ========================================================= */
+
+.cod-pane {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.cod-hero {
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+    padding: 28px;
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f0fdf4,
+            #dcfce7
+        );
+
+    border: 1px solid rgba(22,163,74,.22);
+}
+
+.cod-icon {
+    width: 72px;
+    height: 72px;
+
+    flex-shrink: 0;
+
+    border-radius: 20px;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 32px;
+
+    color: var(--green);
+
+    background: #fff;
+
+    border: 1px solid rgba(22,163,74,.18);
+
+    box-shadow:
+        0 12px 28px rgba(22,163,74,.12);
+}
+
+.cod-title {
+    font-size: 22px;
+
+    font-weight: 900;
+
+    color: #14532d;
+
+    margin-bottom: 5px;
+}
+
+.cod-sub {
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #166534;
+
+    font-weight: 600;
+
+    line-height: 1.6;
+}
+
+.cod-rules {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 12px;
+}
+
+.cod-rule {
+    padding: 17px;
+
+    border-radius: 14px;
+
+    background: #fafaf7;
+
+    border: 1px solid #e8e3d8;
+
+    display: flex;
+
+    gap: 12px;
+
+    align-items: flex-start;
+}
+
+.cod-rule i {
+    color: var(--gold);
+
+    font-size: 17px;
+
+    flex-shrink: 0;
+
+    margin-top: 1px;
+}
+
+.cod-rule strong {
+    display: block;
+
+    font-size: 12px;
+
+    color: var(--ink-2);
+
+    font-weight: 850;
+
+    margin-bottom: 3px;
+}
+
+.cod-rule span {
+    font-size: 11px;
+
+    color: var(--muted);
+
+    line-height: 1.5;
+}
+
+/* =========================================================
+   SECTION 3
+   ========================================================= */
+
+.section3-grid {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 32px;
+}
+
+.step-guide {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.guide-step {
+    display: flex;
+
+    gap: 18px;
+
+    position: relative;
+
+    padding-bottom: 27px;
+}
+
+.guide-step:last-child {
+    padding-bottom: 0;
+}
+
+.guide-step:not(:last-child)::after {
+    content: "";
+
+    position: absolute;
+
+    left: 21px;
+
+    top: 44px;
+
+    bottom: 0;
+
+    width: 2px;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--gold),
+            rgba(184,134,11,.10)
+        );
+}
+
+.guide-num {
+    flex-shrink: 0;
+
+    width: 44px;
+    height: 44px;
+
+    border-radius: 50%;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 16px;
+
+    font-weight: 950;
+
+    color: #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--gold-l),
+            var(--gold)
+        );
+
+    border: 3px solid #fff;
+
+    box-shadow:
+        0 8px 20px rgba(184,134,11,.25),
+        0 0 0 2px rgba(184,134,11,.15);
+
+    position: relative;
+
+    z-index: 2;
+}
+
+.guide-content {
+    padding-top: 7px;
+}
+
+.guide-title {
+    font-size: 15px;
+
+    font-weight: 900;
+
+    color: var(--ink);
+
+    margin-bottom: 5px;
+}
+
+.guide-desc {
+    font-size: 13px;
+
+    color: var(--muted);
+
+    font-weight: 600;
+
+    line-height: 1.65;
+}
+
+/* =========================================================
+   SECURITY
+   ========================================================= */
+
+.security-panel {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+.sec-hero {
+    padding: 25px;
+
+    border-radius: 20px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #fffdf7,
+            #fff8e2
+        );
+
+    border: 1px solid rgba(184,134,11,.25);
+
+    text-align: center;
+
+    box-shadow: var(--shadow-card);
+}
+
+.sec-shield {
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 14px;
+
+    border-radius: 50%;
+
+    display: grid;
+
+    place-items: center;
+
+    font-size: 28px;
+
+    color: var(--gold);
+
+    background: #fff;
+
+    border: 1px solid rgba(184,134,11,.20);
+
+    box-shadow:
+        0 10px 24px rgba(184,134,11,.14);
+
+    position: relative;
+}
+
+.sec-shield::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -6px;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(184,134,11,.15);
+
+    animation:
+        secPulse 2.6s ease-in-out infinite;
+}
+
+@keyframes secPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: .5;
+    }
+
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+.sec-title {
+    font-size: 17px;
+
+    font-weight: 900;
+
+    color: var(--ink);
+
+    margin-bottom: 6px;
+}
+
+.sec-sub {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: var(--muted);
+
+    line-height: 1.6;
+}
+
+.sec-badges {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 10px;
+}
+
+.sec-badge {
+    padding: 13px 14px;
+
+    border-radius: 14px;
+
+    background: #fafaf7;
+
+    border: 1px solid #e9e4da;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    box-shadow: var(--shadow-card);
+}
+
+.sec-badge i {
+    font-size: 18px;
+
+    color: var(--gold);
+
+    flex-shrink: 0;
+}
+
+.sec-badge strong {
+    display: block;
+
+    font-size: 11px;
+
+    color: var(--ink-2);
+
+    font-weight: 850;
+}
+
+.sec-badge span {
+    font-size: 10px;
+
+    color: var(--muted-l);
+
+    font-weight: 600;
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.lux-divider {
+    height: 1px;
+
+    margin: 32px 0 28px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #e0d9cc,
+            rgba(212,175,55,.35),
+            #e0d9cc,
+            transparent
+        );
+}
+
+/* =========================================================
+   CTA
+   ========================================================= */
+
+.action-zone {
+    display: grid;
+
+    grid-template-columns:
+        1fr 2fr;
+
+    gap: 14px;
+
+    margin-top: 8px;
+}
+
+.lux-btn {
+    position: relative;
+
+    height: 62px;
+
+    border-radius: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 0 20px;
+
+    font-size: 14px;
+
+    font-weight: 900;
+
+    letter-spacing: .01em;
+
+    text-decoration: none;
+
+    border: 0;
+
+    transition: var(--transition);
+
+    cursor: pointer;
+
+    overflow: hidden;
+}
+
+.lux-btn:hover {
+    transform: translateY(-3px);
+}
+
+.btn-back {
+    background: #fff;
+
+    border: 1px solid #ddd6c8;
+
+    color: #555;
+}
+
+.btn-back:hover {
+    color: var(--gold);
+
+    border-color:
+        rgba(184,134,11,.35);
+
+    box-shadow:
+        0 12px 28px rgba(0,0,0,.07);
+}
+
+.btn-pay {
+    background:
+        linear-gradient(
+            135deg,
+            #e0ba45,
+            #d4af37,
+            #a07c18
+        );
+
+    color: #fff;
+
+    box-shadow:
+        0 14px 32px rgba(184,134,11,.26),
+        inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+.btn-pay:hover {
+    color: #fff;
+
+    box-shadow:
+        0 20px 42px rgba(184,134,11,.34),
+        inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+.btn-pay::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            110deg,
+            transparent 30%,
+            rgba(255,255,255,.22) 50%,
+            transparent 70%
+        );
+
+    animation:
+        btnShimmer 3s ease-in-out infinite;
+
+    pointer-events: none;
+}
+
+.btn-pay > * {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes btnShimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* =========================================================
+   MICRO TRUST
+   ========================================================= */
+
+.trust-micro {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 20px;
+
+    margin-top: 22px;
+}
+
+.trust-micro-item {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    color: var(--muted-l);
+}
+
+.trust-micro-item i {
+    color: var(--gold);
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .upi-pane {
+        grid-template-columns: 1fr;
+    }
+
+    .qr-zone {
+        width: 100%;
+    }
+
+    .netbank-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .section3-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-zone {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .pay-page {
+        padding: 22px 12px 55px;
+    }
+
+    .card-body {
+        padding: 26px 18px;
+    }
+
+    .page-eyebrow {
+        align-items: flex-start;
+    }
+
+    .trust-metrics {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .hero-amount-block {
+        flex-direction: column;
+
+        gap: 22px;
+
+        padding: 26px 18px;
+    }
+
+    .amount-divider {
+        width: 80%;
+
+        height: 1px;
+    }
+
+    .netbank-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .cod-rules {
+        grid-template-columns: 1fr;
+    }
+
+    .sec-badges {
+        grid-template-columns: 1fr;
+    }
+
+    .upi-id-card {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .copy-pill {
+        width: 100%;
+    }
+
+    .bt-row {
+        grid-template-columns:
+            105px 1fr 36px;
+
+        gap: 10px;
+
+        padding: 15px 13px;
+    }
+
+    .bt-key {
+        font-size: 9px;
+    }
+
+    .bt-val {
+        font-size: 13px;
+    }
+
+    .cod-hero {
+        align-items: flex-start;
+    }
+
+    .cod-icon {
+        width: 58px;
+        height: 58px;
+
+        font-size: 25px;
+    }
+
+    .cod-title {
+        font-size: 19px;
+    }
+
+    .lux-btn {
+        height: 58px;
+
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .eyebrow-left {
+        align-items: flex-start;
+    }
+
+    .eyebrow-icon {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 15px;
+    }
+
+    .trust-metrics {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .tm-value {
+        font-size: 12px;
+    }
+
+    .method-tabs {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .m-tab {
+        min-width: 0;
+
+        font-size: 10px;
+
+        padding: 10px 7px;
+    }
+
+    .m-tab i {
+        font-size: 14px;
+    }
+
+    .qr-frame-outer {
+        width: 205px;
+    }
+
+    .qr-image {
+        width: 169px;
+        height: 169px;
+    }
+
+    .action-zone {
+        gap: 10px;
+    }
+
+    .trust-micro {
+        gap: 10px 16px;
+    }
+}
 </style>
+
+
+<div class="pay-page">
+
+<div class="pay-shell">
+
+<!-- =========================================================
+     SECTION 1
+     ========================================================= -->
+
+<div class="lux-card">
+
+<div class="card-body">
+
+    <div class="page-eyebrow">
+
+        <div class="eyebrow-left">
+
+            <div class="eyebrow-icon">
+                <i class="bi bi-credit-card-2-front-fill"></i>
+            </div>
+
+            <div class="eyebrow-text">
+
+                <h2>Secure Checkout</h2>
+
+                <p>
+                    Review your order and complete payment safely.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="order-badge">
+            <i class="bi bi-receipt-cutoff"></i>
+            Order #{{ order.id }}
+        </div>
+
+    </div>
+
+
+    <!-- TOTAL -->
+
+    <div class="hero-amount-block">
+
+        <div class="amount-main">
+
+            <span class="amount-label">
+                Total Amount Payable
+            </span>
+
+            <div class="amount-value">
+                ₹{{ order.grand_total|floatformat:2 }}
+            </div>
+
+        </div>
+
+
+        <div class="amount-divider"></div>
+
+
+        <div class="amount-meta">
+
+            <div class="meta-item">
+
+                <span class="meta-dot"></span>
+
+                <span class="meta-key">
+                    Subtotal
+                </span>
+
+                <span class="meta-val">
+                    ₹{{ order.total_amount|floatformat:2 }}
+                </span>
+
+            </div>
+
+
+            <div class="meta-item">
+
+                <span
+                    class="meta-dot"
+                    style="background:var(--green);"
+                ></span>
+
+                <span class="meta-key">
+                    Delivery
+                </span>
+
+                <span class="meta-val">
+
+                    {% if order.delivery_charges == 0 %}
+                        FREE
+                    {% else %}
+                        ₹{{ order.delivery_charges|floatformat:2 }}
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            {% if order.discount > 0 %}
+
+            <div class="meta-item">
+
+                <span
+                    class="meta-dot"
+                    style="background:#16a34a;"
+                ></span>
+
+                <span class="meta-key">
+                    Discount
+                </span>
+
+                <span
+                    class="meta-val"
+                    style="color:#16a34a;"
+                >
+                    -₹{{ order.discount|floatformat:2 }}
+                </span>
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="meta-item">
+
+                <span
+                    class="meta-dot"
+                    style="background:#a0522d;"
+                ></span>
+
+                <span class="meta-key">
+                    GST
+                </span>
+
+                <span class="meta-val">
+                    ₹{{ order.tax|floatformat:2 }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- TRUST -->
+
+    <div class="trust-metrics">
+
+        <div class="tm-box">
+
+            <div class="tm-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+
+            <span class="tm-label">
+                Security
+            </span>
+
+            <span class="tm-value">
+                256-bit SSL
+            </span>
+
+        </div>
+
+
+        <div class="tm-box">
+
+            <div class="tm-icon">
+                <i class="bi bi-patch-check-fill"></i>
+            </div>
+
+            <span class="tm-label">
+                Verified
+            </span>
+
+            <span class="tm-value">
+                Admin Review
+            </span>
+
+        </div>
+
+
+        <div class="tm-box">
+
+            <div class="tm-icon">
+                <i class="bi bi-arrow-repeat"></i>
+            </div>
+
+            <span class="tm-label">
+                Refund
+            </span>
+
+            <span class="tm-value">
+                Easy Process
+            </span>
+
+        </div>
+
+
+        <div class="tm-box">
+
+            <div class="tm-icon">
+                <i class="bi bi-headset"></i>
+            </div>
+
+            <span class="tm-label">
+                Support
+            </span>
+
+            <span class="tm-value">
+                24/7 Help
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     SECTION 2
+     ========================================================= -->
+
+<div class="lux-card">
+
+<div class="card-body">
+
+    <div class="s-label-row">
+
+        <div class="s-label-icon">
+            <i class="bi bi-wallet2"></i>
+        </div>
+
+        <div class="s-label-text">
+
+            <h3>
+                Payment Method
+            </h3>
+
+            <span>
+                Choose your preferred way to pay.
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT TABS -->
+
+    <div
+        class="method-tabs"
+        role="tablist"
+    >
+
+        <button
+            class="m-tab active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            onclick="switchTab('upi', this)"
+        >
+            <i class="bi bi-qr-code-scan"></i>
+            UPI / QR
+        </button>
+
+
+        <button
+            class="m-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            onclick="switchTab('netbank', this)"
+        >
+            <i class="bi bi-bank2"></i>
+            Net Banking
+        </button>
+
+
+        <button
+            class="m-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            onclick="switchTab('transfer', this)"
+        >
+            <i class="bi bi-arrow-left-right"></i>
+            Bank Transfer
+        </button>
+
+
+        <button
+            class="m-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            onclick="switchTab('cod', this)"
+        >
+            <i class="bi bi-cash-coin"></i>
+            Cash on Delivery
+        </button>
+
+    </div>
+
+
+    <!-- =====================================================
+         UPI
+         ===================================================== -->
+
+    <div
+        class="tab-pane active"
+        id="tab-upi"
+    >
+
+        <div class="upi-pane">
+
+            <div class="qr-zone">
+
+                <div class="qr-frame-outer">
+
+                    <div class="qr-pulse-ring"></div>
+
+                    <img
+                        id="upiQr"
+                        class="qr-image"
+                        src=""
+                        alt="UPI QR Code"
+                        loading="lazy"
+                    >
+
+                </div>
+
+
+                <p class="scan-label">
+
+                    <i class="bi bi-qr-code-scan me-1"></i>
+
+                    Scan with any UPI app
+
+                </p>
+
+
+                <div class="qr-apps">
+
+                    <span class="qr-app-pill">
+                        <i class="bi bi-phone"></i>
+                        GPay
+                    </span>
+
+                    <span class="qr-app-pill">
+                        <i class="bi bi-phone"></i>
+                        PhonePe
+                    </span>
+
+                    <span class="qr-app-pill">
+                        <i class="bi bi-phone"></i>
+                        Paytm
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="upi-right">
+
+                <div class="upi-id-card">
+
+                    <div class="upi-id-left">
+
+                        <span>
+                            Official UPI ID
+                        </span>
+
+                        <div
+                            class="upi-id-value"
+                            id="upiIdText"
+                        >
+                            {{ upi_id|default:'8000411638@airtel' }}
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="copy-pill"
+                        type="button"
+                        onclick="copyText('upiIdText', this)"
+                    >
+                        <i class="bi bi-clipboard"></i>
+                        Copy
+                    </button>
+
+                </div>
+
+
+                <div class="amount-chip">
+
+                    <i class="bi bi-lock-fill"></i>
+
+                    Pay exact amount:
+
+                    <strong>
+                        ₹{{ order.grand_total|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+
+                <div class="warn-box">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                    <div>
+
+                        <strong>
+                            Important — Do not change the amount
+                        </strong>
+
+                        <span>
+                            Pay the exact amount shown above.
+                            Any mismatch may delay verification.
+                            After payment, save your UTR / Transaction ID.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         NET BANKING
+         ===================================================== -->
+
+    <div
+        class="tab-pane"
+        id="tab-netbank"
+    >
+
+        <div class="netbank-grid">
+
+            {% for bank in banks %}
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:{{ bank.color }};"
+                >
+                    {{ bank.short }}
+                </div>
+
+                <div class="bank-name">
+                    {{ bank.name }}
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:#1a3f7a;"
+                >
+                    SBI
+                </div>
+
+                <div class="bank-name">
+                    State Bank of India
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:#d71920;"
+                >
+                    HDFC
+                </div>
+
+                <div class="bank-name">
+                    HDFC Bank
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:#f37b20;"
+                >
+                    ICICI
+                </div>
+
+                <div class="bank-name">
+                    ICICI Bank
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:#3f51b5;"
+                >
+                    AXIS
+                </div>
+
+                <div class="bank-name">
+                    Axis Bank
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:#008c44;"
+                >
+                    PNB
+                </div>
+
+                <div class="bank-name">
+                    Punjab National Bank
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+
+            <div class="bank-card">
+
+                <div
+                    class="bank-logo"
+                    style="background:#6b2fa0;"
+                >
+                    KTK
+                </div>
+
+                <div class="bank-name">
+                    Kotak Mahindra Bank
+                </div>
+
+                <div class="bank-type">
+                    Net Banking
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <div class="warn-box mt-3">
+
+            <i class="bi bi-info-circle-fill"></i>
+
+            <div>
+
+                <strong>
+                    How to pay via Net Banking
+                </strong>
+
+                <span>
+                    Transfer ₹{{ order.grand_total|floatformat:2 }}
+                    to our bank account using your bank's
+                    net banking portal. Then submit your
+                    transaction proof.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BANK TRANSFER
+         ===================================================== -->
+
+    <div
+        class="tab-pane"
+        id="tab-transfer"
+    >
+
+        <div class="bank-transfer-table">
+
+            <div class="bt-row">
+
+                <span class="bt-key">
+                    Account Name
+                </span>
+
+                <span
+                    class="bt-val"
+                    id="bt-name"
+                >
+                    Surendra Book Store
+                </span>
+
+                <button
+                    class="bt-copy"
+                    type="button"
+                    onclick="copyText('bt-name', this)"
+                >
+                    <i class="bi bi-clipboard"></i>
+                </button>
+
+            </div>
+
+
+            <div class="bt-row">
+
+                <span class="bt-key">
+                    Account Number
+                </span>
+
+                <span
+                    class="bt-val"
+                    id="bt-acc"
+                >
+                    {{ bank_account|default:'8000411638' }}
+                </span>
+
+                <button
+                    class="bt-copy"
+                    type="button"
+                    onclick="copyText('bt-acc', this)"
+                >
+                    <i class="bi bi-clipboard"></i>
+                </button>
+
+            </div>
+
+
+            <div class="bt-row">
+
+                <span class="bt-key">
+                    IFSC Code
+                </span>
+
+                <span
+                    class="bt-val"
+                    id="bt-ifsc"
+                >
+                    {{ bank_ifsc|default:'AIRP0000001' }}
+                </span>
+
+                <button
+                    class="bt-copy"
+                    type="button"
+                    onclick="copyText('bt-ifsc', this)"
+                >
+                    <i class="bi bi-clipboard"></i>
+                </button>
+
+            </div>
+
+
+            <div class="bt-row">
+
+                <span class="bt-key">
+                    Bank Name
+                </span>
+
+                <span
+                    class="bt-val"
+                    id="bt-bank"
+                >
+                    {{ bank_name|default:'Airtel Payments Bank' }}
+                </span>
+
+                <button
+                    class="bt-copy"
+                    type="button"
+                    onclick="copyText('bt-bank', this)"
+                >
+                    <i class="bi bi-clipboard"></i>
+                </button>
+
+            </div>
+
+
+            <div class="bt-row">
+
+                <span class="bt-key">
+                    Amount
+                </span>
+
+                <span
+                    class="bt-val"
+                    id="bt-amt"
+                    style="color:var(--gold);font-size:18px;"
+                >
+                    ₹{{ order.grand_total|floatformat:2 }}
+                </span>
+
+                <button
+                    class="bt-copy"
+                    type="button"
+                    onclick="copyText('bt-amt', this)"
+                >
+                    <i class="bi bi-clipboard"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         COD
+         ===================================================== -->
+
+    <div
+        class="tab-pane"
+        id="tab-cod"
+    >
+
+        <div class="cod-pane">
+
+            <div class="cod-hero">
+
+                <div class="cod-icon">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+
+                <div>
+
+                    <div class="cod-title">
+                        Cash on Delivery
+                    </div>
+
+                    <p class="cod-sub">
+                        Pay ₹{{ order.grand_total|floatformat:2 }}
+                        in cash when your order arrives.
+                        No advance payment required.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="cod-rules">
+
+                <div class="cod-rule">
+
+                    <i class="bi bi-cash-coin"></i>
+
+                    <div>
+
+                        <strong>
+                            Keep Exact Change
+                        </strong>
+
+                        <span>
+                            Please keep the exact amount
+                            ready to avoid inconvenience.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="cod-rule">
+
+                    <i class="bi bi-box-seam"></i>
+
+                    <div>
+
+                        <strong>
+                            Check Before Paying
+                        </strong>
+
+                        <span>
+                            Verify your order contents
+                            before making payment.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="cod-rule">
+
+                    <i class="bi bi-receipt"></i>
+
+                    <div>
+
+                        <strong>
+                            Get a Receipt
+                        </strong>
+
+                        <span>
+                            Always collect your delivery
+                            receipt as proof of payment.
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="cod-rule">
+
+                    <i class="bi bi-geo-alt"></i>
+
+                    <div>
+
+                        <strong>
+                            Be Available
+                        </strong>
+
+                        <span>
+                            Ensure someone is available
+                            at the delivery address.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     SECTION 3
+     ========================================================= -->
+
+<div class="lux-card">
+
+<div class="card-body">
+
+    <div class="section3-grid">
+
+        <!-- STEPS -->
+
+        <div>
+
+            <div
+                class="s-label-row"
+                style="margin-bottom:24px;"
+            >
+
+                <div class="s-label-icon">
+                    <i class="bi bi-list-ol"></i>
+                </div>
+
+                <div class="s-label-text">
+
+                    <h3>
+                        How to Complete Payment
+                    </h3>
+
+                    <span>
+                        Follow these simple steps.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="step-guide">
+
+                <div class="guide-step">
+
+                    <div class="guide-num">
+                        1
+                    </div>
+
+                    <div class="guide-content">
+
+                        <div class="guide-title">
+                            Choose Payment Method
+                        </div>
+
+                        <div class="guide-desc">
+                            Select UPI, Net Banking,
+                            Bank Transfer or Cash on Delivery.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="guide-step">
+
+                    <div class="guide-num">
+                        2
+                    </div>
+
+                    <div class="guide-content">
+
+                        <div class="guide-title">
+                            Make the Payment
+                        </div>
+
+                        <div class="guide-desc">
+                            Scan the QR or copy the UPI ID
+                            and pay the
+                            <strong>exact amount</strong>
+                            ₹{{ order.grand_total|floatformat:2 }}.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="guide-step">
+
+                    <div class="guide-num">
+                        3
+                    </div>
+
+                    <div class="guide-content">
+
+                        <div class="guide-title">
+                            Save Your UTR / Screenshot
+                        </div>
+
+                        <div class="guide-desc">
+                            Note down your UTR / Transaction ID
+                            and save your payment screenshot.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="guide-step">
+
+                    <div class="guide-num">
+                        4
+                    </div>
+
+                    <div class="guide-content">
+
+                        <div class="guide-title">
+                            Submit Payment Proof
+                        </div>
+
+                        <div class="guide-desc">
+                            Click "I've Made the Payment"
+                            and upload your proof for verification.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="guide-step">
+
+                    <div class="guide-num">
+                        5
+                    </div>
+
+                    <div class="guide-content">
+
+                        <div class="guide-title">
+                            Order Confirmed
+                        </div>
+
+                        <div class="guide-desc">
+                            After verification your order will
+                            be confirmed and prepared for dispatch.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SECURITY -->
+
+        <div class="security-panel">
+
+            <div class="sec-hero">
+
+                <div class="sec-shield">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+
+                <div class="sec-title">
+                    Your Payment is Protected
+                </div>
+
+                <div class="sec-sub">
+                    Your payment information is handled securely
+                    and manually verified before order confirmation.
+                </div>
+
+            </div>
+
+
+            <div class="sec-badges">
+
+                <div class="sec-badge">
+
+                    <i class="bi bi-lock-fill"></i>
+
+                    <div>
+
+                        <strong>
+                            SSL Encrypted
+                        </strong>
+
+                        <span>
+                            Secure connection
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sec-badge">
+
+                    <i class="bi bi-person-check-fill"></i>
+
+                    <div>
+
+                        <strong>
+                            Manual Verify
+                        </strong>
+
+                        <span>
+                            Admin reviewed
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sec-badge">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    <div>
+
+                        <strong>
+                            Easy Refund
+                        </strong>
+
+                        <span>
+                            Simple process
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="sec-badge">
+
+                    <i class="bi bi-headset"></i>
+
+                    <div>
+
+                        <strong>
+                            Support
+                        </strong>
+
+                        <span>
+                            We're here to help
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="lux-divider"></div>
+
+
+    <!-- CTA -->
+
+    <div class="action-zone">
+
+        <a
+            href="{% url 'orders:payment_method' %}"
+            class="lux-btn btn-back"
+        >
+            <i class="bi bi-arrow-left"></i>
+
+            Change Method
+        </a>
+
+
+        <a
+            href="{% url 'orders:payment_submit' order.id %}"
+            class="lux-btn btn-pay"
+        >
+
+            <i class="bi bi-shield-check"></i>
+
+            <span>
+                I've Made the Payment — Submit Proof
+            </span>
+
+            <i class="bi bi-arrow-right"></i>
+
+        </a>
+
+    </div>
+
+
+    <div class="trust-micro">
+
+        <span class="trust-micro-item">
+            <i class="bi bi-lock-fill"></i>
+            Secure Transaction
+        </span>
+
+        <span class="trust-micro-item">
+            <i class="bi bi-patch-check-fill"></i>
+            Verified by Admin
+        </span>
+
+        <span class="trust-micro-item">
+            <i class="bi bi-envelope-check-fill"></i>
+            Invoice on Email
+        </span>
+
+        <span class="trust-micro-item">
+            <i class="bi bi-box-seam-fill"></i>
+            Fast Dispatch
+        </span>
+
+        <span class="trust-micro-item">
+            <i class="bi bi-headset"></i>
+            Support
+        </span>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+/* =========================================================
+   UPI QR GENERATOR
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const upiElement =
+        document.getElementById("upiIdText");
+
+    const qrElement =
+        document.getElementById("upiQr");
+
+    if (!upiElement || !qrElement) {
+        return;
+    }
+
+    const upiId =
+        upiElement.innerText.trim();
+
+    const amount =
+        "{{ order.grand_total|floatformat:2 }}";
+
+    const orderId =
+        "{{ order.id }}";
+
+    const upiUrl =
+        "upi://pay" +
+        "?pa=" + upiId +
+        "&pn=Surendra%20BookStore" +
+        "&am=" + amount +
+        "&cu=INR" +
+        "&tn=Order%20" + orderId;
+
+    qrElement.src =
+        "https://api.qrserver.com/v1/create-qr-code/" +
+        "?size=220x220" +
+        "&data=" +
+        encodeURIComponent(upiUrl);
+
+});
+
+
+/* =========================================================
+   TAB SWITCHER
+   ========================================================= */
+
+function switchTab(name, btn) {
+
+    document
+        .querySelectorAll(".tab-pane")
+        .forEach(function (pane) {
+
+            pane.classList.remove("active");
+
+        });
+
+
+    document
+        .querySelectorAll(".m-tab")
+        .forEach(function (button) {
+
+            button.classList.remove("active");
+
+            button.setAttribute(
+                "aria-selected",
+                "false"
+            );
+
+        });
+
+
+    const pane =
+        document.getElementById("tab-" + name);
+
+    if (pane) {
+
+        pane.classList.add("active");
+
+    }
+
+
+    if (btn) {
+
+        btn.classList.add("active");
+
+        btn.setAttribute(
+            "aria-selected",
+            "true"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   COPY TO CLIPBOARD
+   ========================================================= */
+
+function copyText(elId, btn) {
+
+    const el =
+        document.getElementById(elId);
+
+    if (!el || !btn) {
+        return;
+    }
+
+
+    const text =
+        el.innerText.trim();
+
+
+    function copied() {
+
+        const original =
+            btn.innerHTML;
+
+        btn.dataset.original =
+            original;
+
+        btn.innerHTML =
+            '<i class="bi bi-check2"></i> Copied!';
+
+        btn.style.background =
+            "#16a34a";
+
+        btn.style.color =
+            "#fff";
+
+
+        setTimeout(function () {
+
+            btn.innerHTML =
+                btn.dataset.original;
+
+            btn.style.background =
+                "";
+
+            btn.style.color =
+                "";
+
+        }, 2200);
+
+    }
+
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        navigator.clipboard
+            .writeText(text)
+            .then(copied)
+            .catch(function () {
+
+                fallbackCopy(text, copied);
+
+            });
+
+    } else {
+
+        fallbackCopy(text, copied);
+
+    }
+
+}
+
+
+/* =========================================================
+   CLIPBOARD FALLBACK
+   ========================================================= */
+
+function fallbackCopy(text, callback) {
+
+    const textarea =
+        document.createElement("textarea");
+
+    textarea.value = text;
+
+    textarea.style.position =
+        "fixed";
+
+    textarea.style.opacity =
+        "0";
+
+    document.body.appendChild(
+        textarea
+    );
+
+    textarea.focus();
+
+    textarea.select();
+
+    try {
+
+        document.execCommand("copy");
+
+        callback();
+
+    } catch (error) {
+
+        console.error(
+            "Copy failed:",
+            error
+        );
+
+    }
+
+    document.body.removeChild(
+        textarea
+    );
+
+}
+</script>
+
 {% endblock %}

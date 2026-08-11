@@ -125,7 +125,7 @@
         }
 
         /* =========================================================
-           NAVBAR
+           NAVBAR — ULTRA PRO MAX
         ========================================================= */
 
         .navbar-ultra {
@@ -1375,7 +1375,7 @@
         }
 
         /* =========================================================
-           MOBILE
+           MOBILE — NAVBAR IMPROVEMENTS
         ========================================================= */
 
         @media (max-width: 991px) {
@@ -1383,52 +1383,102 @@
             .navbar-ultra .navbar-collapse {
                 margin-top: 15px;
 
-                padding: 15px;
+                padding: 20px 18px;
 
                 background:
                     rgba(13, 16, 32, 0.98);
 
                 border:
-                    1px solid rgba(255, 255, 255, 0.07);
+                    1px solid rgba(255, 255, 255, 0.08);
 
-                border-radius: 18px;
+                border-radius: 20px;
 
                 box-shadow:
-                    0 20px 50px rgba(0, 0, 0, 0.35);
+                    0 25px 60px rgba(0, 0, 0, 0.5);
+
+                backdrop-filter: blur(12px);
             }
 
             .navbar-ultra .navbar-nav {
-                padding: 5px 0;
+                padding: 0;
+                margin-bottom: 12px;
             }
 
             .navbar-ultra .nav-link {
-                margin: 2px 0;
+                padding: 12px 16px !important;
+                margin: 3px 0;
+                border-radius: 12px;
+                font-size: 1rem;
+                display: flex;
+                align-items: center;
             }
 
             .navbar-ultra .nav-link::after {
                 display: none;
             }
 
-            .hero-section h1 {
-                font-size: 2.8rem;
+            .navbar-ultra .nav-link:hover,
+            .navbar-ultra .nav-link.active {
+                background: rgba(124, 92, 255, 0.12);
+                color: white !important;
             }
 
-            .hero-stats {
-                gap: 25px;
+            /* Mobile search */
+            .navbar-ultra .search-bar {
+                width: 100%;
+                min-width: unset;
+                margin-bottom: 8px;
             }
 
+            .navbar-ultra .d-flex.align-items-center.gap-2.gap-lg-3 {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+
+            .navbar-ultra .d-flex.align-items-center.gap-2.gap-lg-3 form {
+                width: 100%;
+            }
+
+            .navbar-ultra .d-flex.align-items-center.gap-2.gap-lg-3 .btn-login,
+            .navbar-ultra .d-flex.align-items-center.gap-2.gap-lg-3 .btn-signup {
+                width: 100%;
+                text-align: center;
+            }
+
+            /* Cart & user on mobile */
+            .navbar-ultra .cart-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 10px;
+            }
+
+            .user-dropdown {
+                width: 100%;
+            }
+
+            .user-dropdown .dropdown-toggle {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .user-dropdown .dropdown-menu {
+                width: 100%;
+                min-width: unset;
+            }
+
+            /* Toggler */
             .navbar-toggler {
                 background:
                     rgba(255, 255, 255, 0.06);
-
-                border-radius: 10px !important;
-
-                padding: 7px 10px;
+                border-radius: 12px !important;
+                padding: 8px 12px;
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
 
             .navbar-toggler:focus {
                 box-shadow:
-                    0 0 0 3px rgba(124, 92, 255, 0.15);
+                    0 0 0 3px rgba(124, 92, 255, 0.2);
             }
 
             .navbar-toggler-icon {
@@ -1526,7 +1576,7 @@
 <body>
 
     <!-- =========================================================
-         NAVBAR
+         NAVBAR — ULTRA PRO MAX
     ========================================================= -->
 
     <nav class="navbar navbar-expand-lg navbar-ultra fixed-top" id="mainNav">
@@ -1539,11 +1589,14 @@
                 SurendraStore
             </a>
 
-            <!-- Mobile -->
+            <!-- Toggler (Mobile) -->
             <button class="navbar-toggler border-0"
                 type="button"
                 data-bs-toggle="collapse"
-                data-bs-target="#navbarContent">
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
 
                 <span class="navbar-toggler-icon"></span>
 
@@ -1552,7 +1605,7 @@
             <!-- Navbar Content -->
             <div class="collapse navbar-collapse" id="navbarContent">
 
-                <!-- Links -->
+                <!-- Nav Links -->
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
 
                     <li class="nav-item">
@@ -1607,7 +1660,7 @@
 
                 </ul>
 
-                <!-- Right -->
+                <!-- Right Side (Search, Cart, User) -->
                 <div class="d-flex align-items-center gap-2 gap-lg-3 flex-wrap flex-lg-nowrap">
 
                     <!-- Search -->
@@ -1646,7 +1699,7 @@
 
                     </a>
 
-                    <!-- User -->
+                    <!-- User Dropdown / Auth -->
                     {% if user.is_authenticated %}
 
                     <div class="dropdown user-dropdown">

@@ -3,38 +3,74 @@ from django.urls import path
 from . import views
 
 
-app_name = 'cart'
+app_name = "cart"
 
 
 urlpatterns = [
 
+    # =====================================================
+    # CART
+    # =====================================================
+
     path(
-        '',
+        "",
         views.view_cart,
-        name='view'
+        name="view",
     ),
 
+    # =====================================================
+    # ADD TO CART
+    # =====================================================
+
     path(
-        'add/<int:book_id>/',
+        "add/<int:book_id>/",
         views.add_to_cart,
-        name='add'
+        name="add",
     ),
 
+    # =====================================================
+    # UPDATE CART
+    # =====================================================
+
     path(
-        'update/<int:item_id>/',
+        "update/<int:item_id>/",
         views.update_cart,
-        name='update'
+        name="update",
     ),
 
+    # =====================================================
+    # REMOVE ITEM
+    # =====================================================
+
     path(
-        'remove/<int:item_id>/',
+        "remove/<int:item_id>/",
         views.remove_from_cart,
-        name='remove'
+        name="remove",
+    ),
+
+    # =====================================================
+    # COUPON
+    # =====================================================
+
+    path(
+        "coupon/apply/",
+        views.apply_coupon,
+        name="apply_coupon",
     ),
 
     path(
-        'count/',
+        "coupon/remove/",
+        views.remove_coupon,
+        name="remove_coupon",
+    ),
+
+    # =====================================================
+    # CART COUNT
+    # =====================================================
+
+    path(
+        "count/",
         views.cart_count,
-        name='count'
+        name="count",
     ),
 ]

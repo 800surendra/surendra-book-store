@@ -100,15 +100,22 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
-# Email Configuration (Order Confirmation)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+# ============================================================
+# EMAIL CONFIGURATION - GMAIL SMTP
+# ============================================================
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = '8000haresh@gmail.com'  # <-- Apna Gmail daalo
-EMAIL_HOST_PASSWORD = 'zgwt bmwd kgwb rrwn'  # <-- App Password paste karo
-DEFAULT_FROM_EMAIL = '8000haresh@gmail.com'
 
+EMAIL_HOST_USER = "8000haresh@gmail.com"
+
+# Gmail App Password - spaces ke saath bhi normally accepted hai
+EMAIL_HOST_PASSWORD = "zgwt bmwd kgwb rrwn"
+
+DEFAULT_FROM_EMAIL = "8000haresh@gmail.com"
 # Authentication
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'core:home'
