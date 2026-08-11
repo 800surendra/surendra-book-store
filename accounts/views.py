@@ -223,37 +223,152 @@ def resend_otp(request):
     return redirect('accounts:verify_otp')
 
 # ===== RESET PASSWORD =====
+# ===== RESET PASSWORD =====
 def reset_password(request):
-    email = request.session.get('reset_email')
-    if not email:
-        messages.error(request, 'Session expired. Please try again.')
-        return redirect('accounts:forgot_password')
-    
-    if request.method == 'POST':
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        
-        if password != confirm_password:
-            messages.error(request, 'Passwords do not match.')
-            return render(request, 'accounts/reset_password.html')
-        
-        if len(password) < 6:
-            messages.error(request, 'Password must be at least 6 characters.')
-            return render(request, 'accounts/reset_password.html')
-        
-        user = User.objects.filter(email=email).first()
-        if user:
-            user.set_password(password)
-            user.save()
-            request.session.pop('reset_email', None)
-            messages.success(request, 'Password reset successfully! Please login.')
-            return redirect('accounts:login')
-        else:
-            messages.error(request, 'User not found.')
-            return redirect('accounts:forgot_password')
-    
-    return render(request, 'accounts/reset_password.html')
+    email = request.session.get("reset_email")
 
+    # OTP verification ke bina reset page open nahi hona chahiye
+    if not email:
+        messages.error(
+            request,
+            "Password reset session expired. Please request a new OTP."
+        )
+        return redirect("accounts:forgot_password")
+
+    if request.method == "POST":
+
+        # =====================================================
+        # IMPORTANT:
+        # Template mein name="new_password" hai
+        # =====================================================
+
+        new_password = (
+            request.POST.get("new_password") or ""
+        ).strip()
+
+        confirm_password = (
+            request.POST.get("confirm_password") or ""
+        ).strip()
+
+        # -----------------------------------------------------
+        # Empty password check
+        # -----------------------------------------------------
+
+        if not new_password:
+            messages.error(
+                request,
+                "Please enter a new password."
+            )
+
+            return render(
+                request,
+                "accounts/reset_password.html"
+            )
+
+        # -----------------------------------------------------
+        # Password match
+        # -----------------------------------------------------
+
+        if new_password != confirm_password:
+            messages.error(
+                request,
+                "Passwords do not match."
+            )
+
+            return render(
+                request,
+                "accounts/reset_password.html"
+            )
+
+        # -----------------------------------------------------
+        # Minimum password length
+        # -----------------------------------------------------
+
+        if len(new_password) < 8:
+            messages.error(
+                request,
+                "Password must be at least 8 characters."
+            )
+
+            return render(
+                request,
+                "accounts/reset_password.html"
+            )
+
+        # -----------------------------------------------------
+        # Find user
+        # -----------------------------------------------------
+
+        user = User.objects.filter(
+            email=email
+        ).first()
+
+        if not user:
+            request.session.pop("reset_email", None)
+
+            messages.error(
+                request,
+                "User account was not found. Please try again."
+            )
+
+            return redirect(
+                "accounts:forgot_password"
+            )
+
+        # -----------------------------------------------------
+        # Set NEW password
+        # -----------------------------------------------------
+
+        user.set_password(new_password)
+        user.save(update_fields=["password"])
+
+        # -----------------------------------------------------
+        # Reset-password session clear
+        # -----------------------------------------------------
+
+        request.session.pop(
+            "reset_email",
+            None
+        )
+
+        request.session.pop(
+            "otp_email",
+            None
+        )
+
+        request.session.pop(
+            "otp_type",
+            None
+        )
+
+        request.session.pop(
+            "otp_user_id",
+            None
+        )
+
+        request.session.modified = True
+
+        # -----------------------------------------------------
+        # Success
+        # -----------------------------------------------------
+
+        messages.success(
+            request,
+            "Password reset successfully! Please login with your new password."
+        )
+
+        return redirect(
+            "accounts:login"
+        )
+
+    # =========================================================
+    # GET
+    # =========================================================
+
+    return render(
+        request,
+        "accounts/reset_password.html"
+    )
 # ===== PROFILE =====
 @login_required
 def my_profile(request):
