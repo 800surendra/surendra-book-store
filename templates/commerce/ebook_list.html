@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}E-Books · SurendraBookStore{% endblock %}
+{% block content %}
+<main class="container py-5">
+  <div class="mb-4"><h1>E-Books</h1><p class="text-muted">Secure digital editions from SurendraBookStore.</p></div>
+  <form method="get" class="mb-4"><input class="form-control" name="q" value="{{ query }}" placeholder="Search e-books by title or author"></form>
+  <div class="row g-4">{% for ebook in ebooks %}<div class="col-md-4"><article class="card h-100 p-3"><h3>{{ ebook.title }}</h3><p>{{ ebook.author }}</p><p>{{ ebook.description|truncatechars:120 }}</p><strong>₹{{ ebook.final_price }}</strong>{% if user.is_authenticated %}<form method="post" action="{% url 'commerce:buy_ebook' ebook.id %}" class="mt-3">{% csrf_token %}<button class="btn btn-primary">Buy securely</button></form>{% else %}<a class="btn btn-primary mt-3" href="{% url 'accounts:login' %}">Sign in to buy</a>{% endif %}</article></div>{% empty %}<p>No e-books are available yet.</p>{% endfor %}</div>
+</main>
+{% endblock %}

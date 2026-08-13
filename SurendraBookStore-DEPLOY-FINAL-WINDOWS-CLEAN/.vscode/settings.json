@@ -1,0 +1,5 @@
+{
+    "css.lint.validProperties": ["background-clip", "-webkit-background-clip", "-webkit-text-fill-color"],
+    "css.lint.unknownProperties": "ignore",
+    "css.validate": false
+}

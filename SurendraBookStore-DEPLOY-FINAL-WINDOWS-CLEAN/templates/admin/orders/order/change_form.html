@@ -1,0 +1,17 @@
+{% extends "admin/change_form.html" %}
+
+{% block object-tools %}
+{{ block.super }}
+{% if original.payment_status == 'pending' and original.payment_method == 'bank' %}
+<div class="module" style="margin: 10px 0; padding: 15px; background: #fff8e1; border: 1px solid #ffc107; border-radius: 4px;">
+    <h4 style="margin: 0 0 10px 0;">⚠️ Payment Pending Verification</h4>
+    <p><strong>UTR/Remarks:</strong> {{ original.notes|default:"Not submitted yet" }}</p>
+    {% if original.screenshot %}
+    <p><strong>Screenshot:</strong> <a href="{{ original.screenshot.url }}" target="_blank">View</a></p>
+    {% endif %}
+    <a href="{% url 'admin:verify_order' original.id %}" class="button" style="background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; display: inline-block;">
+        ✅ Verify Payment & Send Confirmation
+    </a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,1159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<script>document.body.classList.add('checkout-body');</script>
+
+<style>
+/* =========================================================
+   SURENDRA BOOKSTORE — ULTRA LUXURY ORDER STATUS
+   Light Premium 3D Gold Theme
+   ========================================================= */
+
+.status-page {
+    --gold:        #b8860b;
+    --gold-light:  #d4af37;
+    --gold-soft:   #f7efd2;
+    --gold-pale:   #fffaf0;
+    --ink:         #171717;
+    --muted:       #737373;
+    --white:       #ffffff;
+    --green:       #14532d;
+    --green-soft:  #f0fdf4;
+    --green-mid:   #16a34a;
+    --danger:      #991b1b;
+    --danger-soft: #fff1f2;
+    --review:      #92400e;
+    --review-soft: #fffbeb;
+
+    min-height: 100vh;
+    padding: 50px 16px 80px;
+    background:
+        radial-gradient(circle at 8%  8%,  rgba(212,175,55,.13), transparent 26%),
+        radial-gradient(circle at 92% 12%, rgba(184,134,11,.09), transparent 24%),
+        radial-gradient(circle at 50% 90%, rgba(212,175,55,.06), transparent 30%),
+        linear-gradient(180deg, #fffdf8 0%, #f8f8f4 55%, #ffffff 100%);
+}
+
+.status-shell {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.status-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(255,255,255,.97);
+    border: 1px solid rgba(184,134,11,.18);
+    border-radius: 32px;
+    padding: clamp(28px,5vw,58px);
+    box-shadow:
+        0 30px 80px rgba(0,0,0,.10),
+        0 8px 24px rgba(0,0,0,.05),
+        inset 0 1px 0 rgba(255,255,255,.95);
+    isolation: isolate;
+}
+
+/* gold shimmer top */
+.status-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 8%; right: 8%;
+    height: 4px;
+    border-radius: 0 0 8px 8px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        var(--gold-light),
+        var(--gold),
+        transparent
+    );
+}
+
+/* decorative glow orb */
+.status-card::after {
+    content: "";
+    position: absolute;
+    width: 320px; height: 320px;
+    right: -160px; top: -160px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(212,175,55,.10),
+        transparent 68%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* =========================================================
+   STEP PROGRESS BAR
+   ========================================================= */
+
+.step-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 44px;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    flex: 1;
+    max-width: 130px;
+}
+
+.step-circle {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    border: 2px solid #e5e5e5;
+    background: #fafafa;
+    color: #bbb;
+    position: relative;
+    z-index: 2;
+    transition: .3s ease;
+}
+
+.step-circle.done {
+    background: linear-gradient(145deg, var(--gold-light), var(--gold));
+    border-color: rgba(184,134,11,.4);
+    color: #fff;
+    box-shadow:
+        0 8px 20px rgba(184,134,11,.28),
+        inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.step-circle.active {
+    background: linear-gradient(145deg, #fffdf6, #fff7d6);
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow:
+        0 0 0 5px rgba(212,175,55,.12),
+        0 8px 20px rgba(184,134,11,.14);
+    animation: stepPulse 2s ease-in-out infinite;
+}
+
+.step-circle.danger {
+    background: linear-gradient(145deg, #fff1f2, #fecdd3);
+    border-color: rgba(153,27,27,.35);
+    color: var(--danger);
+}
+
+@keyframes stepPulse {
+    0%,100% { box-shadow: 0 0 0 5px rgba(212,175,55,.12), 0 8px 20px rgba(184,134,11,.14); }
+    50%      { box-shadow: 0 0 0 9px rgba(212,175,55,.08), 0 8px 20px rgba(184,134,11,.20); }
+}
+
+.step-label {
+    font-size: 10px;
+    font-weight: 750;
+    color: #bbb;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    white-space: nowrap;
+}
+
+.step-label.done   { color: var(--gold);     }
+.step-label.active { color: var(--gold);     }
+.step-label.danger { color: var(--danger);   }
+
+/* connector line */
+.step-connector {
+    flex: 1;
+    height: 2px;
+    margin-bottom: 26px;
+    background: #e5e5e5;
+    max-width: 80px;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-connector.done {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+}
+
+.step-connector.done::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.6),
+        transparent
+    );
+    animation: shimmerLine 1.8s ease infinite;
+}
+
+@keyframes shimmerLine {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%);  }
+}
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
+
+.status-hero {
+    text-align: center;
+    max-width: 780px;
+    margin: 0 auto 46px;
+}
+
+/* icon wrap */
+.status-icon-wrap {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 28px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-icon-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(212,175,55,.30);
+    box-shadow:
+        0 0 0 10px rgba(212,175,55,.05),
+        0 14px 40px rgba(212,175,55,.12);
+    animation: ringPulse 2.6s ease-in-out infinite;
+}
+
+.status-icon-ring.green-ring {
+    border-color: rgba(22,163,74,.30);
+    box-shadow:
+        0 0 0 10px rgba(22,163,74,.05),
+        0 14px 40px rgba(22,163,74,.12);
+}
+
+.status-icon-ring.danger-ring {
+    border-color: rgba(153,27,27,.25);
+    box-shadow:
+        0 0 0 10px rgba(153,27,27,.04),
+        0 14px 40px rgba(153,27,27,.10);
+}
+
+@keyframes ringPulse {
+    0%,100% { transform: scale(1);    opacity: .75; }
+    50%      { transform: scale(1.07); opacity: 1;   }
+}
+
+.status-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 38px;
+    position: relative;
+    z-index: 2;
+}
+
+.status-icon.gold-icon {
+    background: linear-gradient(145deg, #fffdf5, #fff7d6);
+    border: 1px solid rgba(212,175,55,.35);
+    color: var(--gold);
+    box-shadow:
+        inset 0 2px 8px rgba(255,255,255,.9),
+        0 14px 32px rgba(212,175,55,.18);
+}
+
+.status-icon.green-icon {
+    background: linear-gradient(145deg, #f0fdf4, #dcfce7);
+    border: 1px solid rgba(22,163,74,.25);
+    color: var(--green-mid);
+    box-shadow:
+        inset 0 2px 8px rgba(255,255,255,.9),
+        0 14px 32px rgba(22,163,74,.15);
+}
+
+.status-icon.danger-icon {
+    background: linear-gradient(145deg, #fff1f2, #fecdd3);
+    border: 1px solid rgba(153,27,27,.20);
+    color: var(--danger);
+    box-shadow:
+        inset 0 2px 8px rgba(255,255,255,.9),
+        0 14px 32px rgba(153,27,27,.12);
+}
+
+/* eyebrow pill */
+.status-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    border: 1px solid;
+}
+
+.status-eyebrow.gold-pill {
+    background: #fffdf0;
+    border-color: rgba(212,175,55,.35);
+    color: var(--gold);
+}
+
+.status-eyebrow.green-pill {
+    background: var(--green-soft);
+    border-color: rgba(22,163,74,.25);
+    color: var(--green-mid);
+}
+
+.status-eyebrow.danger-pill {
+    background: var(--danger-soft);
+    border-color: rgba(153,27,27,.20);
+    color: var(--danger);
+}
+
+.status-eyebrow.review-pill {
+    background: var(--review-soft);
+    border-color: rgba(146,64,14,.22);
+    color: var(--review);
+}
+
+/* title */
+.status-title {
+    margin: 0 0 16px;
+    font-size: clamp(30px, 4.5vw, 50px);
+    font-weight: 900;
+    letter-spacing: -.04em;
+    line-height: 1.08;
+    color: var(--ink);
+}
+
+.status-title .gold-text {
+    background: linear-gradient(120deg, #9d7115, #d6a82e, #b98216);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.status-title .green-text { color: var(--green-mid); }
+.status-title .danger-text { color: var(--danger);   }
+
+/* subtitle */
+.status-subtitle {
+    max-width: 680px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.78;
+    font-weight: 500;
+}
+
+/* =========================================================
+   NOTICE BOX  (email / warning / rejection)
+   ========================================================= */
+
+.notice-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 17px;
+    text-align: left;
+    margin-top: 30px;
+    padding: 22px 24px;
+    border-radius: 20px;
+    border: 1px solid;
+    box-shadow: 0 10px 28px rgba(0,0,0,.04);
+}
+
+.notice-box.gold-notice {
+    background: linear-gradient(135deg, #fffdf6, #fff9e7);
+    border-color: rgba(212,175,55,.30);
+}
+
+.notice-box.danger-notice {
+    background: linear-gradient(135deg, #fff8f8, #fff1f2);
+    border-color: rgba(153,27,27,.18);
+}
+
+.notice-icon {
+    flex: 0 0 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.10);
+}
+
+.notice-icon.gold-ni {
+    background: linear-gradient(145deg, var(--gold-light), var(--gold));
+    color: #fff;
+    box-shadow: 0 8px 18px rgba(184,134,11,.25);
+}
+
+.notice-icon.danger-ni {
+    background: linear-gradient(145deg, #fecdd3, #fca5a5);
+    color: var(--danger);
+}
+
+.notice-title {
+    display: block;
+    font-size: 15px;
+    font-weight: 850;
+    color: var(--ink);
+    margin-bottom: 5px;
+}
+
+.notice-text {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.notice-email-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 9px;
+    padding: 7px 13px;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid rgba(184,134,11,.22);
+    color: #8a6411;
+    font-size: 13px;
+    font-weight: 750;
+    word-break: break-word;
+}
+
+/* rejection reason */
+.rejection-reason {
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: rgba(153,27,27,.06);
+    border: 1px solid rgba(153,27,27,.14);
+    color: var(--danger);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.rejection-reason i {
+    margin-top: 1px;
+    flex-shrink: 0;
+}
+
+/* verified strip */
+.verified-strip {
+    margin-top: 22px;
+    padding: 16px 20px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    background: var(--green-soft);
+    border: 1px solid rgba(22,163,74,.18);
+    color: #166534;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.verified-strip i { font-size: 20px; }
+
+/* =========================================================
+   ORDER INFO SECTION
+   ========================================================= */
+
+.order-section {
+    margin-top: 46px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.section-heading-icon {
+    width: 44px; height: 44px;
+    flex: 0 0 44px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    background: linear-gradient(145deg, #fffdf7, #f3e5c7);
+    border: 1px solid rgba(184,134,11,.18);
+    color: var(--gold);
+    font-size: 19px;
+    box-shadow:
+        5px 6px 14px rgba(0,0,0,.07),
+        -3px -3px 10px rgba(255,255,255,.9),
+        inset 0 1px 2px rgba(255,255,255,.9);
+}
+
+.section-heading h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--ink);
+}
+
+/* grid */
+.order-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* info box */
+.info-box {
+    position: relative;
+    padding: 20px 22px;
+    border-radius: 20px;
+    background: linear-gradient(145deg, #fff, #fafaf7);
+    border: 1px solid #e8e3d8;
+    box-shadow:
+        0 10px 26px rgba(0,0,0,.06),
+        inset 0 1px 0 rgba(255,255,255,.9);
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.info-box:hover {
+    transform: translateY(-4px);
+    border-color: rgba(184,134,11,.30);
+    box-shadow:
+        0 18px 38px rgba(0,0,0,.09),
+        inset 0 1px 0 rgba(255,255,255,.9);
+}
+
+.info-box::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 16px; bottom: 16px;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+}
+
+.info-label {
+    display: block;
+    color: #8a8680;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    margin-bottom: 8px;
+}
+
+.info-value {
+    color: var(--ink);
+    font-size: 19px;
+    font-weight: 850;
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+.info-value.gold-val  { color: var(--gold);      font-size: 24px; }
+.info-value.green-val { color: var(--green-mid);  }
+.info-value.danger-val{ color: var(--danger);     }
+.info-value.review-val{ color: var(--review);     }
+
+/* status badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    border: 1px solid transparent;
+}
+
+.status-badge.badge-verified {
+    background: var(--green-soft);
+    color: var(--green-mid);
+    border-color: rgba(22,163,74,.20);
+}
+
+.status-badge.badge-review {
+    background: var(--review-soft);
+    color: var(--review);
+    border-color: rgba(146,64,14,.18);
+}
+
+.status-badge.badge-rejected {
+    background: var(--danger-soft);
+    color: var(--danger);
+    border-color: rgba(153,27,27,.18);
+}
+
+.status-badge.badge-pending {
+    background: #f8f8f8;
+    color: #555;
+    border-color: #e0e0e0;
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.luxury-divider {
+    height: 1px;
+    margin: 40px 0 32px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #ddd9ce,
+        rgba(212,175,55,.40),
+        #ddd9ce,
+        transparent
+    );
+}
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.status-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.lux-btn {
+    min-height: 56px;
+    padding: 0 28px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 850;
+    letter-spacing: .02em;
+    text-decoration: none;
+    border: 0;
+    transition: transform .22s ease, box-shadow .22s ease;
+}
+
+.lux-btn:hover { transform: translateY(-3px); }
+
+.lux-btn-outline {
+    background: #fff;
+    border: 1px solid #ddd6c8;
+    color: #555;
+}
+
+.lux-btn-outline:hover {
+    color: var(--gold);
+    border-color: rgba(184,134,11,.35);
+    box-shadow: 0 12px 28px rgba(0,0,0,.07);
+}
+
+.lux-btn-primary {
+    background: linear-gradient(135deg, #d4af37, #a07c18);
+    color: #fff;
+    box-shadow:
+        0 12px 28px rgba(184,134,11,.24),
+        inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+.lux-btn-primary:hover {
+    color: #fff;
+    box-shadow:
+        0 18px 36px rgba(184,134,11,.32),
+        inset 0 1px 0 rgba(255,255,255,.30);
+}
+
+.lux-btn-danger {
+    background: linear-gradient(135deg, #ef4444, #991b1b);
+    color: #fff;
+    box-shadow:
+        0 12px 28px rgba(153,27,27,.22),
+        inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+.lux-btn-danger:hover {
+    color: #fff;
+    box-shadow:
+        0 18px 36px rgba(153,27,27,.30),
+        inset 0 1px 0 rgba(255,255,255,.25);
+}
+
+/* =========================================================
+   TRUST STRIP
+   ========================================================= */
+
+.trust-strip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 32px;
+    padding-top: 26px;
+    border-top: 1px solid #ede8de;
+}
+
+.trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #a09990;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.trust-item i {
+    color: var(--gold);
+    font-size: 15px;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+    .status-page    { padding: 24px 12px 55px; }
+    .status-card    { padding: 30px 18px; border-radius: 24px; }
+    .status-title   { font-size: 30px; }
+    .status-subtitle{ font-size: 14px; }
+    .order-info-grid{ grid-template-columns: 1fr; gap: 12px; }
+    .status-actions { flex-direction: column; }
+    .lux-btn        { width: 100%; }
+    .step-label     { font-size: 9px; }
+    .step-connector { max-width: 40px; }
+    .trust-strip    { gap: 14px; }
+}
+
+@media (max-width: 420px) {
+    .status-card { padding: 26px 14px; }
+    .notice-box  { flex-direction: column; gap: 13px; }
+    .notice-icon { width: 44px; height: 44px; font-size: 19px; }
+}
+</style>
+
+
+<div class="status-page">
+<div class="status-shell">
+<div class="status-card">
+
+
+    <!-- =================================================
+         STEP PROGRESS BAR
+         ================================================= -->
+
+    <div class="step-bar">
+
+        <div class="step-item">
+            <div class="step-circle done">
+                <i class="bi bi-cart-check-fill"></i>
+            </div>
+            <span class="step-label done">Order</span>
+        </div>
+
+        <div class="step-connector done"></div>
+
+        <div class="step-item">
+            <div class="step-circle done">
+                <i class="bi bi-credit-card-fill"></i>
+            </div>
+            <span class="step-label done">Payment</span>
+        </div>
+
+        <div class="step-connector done"></div>
+
+        <div class="step-item">
+            {% if order.payment_status == "verified" %}
+                <div class="step-circle done">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <span class="step-label done">Verified</span>
+            {% elif order.payment_status == "rejected" %}
+                <div class="step-circle danger">
+                    <i class="bi bi-x-circle-fill"></i>
+                </div>
+                <span class="step-label danger">Rejected</span>
+            {% else %}
+                <div class="step-circle active">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <span class="step-label active">Review</span>
+            {% endif %}
+        </div>
+
+        <div class="step-connector {% if order.payment_status == 'verified' %}done{% endif %}">
+        </div>
+
+        <div class="step-item">
+            {% if order.payment_status == "verified" %}
+                <div class="step-circle active">
+                    <i class="bi bi-box-seam-fill"></i>
+                </div>
+                <span class="step-label active">Processing</span>
+            {% else %}
+                <div class="step-circle">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <span class="step-label">Processing</span>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         STATUS HERO
+         ================================================= -->
+
+    <div class="status-hero">
+
+        {% if order.payment_status == "verified" %}
+
+            <div class="status-icon-wrap">
+                <div class="status-icon-ring green-ring"></div>
+                <div class="status-icon green-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+            </div>
+
+            <div class="status-eyebrow green-pill">
+                <i class="bi bi-shield-check-fill"></i>
+                Payment Confirmed
+            </div>
+
+            <h1 class="status-title">
+                Your Order is <span class="green-text">Confirmed!</span>
+            </h1>
+
+            <p class="status-subtitle">
+                Your payment has been successfully verified.
+                Your order is now being prepared with care and
+                will be dispatched shortly.
+            </p>
+
+            <div class="notice-box gold-notice">
+                <div class="notice-icon gold-ni">
+                    <i class="bi bi-envelope-check-fill"></i>
+                </div>
+                <div>
+                    <span class="notice-title">
+                        Invoice sent to your email
+                    </span>
+                    <span class="notice-text">
+                        Your order confirmation and detailed invoice
+                        have been dispatched to your registered email address.
+                    </span>
+                    <span class="notice-email-pill">
+                        <i class="bi bi-envelope"></i>
+                        {% if order.user and order.user.email %}
+                            {{ order.user.email }}
+                        {% else %}
+                            {{ order.email }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <div class="verified-strip">
+                <i class="bi bi-shield-check"></i>
+                <span>
+                    Payment verified successfully.
+                    Please keep Order <strong>#{{ order.id }}</strong>
+                    for future reference.
+                </span>
+            </div>
+
+
+        {% elif order.payment_status == "under_review" %}
+
+            <div class="status-icon-wrap">
+                <div class="status-icon-ring"></div>
+                <div class="status-icon gold-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+            </div>
+
+            <div class="status-eyebrow review-pill">
+                <i class="bi bi-clock-history"></i>
+                Under Review
+            </div>
+
+            <h1 class="status-title">
+                Payment <span class="gold-text">Under Review</span>
+            </h1>
+
+            <p class="status-subtitle">
+                We have received your payment proof successfully.
+                Our verification team is reviewing your transaction.
+                This usually takes a short while.
+            </p>
+
+            <div class="notice-box gold-notice">
+                <div class="notice-icon gold-ni">
+                    <i class="bi bi-envelope-paper-fill"></i>
+                </div>
+                <div>
+                    <span class="notice-title">
+                        Invoice will be emailed after verification
+                    </span>
+                    <span class="notice-text">
+                        Once your payment is confirmed, your order
+                        invoice will be sent to your email address.
+                    </span>
+                    <span class="notice-email-pill">
+                        <i class="bi bi-envelope"></i>
+                        {% if order.user and order.user.email %}
+                            {{ order.user.email }}
+                        {% else %}
+                            {{ order.email }}
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+
+        {% elif order.payment_status == "rejected" %}
+
+            <div class="status-icon-wrap">
+                <div class="status-icon-ring danger-ring"></div>
+                <div class="status-icon danger-icon">
+                    <i class="bi bi-x-circle-fill"></i>
+                </div>
+            </div>
+
+            <div class="status-eyebrow danger-pill">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                Payment Rejected
+            </div>
+
+            <h1 class="status-title">
+                Payment <span class="danger-text">Rejected</span>
+            </h1>
+
+            <p class="status-subtitle">
+                We could not verify the payment proof submitted
+                for this order. Please review the details below
+                and resubmit with correct transaction information.
+            </p>
+
+            <div class="notice-box danger-notice">
+                <div class="notice-icon danger-ni">
+                    <i class="bi bi-headset"></i>
+                </div>
+                <div>
+                    <span class="notice-title">
+                        Action required — resubmit or contact support
+                    </span>
+                    <span class="notice-text">
+                        You can resubmit your payment proof with the
+                        correct UTR / transaction details. If you believe
+                        this is an error, please contact our support team
+                        with your Order ID.
+                    </span>
+
+                    {% if order.admin_notes %}
+                        <div class="rejection-reason">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span>
+                                Rejection reason:
+                                <strong>{{ order.admin_notes }}</strong>
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+        {% else %}
+
+            <div class="status-icon-wrap">
+                <div class="status-icon-ring"></div>
+                <div class="status-icon gold-icon">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+            </div>
+
+            <div class="status-eyebrow gold-pill">
+                <i class="bi bi-clock"></i>
+                Processing
+            </div>
+
+            <h1 class="status-title">
+                Order <span class="gold-text">Being Processed</span>
+            </h1>
+
+            <p class="status-subtitle">
+                Your order is currently being processed.
+                Please check back shortly for a status update.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =================================================
+         ORDER INFORMATION
+         ================================================= -->
+
+    <div class="order-section">
+
+        <div class="section-heading">
+            <div class="section-heading-icon">
+                <i class="bi bi-receipt-cutoff"></i>
+            </div>
+            <h3>Order Information</h3>
+        </div>
+
+        <div class="order-info-grid">
+
+            <div class="info-box">
+                <span class="info-label">Order ID</span>
+                <span class="info-value">#{{ order.id }}</span>
+            </div>
+
+            <div class="info-box">
+                <span class="info-label">Total Amount</span>
+                <span class="info-value gold-val">
+                    ₹{{ order.grand_total|floatformat:2 }}
+                </span>
+            </div>
+
+            <div class="info-box">
+                <span class="info-label">Payment Method</span>
+                <span class="info-value">
+                    <i class="bi bi-credit-card-2-front me-1"
+                       style="color:var(--gold);font-size:16px;"></i>
+                    {{ order.get_payment_method_display }}
+                </span>
+            </div>
+
+            <div class="info-box">
+                <span class="info-label">Payment Status</span>
+                <span class="info-value">
+
+                    {% if order.payment_status == "verified" %}
+                        <span class="status-badge badge-verified">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Verified
+                        </span>
+
+                    {% elif order.payment_status == "under_review" %}
+                        <span class="status-badge badge-review">
+                            <i class="bi bi-hourglass-split"></i>
+                            Under Review
+                        </span>
+
+                    {% elif order.payment_status == "rejected" %}
+                        <span class="status-badge badge-rejected">
+                            <i class="bi bi-x-circle-fill"></i>
+                            Rejected
+                        </span>
+
+                    {% else %}
+                        <span class="status-badge badge-pending">
+                            <i class="bi bi-clock"></i>
+                            {{ order.get_payment_status_display }}
+                        </span>
+                    {% endif %}
+
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DIVIDER -->
+    <div class="luxury-divider"></div>
+
+
+    <!-- =================================================
+         ACTION BUTTONS
+         ================================================= -->
+
+    <div class="status-actions">
+
+        {% if order.payment_status == "rejected" %}
+
+            <a href="{% url 'orders:payment_submit' order.id %}"
+               class="lux-btn lux-btn-danger">
+                <i class="bi bi-arrow-repeat"></i>
+                Resubmit Payment Proof
+            </a>
+
+        {% endif %}
+
+        <a href="{% url 'core:home' %}" class="lux-btn lux-btn-outline">
+            <i class="bi bi-house-door"></i>
+            Back to Home
+        </a>
+
+        <a href="{% url 'orders:my_orders' %}" class="lux-btn lux-btn-primary">
+            <i class="bi bi-bag-check"></i>
+            My Orders
+        </a>
+
+    </div>
+
+
+    <!-- =================================================
+         TRUST STRIP
+         ================================================= -->
+
+    <div class="trust-strip">
+
+        <span class="trust-item">
+            <i class="bi bi-shield-check"></i>
+            Secure Order
+        </span>
+
+        <span class="trust-item">
+            <i class="bi bi-envelope-check"></i>
+            Email Invoice
+        </span>
+
+        <span class="trust-item">
+            <i class="bi bi-receipt"></i>
+            Order Tracking
+        </span>
+
+        <span class="trust-item">
+            <i class="bi bi-headset"></i>
+            24/7 Support
+        </span>
+
+    </div>
+
+
+</div>
+</div>
+</div>
+
+{% endblock %}

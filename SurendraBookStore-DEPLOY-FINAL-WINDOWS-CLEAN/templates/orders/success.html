@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="card p-5 mx-auto" style="max-width: 650px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">
+        <i class="bi bi-check-circle-fill text-success display-1"></i>
+        <h2 class="mt-3">🎉 Order Placed Successfully!</h2>
+        <p class="lead">Your Order ID: <strong>#{{ order.id }}</strong></p>
+        <p>Total Amount: <strong>₹{{ order.total_amount }}</strong></p>
+        
+        {% if order.payment_method == 'bank' %}
+        <div class="alert alert-info mt-3 text-start">
+            <h5><i class="bi bi-bank me-2"></i>Payment Instructions:</h5>
+            <p>Please transfer the total amount to:</p>
+            <div class="bg-light p-3 rounded">
+                <ul class="list-unstyled mb-0">
+                    <li><strong>Bank:</strong> Surendra BookStore</li>
+                    <li><strong>Account No:</strong> 1234567890</li>
+                    <li><strong>IFSC:</strong> XYZB0001234</li>
+                    <li><strong>UPI:</strong> surendra@upi</li>
+                </ul>
+            </div>
+            <div class="text-center mt-3">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=surendra@upi&pn=Surendra%20BookStore&am={{ order.total_amount }}&cu=INR" alt="UPI QR" class="img-fluid" style="max-width: 150px;">
+            </div>
+            
+            <!-- UTR + Screenshot Submission Form -->
+            <form method="POST" action="{% url 'orders:update_notes' order.id %}" enctype="multipart/form-data" class="mt-3">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input type="text" name="notes" class="form-control" placeholder="Enter UTR Number or Transaction ID" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Upload Payment Screenshot (Optional)</label>
+                    <input type="file" name="screenshot" class="form-control" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="bi bi-send me-2"></i>Submit Payment Details
+                </button>
+            </form>
+            <p class="mt-2 text-muted small">
+                <i class="bi bi-info-circle me-1"></i> After submitting, your order will be pending verification. Admin will confirm within 24 hours.
+            </p>
+        </div>
+        {% else %}
+        <div class="alert alert-success mt-3">
+            <h5>✅ Cash on Delivery</h5>
+            <p>Your order will be delivered soon. Pay when you receive.</p>
+        </div>
+        {% endif %}
+        
+        <div class="mt-4">
+            <a href="{% url 'orders:detail' order.id %}" class="btn btn-ultra-primary">View Order Details</a>
+            <a href="{% url 'core:home' %}" class="btn btn-outline-secondary ms-2">Continue Shopping</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,483 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Order Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="order-header glass-card p-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap">
+                    <div>
+                        <h1 class="gold-title">Order #{{ order.id }}</h1>
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-calendar3 me-1"></i> 
+                            {{ order.created_at|date:"d M Y, h:i A" }}
+                        </p>
+                    </div>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <span class="status-badge {% if order.order_status == 'delivered' %}status-delivered{% elif order.order_status == 'cancelled' %}status-cancelled{% elif order.order_status == 'processing' %}status-processing{% else %}status-pending{% endif %}">
+                            {{ order.get_order_status_display }}
+                        </span>
+                        <span class="status-badge {% if order.payment_status == 'verified' %}status-verified{% elif order.payment_status == 'rejected' %}status-rejected{% else %}status-pending{% endif %}">
+                            Payment: {{ order.get_payment_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Order Items -->
+            <div class="glass-card p-4 mb-4">
+                <h4 class="gold-title mb-3"><i class="bi bi-box-seam me-2"></i>Order Items</h4>
+                <div class="table-responsive">
+                    <table class="table order-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50%;">Book</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-3">
+                                        {% if item.book.image %}
+                                        <img src="{{ item.book.image.url }}" alt="{{ item.book.title }}" style="width: 50px; height: 60px; object-fit: cover; border-radius: 8px;">
+                                        {% else %}
+                                        <div style="width: 50px; height: 60px; background: rgba(255,215,0,0.1); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #d4af37;">
+                                            <i class="bi bi-book"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="fw-bold">{{ item.book.title }}</div>
+                                            <small class="text-muted">{{ item.book.author }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">{{ item.quantity }}</td>
+                                <td class="text-end">₹{{ item.price|floatformat:2 }}</td>
+                                <td class="text-end fw-bold">₹{{ item.get_total|floatformat:2 }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end">Subtotal</td>
+                                <td class="text-end">₹{{ order.total_amount|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end">Delivery Charges</td>
+                                <td class="text-end">{% if order.delivery_charges == 0 %}FREE{% else %}₹{{ order.delivery_charges|floatformat:2 }}{% endif %}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end">GST (5%)</td>
+                                <td class="text-end">₹{{ order.tax|floatformat:2 }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end">Discount</td>
+                                <td class="text-end text-success">-₹{{ order.discount|floatformat:2 }}</td>
+                            </tr>
+                            <tr class="grand-total-row">
+                                <td colspan="3" class="text-end fw-bold fs-5">Grand Total</td>
+                                <td class="text-end fw-bold gold-text fs-5">₹{{ order.grand_total|floatformat:2 }}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payment Proof -->
+            {% if proof %}
+            <div class="glass-card p-4">
+                <h4 class="gold-title mb-3"><i class="bi bi-credit-card me-2"></i>Payment Proof</h4>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <span class="info-label">Payer Name</span>
+                            <span class="info-value">{{ proof.payer_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">UTR Number</span>
+                            <span class="info-value gold-text">{{ proof.utr_number }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Amount Paid</span>
+                            <span class="info-value">₹{{ proof.paid_amount|floatformat:2 }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-item">
+                            <span class="info-label">Payment Date</span>
+                            <span class="info-value">{{ proof.payment_date|date:"d M Y, h:i A" }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Submitted On</span>
+                            <span class="info-value">{{ proof.submitted_at|date:"d M Y, h:i A" }}</span>
+                        </div>
+                        {% if proof.screenshot %}
+                        <div class="info-item">
+                            <span class="info-label">Screenshot</span>
+                            <a href="{{ proof.screenshot.url }}" target="_blank" class="btn-gold-sm">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% if proof.admin_notes %}
+                    <div class="col-12">
+                        <div class="info-item">
+                            <span class="info-label">Admin Notes</span>
+                            <span class="info-value">{{ proof.admin_notes }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if proof.verified_by %}
+                    <div class="col-12">
+                        <div class="alert-verified">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Verified by {{ proof.verified_by.username }} on {{ proof.verified_at|date:"d M Y, h:i A" }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Delivery Address -->
+            <div class="glass-card p-4 mb-4">
+                <h4 class="gold-title mb-3"><i class="bi bi-geo-alt me-2"></i>Delivery Address</h4>
+                <div class="address-box">
+                    <div class="address-name">{{ order.full_name }}</div>
+                    <div class="address-line">{{ order.address }}</div>
+                    <div class="address-line">{{ order.city }}, {{ order.state }}</div>
+                    <div class="address-line">Pincode: <strong>{{ order.pincode }}</strong></div>
+                    {% if order.landmark %}
+                    <div class="address-line">Landmark: {{ order.landmark }}</div>
+                    {% endif %}
+                    <div class="address-divider"></div>
+                    <div class="address-line"><i class="bi bi-telephone me-2"></i>{{ order.phone }}</div>
+                    <div class="address-line"><i class="bi bi-envelope me-2"></i>{{ order.email }}</div>
+                </div>
+            </div>
+
+            <!-- Order Timeline -->
+            <div class="glass-card p-4 mb-4">
+                <h4 class="gold-title mb-3"><i class="bi bi-clock-history me-2"></i>Order Timeline</h4>
+                <div class="timeline">
+                    <div class="timeline-item {% if order.created_at %}active{% endif %}">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-title">Order Placed</div>
+                            <div class="timeline-date">{{ order.created_at|date:"d M Y, h:i A" }}</div>
+                        </div>
+                    </div>
+                    {% if order.payment_status == 'under_review' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-title">Under Review</div>
+                            <div class="timeline-date">Payment verification in progress</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if order.payment_status == 'verified' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-title">Payment Verified</div>
+                            <div class="timeline-date">{{ order.payment_verified_at|date:"d M Y, h:i A" }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if order.order_status == 'processing' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-title">Processing</div>
+                            <div class="timeline-date">Order is being processed</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if order.order_status == 'shipped' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-title">Shipped</div>
+                            <div class="timeline-date">Order has been shipped</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if order.order_status == 'delivered' %}
+                    <div class="timeline-item active">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <div class="timeline-title">Delivered</div>
+                            <div class="timeline-date">{{ order.updated_at|date:"d M Y, h:i A" }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="glass-card p-4">
+                <h4 class="gold-title mb-3"><i class="bi bi-lightning me-2"></i>Quick Actions</h4>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'orders:my_orders' %}" class="btn-gold-outline">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Orders
+                    </a>
+                    <a href="{% url 'core:home' %}" class="btn-gold-outline">
+                        <i class="bi bi-house me-2"></i>Continue Shopping
+                    </a>
+                    <button onclick="window.print()" class="btn-gold">
+                        <i class="bi bi-printer me-2"></i>Print Invoice
+                    </button>
+                    {% if user.is_staff and order.payment_status == 'pending' or order.payment_status == 'under_review' %}
+                    <a href="{% url 'orders:admin_verify_payment' order.id %}" class="btn-warning">
+                        <i class="bi bi-shield-check me-2"></i>Verify Payment (Admin)
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card {
+    background: rgba(20, 20, 30, 0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+.gold-title {
+    color: #d4af37;
+    font-weight: 700;
+}
+.gold-text {
+    color: #d4af37;
+}
+.text-muted {
+    color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Order Table */
+.order-table {
+    background: transparent;
+    color: #e0e0e0;
+}
+.order-table thead th {
+    color: #d4af37;
+    border-bottom: 2px solid rgba(212, 175, 55, 0.2);
+    padding: 12px 8px;
+}
+.order-table tbody td {
+    padding: 12px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.order-table tfoot td {
+    padding: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.grand-total-row td {
+    border-top: 2px solid #d4af37 !important;
+    padding-top: 12px !important;
+}
+
+/* Status Badges */
+.status-badge {
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+.status-pending { background: rgba(255, 193, 7, 0.2); color: #ffc107; }
+.status-processing { background: rgba(13, 202, 240, 0.2); color: #0dcaf0; }
+.status-delivered { background: rgba(25, 135, 84, 0.2); color: #198754; }
+.status-cancelled { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+.status-verified { background: rgba(25, 135, 84, 0.2); color: #198754; }
+.status-rejected { background: rgba(220, 53, 69, 0.2); color: #dc3545; }
+
+/* Address Box */
+.address-box {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 18px;
+    border-radius: 12px;
+    border-left: 3px solid #d4af37;
+}
+.address-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+.address-line {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 2px;
+}
+.address-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin: 8px 0;
+}
+
+/* Info Items */
+.info-item {
+    margin-bottom: 8px;
+}
+.info-label {
+    display: block;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.info-value {
+    display: block;
+    font-size: 1rem;
+    color: #fff;
+}
+
+/* Alert Verified */
+.alert-verified {
+    background: rgba(25, 135, 84, 0.15);
+    border: 1px solid rgba(25, 135, 84, 0.3);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #198754;
+}
+
+/* Timeline */
+.timeline {
+    padding-left: 8px;
+}
+.timeline-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 16px;
+    position: relative;
+}
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 20px;
+    width: 2px;
+    height: calc(100% - 20px);
+    background: rgba(255, 255, 255, 0.05);
+}
+.timeline-item:last-child::before {
+    display: none;
+}
+.timeline-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    margin-top: 2px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+.timeline-item.active .timeline-dot {
+    background: #d4af37;
+    border-color: #d4af37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+.timeline-title {
+    color: #fff;
+    font-weight: 600;
+}
+.timeline-date {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.85rem;
+}
+
+/* Buttons */
+.btn-gold {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+.btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+    color: #1a1a2e;
+}
+.btn-gold-outline {
+    background: transparent;
+    border: 2px solid #d4af37;
+    color: #d4af37;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    text-align: center;
+}
+.btn-gold-outline:hover {
+    background: #d4af37;
+    color: #1a1a2e;
+}
+.btn-warning {
+    background: #ffc107;
+    border: none;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-decoration: none;
+    text-align: center;
+}
+.btn-gold-sm {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 30px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.85rem;
+}
+
+/* Print Styles */
+@media print {
+    body { background: white !important; }
+    .glass-card { background: white !important; border: 1px solid #ddd !important; box-shadow: none !important; }
+    .gold-title { color: #333 !important; }
+    .gold-text { color: #333 !important; }
+    .btn-gold, .btn-gold-outline, .btn-warning, .btn-gold-sm { display: none !important; }
+    .navbar-ultra, .footer-ultra, .scroll-top { display: none !important; }
+    .container { max-width: 100% !important; padding: 0 !important; }
+    .order-table thead th { color: #333 !important; }
+    .order-table tfoot td { color: #333 !important; }
+    .address-line { color: #333 !important; }
+    .address-name { color: #333 !important; }
+    .info-value { color: #333 !important; }
+    .timeline-title { color: #333 !important; }
+    .timeline-date { color: #666 !important; }
+    .status-badge { border: 1px solid #ddd; color: #333 !important; }
+}
+</style>
+{% endblock %}

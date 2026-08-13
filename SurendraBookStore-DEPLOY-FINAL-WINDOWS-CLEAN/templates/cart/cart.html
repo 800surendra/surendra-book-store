@@ -1,0 +1,1752 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* =========================================================
+   SURINDRA BOOK STORE — ULTRA LUXURY LIGHT CART
+   ========================================================= */
+
+:root {
+    --lux-bg: #faf8f4;
+    --lux-card: #ffffff;
+    --lux-card-soft: #fcfaf7;
+    --lux-border: #eee7df;
+    --lux-border-strong: #e3d8cc;
+    --lux-text: #29241f;
+    --lux-text-soft: #756b62;
+    --lux-muted: #9b9188;
+    --lux-gold: #b28a52;
+    --lux-gold-dark: #8f6b3d;
+    --lux-gold-soft: #f5ede1;
+    --lux-green: #53745b;
+    --lux-danger: #a95f58;
+    --lux-shadow: 0 18px 55px rgba(77, 57, 37, .08);
+    --lux-shadow-hover: 0 24px 65px rgba(77, 57, 37, .13);
+    --lux-radius: 22px;
+}
+
+.cart-luxury-page {
+    background:
+        radial-gradient(circle at 10% 0%, rgba(221, 197, 163, .16), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(234, 220, 201, .20), transparent 25%),
+        var(--lux-bg);
+    min-height: 100vh;
+    padding: 55px 0 80px;
+    color: var(--lux-text);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.cart-page-header {
+    text-align: center;
+    max-width: 820px;
+    margin: 0 auto 48px;
+}
+
+.cart-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border: 1px solid var(--lux-border);
+    border-radius: 999px;
+    background: rgba(255,255,255,.75);
+    color: var(--lux-gold-dark);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+    box-shadow: 0 8px 25px rgba(76,55,35,.04);
+}
+
+.cart-page-title {
+    margin: 18px 0 10px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(34px, 5vw, 55px);
+    line-height: 1.05;
+    font-weight: 500;
+    letter-spacing: -1.5px;
+    color: #27211c;
+}
+
+.cart-page-title span {
+    color: var(--lux-gold-dark);
+    font-style: italic;
+}
+
+.cart-page-subtitle {
+    max-width: 650px;
+    margin: 0 auto;
+    color: var(--lux-text-soft);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* =========================================================
+   CHECKOUT PROGRESS
+   ========================================================= */
+
+.cart-progress {
+    margin: 32px auto 0;
+    max-width: 510px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-progress-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    color: var(--lux-text-soft);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .5px;
+}
+
+.cart-progress-step:first-child {
+    color: var(--lux-gold-dark);
+}
+
+.cart-progress-number {
+    width: 31px;
+    height: 31px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #c5a06b, #9c733f);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 0 7px 18px rgba(157,113,57,.18);
+}
+
+.cart-progress-line {
+    width: 55px;
+    height: 1px;
+    background: var(--lux-border-strong);
+    margin: 0 12px;
+}
+
+/* =========================================================
+   CART ITEM
+   ========================================================= */
+
+.premium-cart-item {
+    background: rgba(255,255,255,.92);
+    border: 1px solid var(--lux-border);
+    border-radius: var(--lux-radius);
+    padding: 19px;
+    margin-bottom: 15px;
+    box-shadow: 0 12px 35px rgba(67,48,29,.055);
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+}
+
+.premium-cart-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--lux-shadow-hover);
+    border-color: #dfd0bf;
+}
+
+.book-thumb-wrapper {
+    width: 100%;
+    aspect-ratio: .78;
+    max-width: 88px;
+    overflow: hidden;
+    border-radius: 13px;
+    background: #f4eee7;
+    border: 1px solid #e8ddd1;
+    box-shadow: 0 10px 24px rgba(64,44,26,.10);
+}
+
+.book-thumb-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .45s ease;
+}
+
+.premium-cart-item:hover .book-thumb-wrapper img {
+    transform: scale(1.045);
+}
+
+.cart-book-title {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.35;
+    font-weight: 700;
+    color: #29231e;
+    margin: 0 0 7px;
+}
+
+.cart-book-author {
+    color: var(--lux-muted);
+    font-size: 12px;
+    margin: 0 0 9px;
+}
+
+.cart-book-price {
+    display: inline-block;
+    color: var(--lux-gold-dark);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.quantity-label,
+.cart-item-total-label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--lux-muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.quantity-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.premium-qty-input {
+    width: 67px;
+    height: 40px;
+    padding: 0 9px;
+    border: 1px solid var(--lux-border-strong);
+    border-radius: 11px;
+    background: #fff;
+    color: var(--lux-text);
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    outline: none;
+    transition: .25s ease;
+}
+
+.premium-qty-input:focus {
+    border-color: #bd9a69;
+    box-shadow: 0 0 0 4px rgba(178,138,82,.10);
+}
+
+.quantity-update-btn {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--lux-border);
+    border-radius: 11px;
+    background: #fbf8f4;
+    color: var(--lux-gold-dark);
+    font-size: 11px;
+    font-weight: 800;
+    transition: .25s ease;
+}
+
+.quantity-update-btn:hover {
+    background: var(--lux-gold-soft);
+    border-color: #d9c3a6;
+    transform: translateY(-1px);
+}
+
+.cart-item-total-label {
+    margin-bottom: 4px;
+}
+
+.cart-item-total {
+    font-size: 17px;
+    font-weight: 900;
+    color: #29231e;
+}
+
+.cart-remove-btn {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    color: #aa7770;
+    background: #fff8f7;
+    border: 1px solid #f0dfdc;
+    text-decoration: none;
+    transition: .25s ease;
+}
+
+.cart-remove-btn:hover {
+    color: #fff;
+    background: var(--lux-danger);
+    border-color: var(--lux-danger);
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   CONTINUE SHOPPING
+   ========================================================= */
+
+.continue-shopping-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 12px 17px;
+    border-radius: 12px;
+    border: 1px solid var(--lux-border-strong);
+    background: #fff;
+    color: var(--lux-text-soft);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    transition: .25s ease;
+}
+
+.continue-shopping-btn:hover {
+    color: var(--lux-gold-dark);
+    border-color: #d6c0a2;
+    background: #fffdf9;
+    transform: translateX(-2px);
+}
+
+/* =========================================================
+   SUMMARY CARD
+   ========================================================= */
+
+.premium-summary-card {
+    position: sticky;
+    top: 24px;
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--lux-border);
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: var(--lux-shadow);
+    overflow: hidden;
+}
+
+.premium-summary-card::before {
+    content: "";
+    display: block;
+    height: 3px;
+    position: absolute;
+    top: 0;
+    left: 25px;
+    right: 25px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        #c7a26e,
+        #e0c69b,
+        #c7a26e,
+        transparent
+    );
+}
+
+.summary-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.summary-title {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #2b251f;
+}
+
+.summary-secure-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: #f3f7f3;
+    color: var(--lux-green);
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+}
+
+.summary-divider {
+    border: 0;
+    border-top: 1px solid var(--lux-border);
+    margin: 19px 0;
+    opacity: 1;
+}
+
+.summary-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 8px 0;
+    color: var(--lux-text-soft);
+    font-size: 12px;
+}
+
+.summary-row strong {
+    color: #332c25;
+    font-size: 13px;
+}
+
+.free-delivery {
+    color: var(--lux-green);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .6px;
+}
+
+.summary-discount {
+    color: var(--lux-green);
+    font-weight: 800;
+}
+
+.grand-total-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 13px;
+    padding: 17px 0 6px;
+    border-top: 1px dashed #dfd4c9;
+}
+
+.grand-total-label {
+    color: #4d433a;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.grand-total-price {
+    color: #211c17;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 27px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   COUPON
+   ========================================================= */
+
+.coupon-box {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #e9dfd4;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #fdfbf8, #f8f1e8);
+}
+
+.coupon-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 10px;
+    color: #51463d;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .4px;
+}
+
+.coupon-label i {
+    color: var(--lux-gold-dark);
+    font-size: 15px;
+}
+
+.coupon-input {
+    height: 43px;
+    border: 1px solid #ded2c6 !important;
+    border-radius: 11px 0 0 11px !important;
+    background: #fff !important;
+    color: #2b251f !important;
+    font-size: 12px !important;
+    box-shadow: none !important;
+}
+
+.coupon-input:focus {
+    border-color: #bd9a69 !important;
+    box-shadow: 0 0 0 3px rgba(178,138,82,.09) !important;
+}
+
+.coupon-apply-btn {
+    min-width: 75px;
+    height: 43px;
+    border: 0;
+    border-radius: 0 11px 11px 0;
+    background: linear-gradient(135deg, #b99663, #95703f);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .4px;
+    transition: .25s ease;
+}
+
+.coupon-apply-btn:hover {
+    background: linear-gradient(135deg, #a98452, #805e35);
+}
+
+.coupon-apply-btn:disabled {
+    opacity: .7;
+    cursor: wait;
+}
+
+.coupon-hint {
+    display: block;
+    margin-top: 8px;
+    color: #9a9087;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.coupon-applied {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 12px;
+    border-radius: 12px;
+    background: #f2f7f2;
+    border: 1px solid #dce9dc;
+}
+
+.coupon-applied-left {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.coupon-success-icon {
+    width: 29px;
+    height: 29px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #dfeee0;
+    color: #53745b;
+}
+
+.coupon-applied-code {
+    color: #405744;
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: .5px;
+}
+
+.coupon-applied-text {
+    color: #728073;
+    font-size: 9px;
+    margin-top: 2px;
+}
+
+.coupon-remove-btn {
+    border: 0;
+    background: transparent;
+    color: #9c6862;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+.premium-checkout-btn {
+    width: 100%;
+    min-height: 54px;
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #c29d69, #967042);
+    color: #fff !important;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .7px;
+    box-shadow: 0 12px 25px rgba(143,105,58,.18);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.premium-checkout-btn:hover {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 17px 32px rgba(143,105,58,.25);
+}
+
+.premium-checkout-btn i {
+    transition: transform .25s ease;
+}
+
+.premium-checkout-btn:hover i {
+    transform: translateX(4px);
+}
+
+/* =========================================================
+   TRUST
+   ========================================================= */
+
+.trust-area {
+    margin-top: 20px;
+    padding-top: 17px;
+    border-top: 1px solid var(--lux-border);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 10px;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #82776d;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.trust-item i {
+    color: var(--lux-gold-dark);
+    font-size: 13px;
+}
+
+/* =========================================================
+   EMPTY CART
+   ========================================================= */
+
+.premium-empty-cart {
+    padding: 75px 25px;
+    text-align: center;
+    background: rgba(255,255,255,.92);
+    border: 1px solid var(--lux-border);
+    border-radius: 25px;
+    box-shadow: var(--lux-shadow);
+}
+
+.empty-cart-icon {
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f8f0e7, #eee3d5);
+    color: var(--lux-gold-dark);
+    font-size: 32px;
+    box-shadow: inset 0 1px 0 #fff, 0 12px 30px rgba(78,54,31,.08);
+}
+
+.empty-cart-title {
+    margin-bottom: 10px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 27px;
+    font-weight: 600;
+}
+
+.empty-cart-text {
+    max-width: 450px;
+    margin: 0 auto 24px;
+    color: var(--lux-text-soft);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.empty-cart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 20px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #b99663, #95703f);
+    color: #fff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 900;
+    box-shadow: 0 10px 24px rgba(143,105,58,.17);
+    transition: .25s ease;
+}
+
+.empty-cart-btn:hover {
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* =========================================================
+   COUPON TOAST
+   ========================================================= */
+
+.cart-toast {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 9999;
+    min-width: 280px;
+    max-width: 390px;
+    padding: 14px 16px;
+    border-radius: 15px;
+    background: rgba(255,255,255,.97);
+    border: 1px solid var(--lux-border);
+    box-shadow: 0 20px 50px rgba(45,32,20,.16);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(15px);
+    pointer-events: none;
+    transition: .3s ease;
+}
+
+.cart-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cart-toast.success i {
+    color: #55745a;
+}
+
+.cart-toast.error i {
+    color: #a45e58;
+}
+
+.cart-toast span {
+    color: #554b42;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 991px) {
+    .premium-summary-card {
+        position: static;
+    }
+}
+
+@media (max-width: 767px) {
+    .cart-luxury-page {
+        padding: 35px 0 55px;
+    }
+
+    .cart-page-header {
+        margin-bottom: 30px;
+    }
+
+    .cart-page-title {
+        font-size: 36px;
+    }
+
+    .cart-page-subtitle {
+        padding: 0 12px;
+        font-size: 13px;
+    }
+
+    .cart-progress-line {
+        width: 25px;
+        margin: 0 6px;
+    }
+
+    .cart-progress-step {
+        font-size: 9px;
+        gap: 5px;
+    }
+
+    .cart-progress-number {
+        width: 27px;
+        height: 27px;
+        font-size: 10px;
+    }
+
+    .premium-cart-item {
+        padding: 14px;
+    }
+
+    .cart-book-title {
+        font-size: 15px;
+    }
+
+    .quantity-form {
+        flex-wrap: wrap;
+    }
+
+    .quantity-update-btn {
+        flex: 1;
+    }
+
+    .cart-item-total {
+        font-size: 15px;
+    }
+
+    .premium-summary-card {
+        padding: 20px;
+    }
+
+    .grand-total-price {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 575px) {
+    .cart-page-title {
+        font-size: 32px;
+    }
+
+    .cart-progress {
+        transform: scale(.88);
+    }
+
+    .premium-cart-item .row {
+        align-items: flex-start !important;
+    }
+
+    .book-thumb-wrapper {
+        max-width: 72px;
+    }
+
+    .cart-item-total {
+        margin-top: 5px;
+    }
+
+    .trust-area {
+        grid-template-columns: 1fr;
+    }
+
+    .cart-toast {
+        left: 15px;
+        right: 15px;
+        bottom: 15px;
+        min-width: auto;
+    }
+}
+</style>
+
+
+<div class="cart-luxury-page">
+
+<div class="container">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="cart-page-header">
+
+        <div class="cart-eyebrow">
+            <i class="bi bi-bag-check-fill"></i>
+            Your Shopping Bag
+        </div>
+
+        <h1 class="cart-page-title">
+            Review Your <span>Books</span>
+        </h1>
+
+        <p class="cart-page-subtitle">
+            A carefully curated reading collection, ready for your next chapter.
+            Review your selection and continue securely when you're ready.
+        </p>
+
+        <div class="cart-progress" aria-label="Checkout progress">
+
+            <div class="cart-progress-step">
+                <span class="cart-progress-number">1</span>
+                <span>Cart</span>
+            </div>
+
+            <div class="cart-progress-line"></div>
+
+            <div class="cart-progress-step">
+                <span class="cart-progress-number"
+                      style="background:#eee7df;color:#8a7d70;">
+                    2
+                </span>
+                <span>Delivery</span>
+            </div>
+
+            <div class="cart-progress-line"></div>
+
+            <div class="cart-progress-step">
+                <span class="cart-progress-number"
+                      style="background:#eee7df;color:#8a7d70;">
+                    3
+                </span>
+                <span>Payment</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4 align-items-start">
+
+        <!-- =================================================
+             CART ITEMS
+             ================================================= -->
+
+        <div class="col-lg-8">
+
+            {% if cart and cart.items.all %}
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <div>
+                        <h2 class="mb-1"
+                            style="
+                                font-family:Georgia,serif;
+                                font-size:20px;
+                                font-weight:600;
+                                color:#29241f;
+                            ">
+                            Your Selection
+                        </h2>
+
+                        <p class="mb-0"
+                           style="
+                               font-size:11px;
+                               color:#91877e;
+                           ">
+                            {{ cart.get_total_items }}
+                            item{{ cart.get_total_items|pluralize }}
+                            carefully selected for you
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="cart-items">
+
+                    {% for item in cart.items.all %}
+
+                    <div class="premium-cart-item">
+
+                        <div class="row align-items-center g-3">
+
+                            <!-- Book Image -->
+
+                            <div class="col-3 col-sm-2 col-md-2">
+
+                                <div class="book-thumb-wrapper">
+
+                                    {% if item.book.image %}
+
+                                        <img
+                                            src="{{ item.book.image.url }}"
+                                            alt="{{ item.book.title }}"
+                                            loading="lazy"
+                                        >
+
+                                    {% else %}
+
+                                        <img
+                                            src="https://via.placeholder.com/80x100/f2e8dc/7b4e29?text=Book"
+                                            alt="Book"
+                                            loading="lazy"
+                                        >
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Book Information -->
+
+                            <div class="col-9 col-sm-4 col-md-4">
+
+                                <div class="cart-book-info">
+
+                                    <h3 class="cart-book-title">
+                                        {{ item.book.title }}
+                                    </h3>
+
+                                    {% if item.book.author %}
+
+                                        <p class="cart-book-author">
+                                            <i class="bi bi-person me-1"></i>
+                                            {{ item.book.author }}
+                                        </p>
+
+                                    {% endif %}
+
+                                    <span class="cart-book-price">
+                                        ₹{{ item.book.final_price }}
+                                        <span style="font-weight:500;margin-left:4px;">
+                                            / book
+                                        </span>
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Quantity -->
+
+                            <div class="col-7 col-sm-4 col-md-3">
+
+                                <span class="quantity-label">
+                                    Quantity
+                                </span>
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'cart:update' item.id %}"
+                                    class="quantity-form"
+                                >
+
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        value="{{ item.quantity }}"
+                                        min="1"
+                                        inputmode="numeric"
+                                        class="premium-qty-input"
+                                        aria-label="Quantity for {{ item.book.title }}"
+                                        required
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="quantity-update-btn"
+                                    >
+                                        <i class="bi bi-arrow-repeat me-1"></i>
+                                        Update
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                            <!-- Item Total -->
+
+                            <div class="col-4 col-sm-1 col-md-2 text-sm-end">
+
+                                <div class="cart-item-total-label">
+                                    Total
+                                </div>
+
+                                <div class="cart-item-total">
+                                    ₹{{ item.get_total_price|floatformat:2 }}
+                                </div>
+
+                            </div>
+
+
+                            <!-- Remove -->
+
+                            <div class="col-1 text-end">
+
+                                <a
+                                    href="{% url 'cart:remove' item.id %}"
+                                    class="cart-remove-btn"
+                                    title="Remove {{ item.book.title }}"
+                                    aria-label="Remove {{ item.book.title }}"
+                                    onclick="return confirm('Are you sure you want to remove this book from your cart?');"
+                                >
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="mt-4">
+
+                    <a
+                        href="{% url 'books:list' %}"
+                        class="continue-shopping-btn"
+                    >
+                        <i class="bi bi-arrow-left"></i>
+                        Continue Shopping
+                    </a>
+
+                </div>
+
+            {% else %}
+
+                <!-- =================================================
+                     EMPTY CART
+                     ================================================= -->
+
+                <div class="premium-empty-cart">
+
+                    <div class="empty-cart-icon">
+                        <i class="bi bi-bag-x"></i>
+                    </div>
+
+                    <h2 class="empty-cart-title">
+                        Your cart is empty
+                    </h2>
+
+                    <p class="empty-cart-text">
+                        Looks like you haven't added any books yet.
+                        Explore our collection and discover your next great read.
+                    </p>
+
+                    <a
+                        href="{% url 'books:list' %}"
+                        class="empty-cart-btn"
+                    >
+                        <i class="bi bi-book"></i>
+                        Explore Books
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =================================================
+             ORDER SUMMARY
+             ================================================= -->
+
+        <div class="col-lg-4">
+
+            <div class="premium-summary-card">
+
+                <div class="summary-heading">
+
+                    <h2 class="summary-title">
+                        Order Summary
+                    </h2>
+
+                    <span class="summary-secure-badge">
+                        <i class="bi bi-shield-check"></i>
+                        Secure
+                    </span>
+
+                </div>
+
+                <hr class="summary-divider">
+
+
+                {% if cart and cart.items.all %}
+
+                    <!-- Subtotal -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            Subtotal
+                            <small style="color:#aaa;">
+                                ({{ cart.get_total_items }} items)
+                            </small>
+                        </span>
+
+                        <strong id="cartSubtotal">
+                            ₹{{ subtotal|floatformat:2 }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Delivery -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            Delivery Charges
+                        </span>
+
+                        <span
+                            id="cartDelivery"
+                            class="{% if delivery_charge == 0 %}free-delivery{% endif %}"
+                        >
+
+                            {% if delivery_charge == 0 %}
+                                FREE
+                            {% else %}
+                                ₹{{ delivery_charge|floatformat:2 }}
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- GST -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            GST (5%)
+                        </span>
+
+                        <strong id="cartGst">
+                            ₹{{ gst|floatformat:2 }}
+                        </strong>
+
+                    </div>
+
+
+                    <!-- Discount -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            Discount
+                        </span>
+
+                        <span
+                            id="cartDiscount"
+                            class="summary-discount"
+                        >
+                            -₹{{ discount|floatformat:2 }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- Grand Total -->
+
+                    <div class="grand-total-row">
+
+                        <span class="grand-total-label">
+                            Grand Total
+                        </span>
+
+                        <span
+                            id="cartGrandTotal"
+                            class="grand-total-price"
+                        >
+                            ₹{{ grand_total|floatformat:2 }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         COUPON
+                         ================================================= -->
+
+                    <div class="coupon-box">
+
+                        {% if applied_coupon %}
+
+                            <!-- Applied Coupon -->
+
+                            <div class="coupon-applied">
+
+                                <div class="coupon-applied-left">
+
+                                    <div class="coupon-success-icon">
+                                        <i class="bi bi-check-lg"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <div class="coupon-applied-code">
+                                            {{ applied_coupon.code }}
+                                        </div>
+
+                                        <div class="coupon-applied-text">
+                                            Coupon applied successfully
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="coupon-remove-btn"
+                                    id="removeCoupon"
+                                >
+                                    Remove
+                                </button>
+
+                            </div>
+
+                        {% else %}
+
+                            <div class="coupon-label">
+                                <i class="bi bi-ticket-perforated"></i>
+                                Have a coupon?
+                            </div>
+
+                            <div class="input-group">
+
+                                <input
+                                    type="text"
+                                    class="form-control coupon-input"
+                                    placeholder="Enter coupon code"
+                                    id="couponInput"
+                                    autocomplete="off"
+                                    aria-label="Coupon code"
+                                    maxlength="50"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="coupon-apply-btn"
+                                    id="applyCoupon"
+                                >
+                                    Apply
+                                </button>
+
+                            </div>
+
+                            <small
+                                class="coupon-hint"
+                                id="couponHint"
+                            >
+                                Apply an eligible coupon to get an additional discount.
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- Checkout -->
+
+                    <a
+                        href="{% url 'orders:checkout_delivery' %}"
+                        class="premium-checkout-btn"
+                    >
+                        Proceed to Checkout
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+
+                    <!-- Trust -->
+
+                    <div class="trust-area">
+
+                        <div class="trust-item">
+                            <i class="bi bi-shield-lock"></i>
+                            <span>Secure checkout</span>
+                        </div>
+
+                        <div class="trust-item">
+                            <i class="bi bi-credit-card"></i>
+                            <span>Safe payment</span>
+                        </div>
+
+                        <div class="trust-item">
+                            <i class="bi bi-box-seam"></i>
+                            <span>Reliable delivery</span>
+                        </div>
+
+                        <div class="trust-item">
+                            <i class="bi bi-headset"></i>
+                            <span>Customer support</span>
+                        </div>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="text-center py-4">
+
+                        <div style="
+                            width:58px;
+                            height:58px;
+                            border-radius:50%;
+                            background:#f7f0e8;
+                            color:#8b5e34;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            margin:0 auto 12px;
+                            font-size:24px;
+                        ">
+                            <i class="bi bi-bag"></i>
+                        </div>
+
+                        <p class="mb-0"
+                           style="
+                               color:#7d746c;
+                               font-size:13px;
+                           ">
+                            Your cart is empty.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     LUXURY TOAST
+     ========================================================= -->
+
+<div
+    id="cartToast"
+    class="cart-toast"
+    role="alert"
+    aria-live="polite"
+>
+    <i class="bi bi-check-circle-fill"></i>
+    <span id="cartToastMessage"></span>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const applyButton = document.getElementById("applyCoupon");
+    const removeButton = document.getElementById("removeCoupon");
+    const couponInput = document.getElementById("couponInput");
+
+    const toast = document.getElementById("cartToast");
+    const toastMessage = document.getElementById("cartToastMessage");
+
+    function getCookie(name) {
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+
+            const cookies = document.cookie.split(";");
+
+            for (let cookie of cookies) {
+
+                cookie = cookie.trim();
+
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(name.length + 1)
+                    );
+
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+    const csrfToken = getCookie("csrftoken");
+
+
+    function showToast(message, type = "success") {
+
+        if (!toast || !toastMessage) {
+            return;
+        }
+
+        toast.classList.remove("success", "error");
+        toast.classList.add(type);
+
+        toastMessage.textContent = message;
+
+        const icon = toast.querySelector("i");
+
+        if (icon) {
+            icon.className =
+                type === "success"
+                    ? "bi bi-check-circle-fill"
+                    : "bi bi-exclamation-circle-fill";
+        }
+
+        toast.classList.add("show");
+
+        setTimeout(function () {
+            toast.classList.remove("show");
+        }, 3500);
+    }
+
+
+    function money(value) {
+
+        const number = parseFloat(value || 0);
+
+        return "₹" + number.toFixed(2);
+    }
+
+
+    function updateTotals(data) {
+
+        const subtotal = document.getElementById("cartSubtotal");
+        const delivery = document.getElementById("cartDelivery");
+        const gst = document.getElementById("cartGst");
+        const discount = document.getElementById("cartDiscount");
+        const grandTotal = document.getElementById("cartGrandTotal");
+
+        if (subtotal) {
+            subtotal.textContent = money(data.subtotal);
+        }
+
+        if (delivery) {
+
+            const deliveryValue =
+                parseFloat(data.delivery_charge || 0);
+
+            if (deliveryValue === 0) {
+
+                delivery.textContent = "FREE";
+                delivery.classList.add("free-delivery");
+
+            } else {
+
+                delivery.textContent = money(deliveryValue);
+                delivery.classList.remove("free-delivery");
+            }
+        }
+
+        if (gst) {
+            gst.textContent = money(data.gst);
+        }
+
+        if (discount) {
+            discount.textContent =
+                "-₹" +
+                parseFloat(data.discount || 0).toFixed(2);
+        }
+
+        if (grandTotal) {
+            grandTotal.textContent = money(data.grand_total);
+        }
+    }
+
+
+    function setLoading(button, loading) {
+
+        if (!button) {
+            return;
+        }
+
+        if (loading) {
+
+            button.disabled = true;
+            button.dataset.originalText =
+                button.textContent.trim();
+
+            button.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-1"></span> Applying';
+
+        } else {
+
+            button.disabled = false;
+
+            button.textContent =
+                button.dataset.originalText || "Apply";
+        }
+    }
+
+
+    /* =====================================================
+       APPLY COUPON
+       ===================================================== */
+
+    if (applyButton) {
+
+        applyButton.addEventListener("click", function () {
+
+            const code =
+                couponInput
+                    ? couponInput.value.trim()
+                    : "";
+
+            if (!code) {
+
+                showToast(
+                    "Please enter a coupon code.",
+                    "error"
+                );
+
+                if (couponInput) {
+                    couponInput.focus();
+                }
+
+                return;
+            }
+
+            setLoading(applyButton, true);
+
+            const formData = new FormData();
+
+            formData.append(
+                "coupon_code",
+                code
+            );
+
+            fetch(
+                "{% url 'cart:apply_coupon' %}",
+                {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": csrfToken,
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: formData
+                }
+            )
+            .then(async function (response) {
+
+                const data =
+                    await response.json();
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        "Unable to apply coupon."
+                    );
+                }
+
+                return data;
+            })
+            .then(function (data) {
+
+                updateTotals(data);
+
+                showToast(
+                    data.message ||
+                    "Coupon applied successfully.",
+                    "success"
+                );
+
+                setTimeout(function () {
+                    window.location.reload();
+                }, 650);
+
+            })
+            .catch(function (error) {
+
+                showToast(
+                    error.message ||
+                    "Something went wrong.",
+                    "error"
+                );
+
+                setLoading(
+                    applyButton,
+                    false
+                );
+            });
+
+        });
+
+
+        /* Enter key */
+
+        if (couponInput) {
+
+            couponInput.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (event.key === "Enter") {
+
+                        event.preventDefault();
+
+                        applyButton.click();
+                    }
+                }
+            );
+        }
+    }
+
+
+    /* =====================================================
+       REMOVE COUPON
+       ===================================================== */
+
+    if (removeButton) {
+
+        removeButton.addEventListener(
+            "click",
+            function () {
+
+                removeButton.disabled = true;
+
+                removeButton.textContent =
+                    "Removing...";
+
+                fetch(
+                    "{% url 'cart:remove_coupon' %}",
+                    {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": csrfToken,
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    }
+                )
+                .then(async function (response) {
+
+                    const data =
+                        await response.json();
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.message ||
+                            "Unable to remove coupon."
+                        );
+                    }
+
+                    return data;
+                })
+                .then(function (data) {
+
+                    updateTotals(data);
+
+                    showToast(
+                        data.message ||
+                        "Coupon removed.",
+                        "success"
+                    );
+
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 500);
+
+                })
+                .catch(function (error) {
+
+                    showToast(
+                        error.message ||
+                        "Unable to remove coupon.",
+                        "error"
+                    );
+
+                    removeButton.disabled = false;
+
+                    removeButton.textContent =
+                        "Remove";
+                });
+
+            }
+        );
+    }
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,945 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* =========================================================
+   SURENDRA BOOKSTORE — ULTRA PRO BOOK DETAIL
+   Design only — existing Django data/URLs preserved
+   ========================================================= */
+
+.book-detail-page {
+    background: #f7f8fc;
+    color: #202338;
+    padding: 42px 0 80px;
+    min-height: 100vh;
+}
+
+/* Main Product Card */
+.detail-card {
+    background: #ffffff;
+    border: 1px solid #e8eaf2;
+    border-radius: 28px;
+    padding: 34px;
+    box-shadow: 0 18px 55px rgba(39, 45, 80, 0.09);
+    overflow: hidden;
+}
+
+/* Breadcrumb */
+.detail-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 22px;
+    color: #7c8197;
+    font-size: 14px;
+}
+
+.detail-breadcrumb a {
+    color: #6255e7;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.detail-breadcrumb i {
+    font-size: 11px;
+}
+
+/* Image Area */
+.detail-image-column {
+    position: relative;
+}
+
+.book-image-wrapper {
+    position: relative;
+    background: linear-gradient(145deg, #f4f5fb, #ffffff);
+    border-radius: 24px;
+    min-height: 620px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px;
+    border: 1px solid #eceef5;
+    overflow: hidden;
+}
+
+.book-image-wrapper::before {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(105, 89, 232, .12), transparent 70%);
+    top: -90px;
+    right: -70px;
+}
+
+.book-image-wrapper::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(245, 190, 54, .10), transparent 70%);
+    bottom: -80px;
+    left: -60px;
+}
+
+.book-image-wrapper img {
+    position: relative;
+    z-index: 2;
+    max-width: 100%;
+    max-height: 550px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 28px 45px rgba(25, 29, 55, .20);
+    transition: transform .45s ease, box-shadow .45s ease;
+}
+
+.book-image-wrapper:hover img {
+    transform: translateY(-8px) scale(1.015);
+    box-shadow: 0 35px 55px rgba(25, 29, 55, .25);
+}
+
+/* Badges */
+.book-badges {
+    position: absolute;
+    z-index: 5;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.book-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 8px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    box-shadow: 0 8px 20px rgba(0,0,0,.10);
+}
+
+.badge-bestseller {
+    background: #fff3cf;
+    color: #a86b00;
+}
+
+.badge-new {
+    background: #e8f8ee;
+    color: #16834b;
+}
+
+.badge-discount {
+    background: #ffe7ed;
+    color: #d72e55;
+}
+
+/* Product Info */
+.detail-info {
+    padding: 10px 12px 10px 20px;
+}
+
+.detail-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: #f0efff;
+    color: #5d51d8;
+    padding: 7px 13px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
+
+.detail-category i {
+    font-size: 13px;
+}
+
+.book-title {
+    color: #171a2b;
+    font-size: clamp(32px, 4vw, 52px);
+    line-height: 1.08;
+    font-weight: 850;
+    letter-spacing: -1.5px;
+    margin-bottom: 12px;
+}
+
+.book-author {
+    color: #777c91;
+    font-size: 17px;
+    margin-bottom: 20px;
+}
+
+.book-author strong {
+    color: #4d5064;
+}
+
+/* Rating */
+.rating-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.rating-stars {
+    color: #f3b91f;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+.rating-text {
+    color: #70758a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Price */
+.price-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 13px;
+    padding: 20px 0;
+    border-top: 1px solid #eef0f5;
+    border-bottom: 1px solid #eef0f5;
+    margin-bottom: 24px;
+}
+
+.current-price {
+    color: #202338;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 850;
+}
+
+.currency {
+    color: #6255e7;
+}
+
+.original-price {
+    color: #9b9eab;
+    text-decoration: line-through;
+    font-size: 17px;
+}
+
+.discount-tag {
+    background: #fff0d2;
+    color: #a96d00;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+/* Description */
+.description {
+    color: #656a7d;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.description strong {
+    display: block;
+    color: #202338;
+    font-size: 19px;
+    margin-bottom: 5px;
+}
+
+/* Specs */
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.spec-item {
+    background: #f8f9fc;
+    border: 1px solid #eceef4;
+    border-radius: 14px;
+    padding: 15px 17px;
+    transition: .25s ease;
+}
+
+.spec-item:hover {
+    border-color: #d9d5ff;
+    background: #fafaff;
+    transform: translateY(-2px);
+}
+
+.spec-label {
+    display: block;
+    color: #9296a7;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.spec-value {
+    display: block;
+    color: #33374a;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+/* Actions */
+.btn-group-detail {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.btn-add-cart,
+.btn-buy-now-detail,
+.btn-wishlist-detail {
+    min-height: 55px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: 800;
+    transition: all .25s ease;
+}
+
+.btn-add-cart {
+    flex: 1;
+    background: linear-gradient(135deg, #6759ed, #5143d7);
+    color: #ffffff;
+    box-shadow: 0 12px 25px rgba(98, 85, 231, .25);
+}
+
+.btn-add-cart:hover {
+    color: #ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 16px 30px rgba(98, 85, 231, .34);
+}
+
+.btn-buy-now-detail {
+    flex: 1;
+    background: #fff;
+    color: #3f4356;
+    border: 1px solid #dfe1e9;
+}
+
+.btn-buy-now-detail:hover {
+    color: #6255e7;
+    border-color: #6255e7;
+    transform: translateY(-3px);
+}
+
+.btn-wishlist-detail {
+    width: 55px;
+    flex: 0 0 55px;
+    border: 1px solid #e0e2ea;
+    background: #fff;
+    color: #777b8f;
+    cursor: pointer;
+}
+
+.btn-wishlist-detail:hover {
+    color: #e74b70;
+    border-color: #f2b5c4;
+    background: #fff6f8;
+    transform: translateY(-3px);
+}
+
+/* Related Books */
+.related-section {
+    margin-top: 60px;
+}
+
+.related-title {
+    color: #1d2031;
+    font-size: 28px;
+    font-weight: 850;
+    margin-bottom: 25px;
+}
+
+.related-title span {
+    color: #e8b72b;
+}
+
+.related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.related-card {
+    display: block;
+    background: #fff;
+    border: 1px solid #e7e9f0;
+    border-radius: 20px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 10px 30px rgba(30, 35, 65, .06);
+    transition: all .3s ease;
+}
+
+.related-card:hover {
+    color: inherit;
+    transform: translateY(-7px);
+    box-shadow: 0 18px 40px rgba(30, 35, 65, .12);
+    border-color: #d9d5ff;
+}
+
+.related-card img {
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+    display: block;
+    background: #f4f5f9;
+}
+
+.related-card-body {
+    padding: 17px;
+}
+
+.related-card-title {
+    color: #202338;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.related-card-author {
+    color: #888c9d;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.related-card-price {
+    color: #6255e7;
+    font-size: 18px;
+    font-weight: 850;
+}
+
+/* Reviews */
+.reviews-section {
+    background: #fff;
+    border: 1px solid #e7e9f0;
+    border-radius: 22px;
+    margin-top: 45px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(30,35,65,.05);
+}
+
+.reviews-title {
+    color: #202338;
+    font-size: 22px;
+    font-weight: 850;
+    margin-bottom: 20px;
+}
+
+.review-item {
+    padding: 18px 0;
+    border-top: 1px solid #edf0f5;
+}
+
+.review-name {
+    color: #303449;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.review-text {
+    color: #6f7487;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.review-date {
+    color: #a0a3b0;
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+    .book-detail-page {
+        padding: 25px 0 60px;
+    }
+
+    .detail-card {
+        padding: 22px;
+        border-radius: 22px;
+    }
+
+    .book-image-wrapper {
+        min-height: 500px;
+    }
+
+    .detail-info {
+        padding: 20px 5px 5px;
+    }
+
+    .related-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .book-detail-page {
+        padding: 18px 0 45px;
+    }
+
+    .detail-card {
+        padding: 14px;
+        border-radius: 18px;
+    }
+
+    .book-image-wrapper {
+        min-height: 390px;
+        padding: 25px;
+        border-radius: 18px;
+    }
+
+    .book-image-wrapper img {
+        max-height: 360px;
+    }
+
+    .book-title {
+        font-size: 32px;
+        letter-spacing: -1px;
+    }
+
+    .current-price {
+        font-size: 29px;
+    }
+
+    .specs-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-group-detail {
+        flex-wrap: wrap;
+    }
+
+    .btn-add-cart,
+    .btn-buy-now-detail {
+        flex: 1 1 calc(50% - 6px);
+    }
+
+    .btn-wishlist-detail {
+        flex: 0 0 55px;
+    }
+
+    .related-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 13px;
+    }
+
+    .related-card img {
+        height: 230px;
+    }
+
+    .reviews-section {
+        padding: 20px;
+        border-radius: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .book-title {
+        font-size: 28px;
+    }
+
+    .btn-add-cart,
+    .btn-buy-now-detail {
+        flex: 1 1 100%;
+    }
+
+    .btn-wishlist-detail {
+        width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .related-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+</style>
+
+
+<div class="book-detail-page">
+    <div class="container">
+
+        <!-- Breadcrumb -->
+        <div class="detail-breadcrumb">
+            <a href="{% url 'books:list' %}">
+                <i class="bi bi-house"></i> Books
+            </a>
+            <i class="bi bi-chevron-right"></i>
+            <span>{{ book.title|truncatechars:45 }}</span>
+        </div>
+
+
+        <!-- =====================================================
+             MAIN PRODUCT
+             ===================================================== -->
+        <div class="detail-card">
+
+            <div class="row g-4 g-xl-5 align-items-start">
+
+                <!-- IMAGE -->
+                <div class="col-lg-5">
+                    <div class="detail-image-column">
+
+                        <div class="book-image-wrapper">
+
+                            <img
+                                src="{% if book.image %}{{ book.image.url }}{% else %}https://via.placeholder.com/600x800/ffffff/6255e7?text=📚{% endif %}"
+                                alt="{{ book.title }}"
+                            >
+
+                            <div class="book-badges">
+
+                                {% if book.is_bestseller %}
+                                <span class="book-badge badge-bestseller">
+                                    ⭐ Bestseller
+                                </span>
+                                {% endif %}
+
+                                {% if book.is_new_arrival %}
+                                <span class="book-badge badge-new">
+                                    ✨ New Arrival
+                                </span>
+                                {% endif %}
+
+                                {% if book.discount_percent > 0 %}
+                                <span class="book-badge badge-discount">
+                                    -{{ book.discount_percent }}%
+                                </span>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- INFORMATION -->
+                <div class="col-lg-7">
+
+                    <div class="detail-info">
+
+                        <!-- Category -->
+                        <div class="detail-category">
+                            <i class="bi bi-book"></i>
+                            {{ book.category.name|default:"General" }}
+                        </div>
+
+
+                        <!-- Title -->
+                        <h1 class="book-title">
+                            {{ book.title }}
+                        </h1>
+
+
+                        <!-- Author -->
+                        <p class="book-author">
+                            by <strong>{{ book.author }}</strong>
+                        </p>
+
+
+                        <!-- Rating -->
+                        <div class="rating-section">
+
+                            <span class="rating-stars">
+
+                                {% for i in "12345" %}
+
+                                    {% if forloop.counter <= book.rating|add:"0" %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            </span>
+
+                            <span class="rating-text">
+                                {{ book.rating|default:0 }}★
+                                ({{ book.review_count|default:0 }} reviews)
+                            </span>
+
+                        </div>
+
+
+                        <!-- Price -->
+                        <div class="price-section">
+
+                            <span class="current-price">
+                                <span class="currency">₹</span>{{ book.final_price }}
+                            </span>
+
+                            {% if book.discount_percent > 0 %}
+
+                                <span class="original-price">
+                                    ₹{{ book.price }}
+                                </span>
+
+                                <span class="discount-tag">
+                                    {{ book.discount_percent }}% off
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- Description -->
+                        <div class="description">
+
+                            <strong>
+                                About this book
+                            </strong>
+
+                            {{ book.description|linebreaks|default:"A captivating read that will transport you to another world." }}
+
+                        </div>
+
+
+                        <!-- Specifications -->
+                        <div class="specs-grid">
+
+                            <div class="spec-item">
+                                <span class="spec-label">
+                                    Category
+                                </span>
+
+                                <span class="spec-value">
+                                    {{ book.category.name|default:"General" }}
+                                </span>
+                            </div>
+
+
+                            <div class="spec-item">
+
+                                <span class="spec-label">
+                                    Stock
+                                </span>
+
+                                <span
+                                    class="spec-value"
+                                    style="color: {% if book.stock > 0 %}#16834b{% else %}#dc3545{% endif %};"
+                                >
+
+                                    {% if book.stock > 0 %}
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        In Stock ({{ book.stock }})
+                                    {% else %}
+                                        <i class="bi bi-x-circle-fill"></i>
+                                        Out of Stock
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="spec-item">
+
+                                <span class="spec-label">
+                                    Language
+                                </span>
+
+                                <span class="spec-value">
+                                    English
+                                </span>
+
+                            </div>
+
+
+                            <div class="spec-item">
+
+                                <span class="spec-label">
+                                    ISBN
+                                </span>
+
+                                <span class="spec-value">
+                                    {{ book.isbn|default:"N/A" }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ACTIONS -->
+                        <div class="btn-group-detail">
+
+                            {% if book.stock > 0 %}
+
+                                <a
+                                    href="{% url 'cart:add' book.id %}"
+                                    class="btn-add-cart"
+                                >
+                                    <i class="bi bi-cart-plus me-2"></i>
+                                    Add to Cart
+                                </a>
+
+
+                                <a
+                                    href="{% url 'cart:view' %}"
+                                    class="btn-buy-now-detail"
+                                >
+                                    <i class="bi bi-lightning-charge-fill me-2"></i>
+                                    Buy Now
+                                </a>
+
+                            {% else %}
+
+                                <button
+                                    class="btn-buy-now-detail"
+                                    disabled
+                                    style="opacity:.45;cursor:not-allowed;"
+                                >
+                                    <i class="bi bi-x-circle me-2"></i>
+                                    Out of Stock
+                                </button>
+
+                            {% endif %}
+
+
+                            <button
+                                class="btn-wishlist-detail wishlist-btn"
+                                data-book-id="{{ book.id }}"
+                                aria-label="Add to wishlist"
+                            >
+                                <i class="bi bi-heart"></i>
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             RELATED BOOKS
+             ===================================================== -->
+
+        {% if related_books %}
+
+        <div class="related-section">
+
+            <h2 class="related-title">
+                You may also like <span>✦</span>
+            </h2>
+
+
+            <div class="related-grid">
+
+                {% for rel in related_books %}
+
+                <a
+                    href="{% url 'books:detail' rel.slug %}"
+                    class="related-card"
+                >
+
+                    <img
+                        src="{% if rel.image %}{{ rel.image.url }}{% else %}https://via.placeholder.com/300x400/ffffff/6255e7?text=📚{% endif %}"
+                        alt="{{ rel.title }}"
+                        loading="lazy"
+                    >
+
+                    <div class="related-card-body">
+
+                        <div class="related-card-title">
+                            {{ rel.title|truncatechars:20 }}
+                        </div>
+
+                        <div class="related-card-author">
+                            {{ rel.author }}
+                        </div>
+
+                        <div class="related-card-price">
+                            ₹{{ rel.final_price }}
+                        </div>
+
+                    </div>
+
+                </a>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             CUSTOMER REVIEWS
+             ===================================================== -->
+
+        <div class="reviews-section">
+
+            <h4 class="reviews-title">
+                📝 Customer Reviews
+            </h4>
+
+
+            <div class="review-item">
+
+                <div class="review-name">
+                    Rahul S.
+                </div>
+
+                <div class="review-text">
+                    Absolutely loved this book! A must-read.
+                </div>
+
+                <div class="review-date">
+                    Reviewed on 05 Aug 2026
+                </div>
+
+            </div>
+
+
+            <div class="review-item">
+
+                <div class="review-name">
+                    Priya M.
+                </div>
+
+                <div class="review-text">
+                    Well written and engaging from start to finish.
+                </div>
+
+                <div class="review-date">
+                    Reviewed on 02 Aug 2026
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

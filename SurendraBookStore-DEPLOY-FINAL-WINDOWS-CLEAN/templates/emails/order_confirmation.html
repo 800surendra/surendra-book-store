@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+        .header { background: #6C63FF; color: white; padding: 20px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { padding: 20px; background: white; border-radius: 0 0 10px 10px; }
+        .footer { text-align: center; padding: 10px; color: #777; }
+        .order-details { background: #f5f5f5; padding: 15px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Order Confirmed!</h1>
+        </div>
+        <div class="content">
+            <p>Dear <strong>{{ order.full_name }}</strong>,</p>
+            <p>Thank you for your order! We're excited to confirm that your order has been placed successfully.</p>
+            
+            <div class="order-details">
+                <h3>Order #{{ order.id }}</h3>
+                <p><strong>Date:</strong> {{ order.created_at|date:"d M Y, H:i" }}</p>
+                <p><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+                <p><strong>Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+                <p><strong>Status:</strong> {{ order.get_order_status_display }}</p>
+            </div>
+            
+            <h4>Shipping Address:</h4>
+            <p>{{ order.full_name }}<br>
+            {{ order.address }}<br>
+            {{ order.city }}, {{ order.state }} - {{ order.pincode }}<br>
+            Phone: {{ order.phone }}</p>
+            
+            <h4>Items Ordered:</h4>
+            <table style="width:100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f0f0f0;">
+                        <th style="padding: 8px; text-align: left;">Book</th>
+                        <th style="padding: 8px; text-align: center;">Qty</th>
+                        <th style="padding: 8px; text-align: right;">Price</th>
+                        <th style="padding: 8px; text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.items.all %}
+                    <tr>
+                        <td style="padding: 8px;">{{ item.book.title }}</td>
+                        <td style="padding: 8px; text-align: center;">{{ item.quantity }}</td>
+                        <td style="padding: 8px; text-align: right;">₹{{ item.price }}</td>
+                        <td style="padding: 8px; text-align: right;">₹{{ item.get_total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr style="border-top: 2px solid #ddd;">
+                        <td colspan="3" style="padding: 8px; text-align: right;"><strong>Total</strong></td>
+                        <td style="padding: 8px; text-align: right;"><strong>₹{{ order.total_amount }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p style="margin-top: 20px;">We'll notify you when your order is shipped.</p>
+            <p>Thank you for shopping with <strong>Surendra BookStore</strong>! 📖</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2026 Surendra BookStore | All Rights Reserved</p>
+        </div>
+    </div>
+</body>
+</html>

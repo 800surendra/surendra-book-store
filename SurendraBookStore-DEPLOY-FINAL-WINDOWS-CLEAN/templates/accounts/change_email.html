@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="icon-circle bg-gold mx-auto">
+                        <i class="bi bi-envelope fs-1 text-dark"></i>
+                    </div>
+                    <h1 class="gold-title mt-3">Change Email</h1>
+                    <p class="text-muted">We'll send an OTP to verify your new email</p>
+                </div>
+
+                <form method="POST" action="{% url 'accounts:change_email' %}">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-white">Current Email</label>
+                        <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label text-white">New Email</label>
+                        <input type="email" name="new_email" class="form-control" placeholder="Enter new email" required>
+                    </div>
+
+                    <button type="submit" class="btn-gold w-100 py-3">
+                        <i class="bi bi-send me-2"></i>Send OTP
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'accounts:my_profile' %}" class="text-gold">
+                        <i class="bi bi-arrow-left me-2"></i>Back to Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.glass-card {
+    background: rgba(20, 20, 30, 0.92);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 215, 0, 0.12);
+    border-radius: 30px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+.gold-title { color: #d4af37; font-weight: 900; }
+.text-muted { color: rgba(255,255,255,0.6) !important; }
+.icon-circle { width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.bg-gold { background: linear-gradient(135deg, #d4af37, #f9d976); }
+.form-label { font-weight: 600; font-size: 0.9rem; color: rgba(255,255,255,0.8); }
+input, input:disabled {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid rgba(255,215,0,0.2);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+    color: white;
+    font-size: 1rem;
+}
+input:disabled { opacity: 0.5; }
+input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 4px rgba(212,175,55,0.15);
+    outline: none;
+}
+.btn-gold {
+    background: linear-gradient(135deg, #d4af37, #f9d976);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 700;
+    padding: 12px;
+    border-radius: 50px;
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,175,55,0.3); }
+.text-gold { color: #d4af37; text-decoration: none; }
+.text-gold:hover { color: #f9d976; }
+</style>
+{% endblock %}

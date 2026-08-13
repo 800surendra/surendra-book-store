@@ -1,0 +1,671 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Profile Header with Cover -->
+    <div class="profile-header glass-card p-0 overflow-hidden mb-4">
+        <!-- Cover Photo - Default only, no change button -->
+        <div class="cover-photo"
+            style="background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=1200&h=300&fit=crop'); background-size: cover; background-position: center;">
+            <div class="cover-overlay"></div>
+        </div>
+
+        <!-- Profile Info Overlay -->
+        <div class="profile-info-overlay">
+            <div class="row align-items-end g-3">
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center gap-4">
+                        <!-- Avatar -->
+                        <div class="profile-avatar-wrapper">
+                            {% if user.profile_photo and user.profile_photo.url %}
+                            <img src="{{ user.profile_photo.url }}" alt="Profile Photo" class="profile-avatar-img">
+                            {% else %}
+                            <div class="profile-avatar">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            {% endif %}
+                            <!-- ✅ Profile Photo Upload Only -->
+                            <label for="profilePhotoInput" class="btn-avatar-edit" title="Change Photo"
+                                style="cursor: pointer;">
+                                <i class="bi bi-camera"></i>
+                            </label>
+                            <form id="profileUploadForm" method="POST" action="{% url 'accounts:edit_profile' %}"
+                                enctype="multipart/form-data" style="display:none;">
+                                {% csrf_token %}
+                                <input type="file" name="profile_photo" id="profilePhotoInput" accept="image/*"
+                                    onchange="document.getElementById('profileUploadForm').submit();">
+                                <input type="hidden" name="upload_profile" value="1">
+                            </form>
+                        </div>
+                        <div class="profile-name-wrapper">
+                            <h1 class="profile-name">{{ user.get_full_name|default:user.username }}</h1>
+                            <p class="profile-username">@{{ user.username }}</p>
+                            <div class="d-flex gap-3 flex-wrap">
+                                <span class="profile-badge">
+                                    <i class="bi bi-envelope"></i> {{ user.email }}
+                                </span>
+                                <span class="profile-badge">
+                                    <i class="bi bi-calendar3"></i> Member since {{ user.created_at|date:"M Y" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn-gold">
+                        <i class="bi bi-pencil me-2"></i>Edit Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4">
+        <!-- Left Column -->
+        <div class="col-lg-4">
+            <!-- Profile Completion -->
+            <div class="glass-card p-4 mb-4">
+                <h5 class="gold-title mb-3"><i class="bi bi-pie-chart me-2"></i>Profile Completion</h5>
+                <div class="completion-circle">
+                    <svg viewBox="0 0 120 120" class="circle-chart">
+                        <circle cx="60" cy="60" r="50" class="circle-bg" />
+                        <circle cx="60" cy="60" r="50" class="circle-progress"
+                            style="stroke-dasharray: 314.16; stroke-dashoffset: {{ dash_offset|floatformat:2 }};" />
+                    </svg>
+                    <div class="completion-text">
+                        <span class="completion-number">{{ profile_completion }}%</span>
+                        <span class="completion-label">Complete</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="completion-detail">
+                        <span>Profile Strength</span>
+                        <span class="gold-text">
+                            {% if profile_completion >= 80 %}Excellent 🏆
+                            {% elif profile_completion >= 50 %}Good 👍
+                            {% else %}Needs Improvement 📝{% endif %}
+                        </span>
+                    </div>
+                    <div class="progress completion-progress mt-2">
+                        <div class="progress-bar" style="width: {{ profile_completion }}%;"></div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn-gold-outline w-100 text-center">
+                        <i class="bi bi-pencil me-2"></i>Complete Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="glass-card p-4">
+                <h5 class="gold-title mb-3"><i class="bi bi-graph-up me-2"></i>Quick Stats</h5>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ orders_count|default:0 }}</div>
+                        <div class="stat-label">Orders</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">{{ cart_items_count|default:0 }}</div>
+                        <div class="stat-label">Cart Items</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Wishlist</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Reviews</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-8">
+            <!-- Personal Information -->
+            <div class="glass-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="gold-title mb-0"><i class="bi bi-person me-2"></i>Personal Information</h5>
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn-gold-sm">Edit</a>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value">{{ user.get_full_name|default:"Not set" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Username</span>
+                        <span class="info-value">@{{ user.username }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">{{ user.email }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone</span>
+                        <span class="info-value">{{ user.phone|default:"Not set" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Gender</span>
+                        <span class="info-value">{{ user.get_gender_display|default:"Not set" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Date of Birth</span>
+                        <span class="info-value">{{ user.date_of_birth|date:"d M Y"|default:"Not set" }}</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Bio</span>
+                        <span class="info-value">{{ user.bio|default:"No bio yet" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Information -->
+            <div class="glass-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="gold-title mb-0"><i class="bi bi-geo-alt me-2"></i>Address Information</h5>
+                    <a href="{% url 'accounts:edit_profile' %}" class="btn-gold-sm">Update</a>
+                </div>
+                <div class="address-grid">
+                    <div class="address-item">
+                        <span class="info-label">Address</span>
+                        <span class="info-value">{{ user.address|default:"Not set" }}</span>
+                    </div>
+                    <div class="address-item">
+                        <span class="info-label">City</span>
+                        <span class="info-value">{{ user.city|default:"Not set" }}</span>
+                    </div>
+                    <div class="address-item">
+                        <span class="info-label">State</span>
+                        <span class="info-value">{{ user.state|default:"Not set" }}</span>
+                    </div>
+                    <div class="address-item">
+                        <span class="info-label">Pincode</span>
+                        <span class="info-value">{{ user.pincode|default:"Not set" }}</span>
+                    </div>
+                    <div class="address-item full-width">
+                        <span class="info-label">Country</span>
+                        <span class="info-value">{{ user.country|default:"India" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Security -->
+            <div class="glass-card p-4">
+                <h5 class="gold-title mb-3"><i class="bi bi-shield me-2"></i>Account Security</h5>
+                <div class="security-grid">
+                    <a href="{% url 'accounts:change_password' %}" class="security-action">
+                        <i class="bi bi-key"></i>
+                        <span>Change Password</span>
+                        <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                    <a href="{% url 'accounts:change_email' %}" class="security-action">
+                        <i class="bi bi-envelope"></i>
+                        <span>Change Email</span>
+                        <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                    <a href="{% url 'accounts:logout' %}" class="security-action text-danger">
+                        <i class="bi bi-box-arrow-right"></i>
+                        <span>Logout</span>
+                        <i class="bi bi-chevron-right ms-auto"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* ===== BASE STYLES ===== */
+    .glass-card {
+        background: rgba(20, 20, 30, 0.92);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 215, 0, 0.12);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .gold-title {
+        color: #d4af37;
+        font-weight: 700;
+    }
+
+    .gold-text {
+        color: #d4af37;
+    }
+
+    /* ===== PROFILE HEADER ===== */
+    .profile-header {
+        position: relative;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .cover-photo {
+        height: 200px;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .cover-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60%;
+        background: linear-gradient(transparent, rgba(20, 20, 30, 0.9));
+    }
+
+    .cover-actions {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        z-index: 2;
+    }
+
+    .btn-cover-action {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cover-action:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .profile-info-overlay {
+        padding: 20px 30px 30px;
+        position: relative;
+        z-index: 2;
+        margin-top: -60px;
+    }
+
+    .profile-avatar-wrapper {
+        position: relative;
+        width: 100px;
+        height: 100px;
+        flex-shrink: 0;
+    }
+
+    .profile-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37, #f9d976);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        color: #1a1a2e;
+        border: 4px solid rgba(20, 20, 30, 0.9);
+        box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+    }
+
+    .profile-avatar-img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid rgba(20, 20, 30, 0.9);
+        box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-avatar-edit {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #d4af37;
+        border: 2px solid #1a1a2e;
+        color: #1a1a2e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+        border: none;
+        padding: 0;
+        transition: all 0.3s ease;
+    }
+
+    .btn-avatar-edit:hover {
+        transform: scale(1.1);
+    }
+
+    .profile-name-wrapper {
+        min-width: 0;
+    }
+
+    .profile-name {
+        color: white;
+        font-weight: 800;
+        font-size: 1.8rem;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    .profile-username {
+        color: rgba(255, 255, 255, 0.5);
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .profile-badge {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px 12px;
+        border-radius: 30px;
+        white-space: nowrap;
+    }
+
+    .profile-badge i {
+        color: #d4af37;
+        margin-right: 4px;
+    }
+
+    /* ===== STATS ===== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .stat-item {
+        background: rgba(255, 255, 255, 0.03);
+        padding: 12px;
+        border-radius: 12px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #d4af37;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.4);
+        text-transform: uppercase;
+    }
+
+    /* ===== INFO GRID ===== */
+    .info-grid,
+    .address-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 24px;
+    }
+
+    .info-item.full-width,
+    .address-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .info-item,
+    .address-item {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .info-label {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: rgba(255, 255, 255, 0.3);
+    }
+
+    .info-value {
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 500;
+        word-break: break-word;
+    }
+
+    /* ===== SECURITY ===== */
+    .security-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .security-action {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .security-action:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
+    }
+
+    .security-action i:first-child {
+        color: #d4af37;
+        font-size: 1.1rem;
+    }
+
+    .security-action .bi-chevron-right {
+        color: rgba(255, 255, 255, 0.15);
+        margin-left: auto;
+    }
+
+    .security-action.text-danger i:first-child {
+        color: #dc3545;
+    }
+
+    .security-action.text-danger:hover {
+        color: #dc3545 !important;
+    }
+
+    /* ===== BUTTONS ===== */
+    .btn-gold {
+        background: linear-gradient(135deg, #d4af37, #f9d976);
+        border: none;
+        color: #1a1a2e;
+        font-weight: 700;
+        padding: 8px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        color: #1a1a2e;
+    }
+
+    .btn-gold-outline {
+        background: transparent;
+        border: 2px solid #d4af37;
+        color: #d4af37;
+        font-weight: 600;
+        padding: 8px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gold-outline:hover {
+        background: #d4af37;
+        color: #1a1a2e;
+    }
+
+    .btn-gold-sm {
+        background: linear-gradient(135deg, #d4af37, #f9d976);
+        border: none;
+        color: #1a1a2e;
+        font-weight: 600;
+        padding: 4px 14px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gold-sm:hover {
+        transform: scale(1.05);
+    }
+
+    /* ===== COMPLETION CIRCLE ===== */
+    .completion-circle {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto;
+    }
+
+    .circle-chart {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .circle-bg {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.05);
+        stroke-width: 8;
+    }
+
+    .circle-progress {
+        fill: none;
+        stroke: #d4af37;
+        stroke-width: 8;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s ease;
+    }
+
+    .completion-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .completion-number {
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #d4af37;
+    }
+
+    .completion-label {
+        font-size: 0.7rem;
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .completion-detail {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .completion-progress {
+        height: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .completion-progress .progress-bar {
+        background: linear-gradient(90deg, #d4af37, #f9d976);
+        height: 100%;
+        border-radius: 2px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .profile-info-overlay {
+            padding: 16px;
+            margin-top: -40px;
+        }
+
+        .profile-avatar-wrapper {
+            width: 70px;
+            height: 70px;
+        }
+
+        .profile-avatar {
+            font-size: 2.5rem;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+        }
+
+        .info-grid,
+        .address-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .cover-photo {
+            height: 120px;
+        }
+
+        .profile-badge {
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            white-space: normal;
+        }
+
+        .profile-name-wrapper {
+            min-width: 0;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .profile-info-overlay .row {
+            flex-direction: column;
+        }
+
+        .profile-info-overlay .col-md-8 {
+            width: 100%;
+        }
+
+        .profile-info-overlay .col-md-4 {
+            width: 100%;
+            text-align: left !important;
+            margin-top: 10px;
+        }
+
+        .btn-gold {
+            padding: 6px 18px;
+            font-size: 0.85rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-cover-action {
+            font-size: 0.7rem;
+            padding: 4px 12px;
+        }
+    }
+</style>
+{% endblock %}

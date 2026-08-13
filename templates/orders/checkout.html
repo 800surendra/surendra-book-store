@@ -1,0 +1,1114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+/* =========================================================
+   ULTRA PRO CHECKOUT
+========================================================= */
+
+:root {
+    --gold: #d4af37;
+    --gold-light: #f7df8a;
+    --gold-dark: #a67c00;
+    --dark: #11131a;
+    --dark-2: #181b24;
+    --dark-3: #222633;
+    --text: #f5f5f5;
+    --muted: #9ca3af;
+    --border: rgba(255,255,255,.10);
+    --success: #35d07f;
+}
+
+.checkout-page {
+    min-height: 100vh;
+    padding: 50px 0 80px;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(212,175,55,.08), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(124,92,255,.07), transparent 30%),
+        linear-gradient(180deg, #0d0f15, #12151d 55%, #0d0f15);
+    color: var(--text);
+}
+
+/* Header */
+
+.checkout-header {
+    margin-bottom: 35px;
+}
+
+.checkout-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 15px;
+    border: 1px solid rgba(212,175,55,.25);
+    background: rgba(212,175,55,.08);
+    color: var(--gold-light);
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.checkout-title {
+    margin-top: 16px;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 950;
+    letter-spacing: -1.5px;
+    margin-bottom: 8px;
+}
+
+.checkout-title span {
+    background: linear-gradient(135deg, #fff, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.checkout-subtitle {
+    color: var(--muted);
+    font-size: 15px;
+}
+
+/* Progress */
+
+.checkout-progress {
+    display: flex;
+    align-items: center;
+    margin: 30px 0 40px;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.progress-number {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    font-weight: 900;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    color: var(--muted);
+}
+
+.progress-step.active .progress-number {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #111;
+    border-color: transparent;
+    box-shadow: 0 0 25px rgba(212,175,55,.25);
+}
+
+.progress-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--muted);
+}
+
+.progress-step.active .progress-label {
+    color: white;
+}
+
+.progress-line {
+    height: 1px;
+    background: var(--border);
+    flex: 1;
+    margin: 0 15px;
+}
+
+/* Main cards */
+
+.checkout-card {
+    background: linear-gradient(
+        145deg,
+        rgba(30,33,43,.96),
+        rgba(18,20,27,.98)
+    );
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.03);
+    overflow: hidden;
+}
+
+.card-section {
+    padding: 30px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.section-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    display: grid;
+    place-items: center;
+    font-size: 21px;
+    color: var(--gold-light);
+    background: rgba(212,175,55,.10);
+    border: 1px solid rgba(212,175,55,.18);
+}
+
+.section-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.section-description {
+    margin: 3px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* Forms */
+
+.form-label {
+    color: #e5e7eb;
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.ultra-input {
+    width: 100%;
+    min-height: 52px;
+    border-radius: 14px !important;
+    border: 1px solid rgba(255,255,255,.10) !important;
+    background: rgba(255,255,255,.045) !important;
+    color: white !important;
+    padding: 13px 16px !important;
+    transition: .25s ease;
+}
+
+.ultra-input::placeholder {
+    color: #6f7480;
+}
+
+.ultra-input:focus {
+    border-color: var(--gold) !important;
+    box-shadow:
+        0 0 0 3px rgba(212,175,55,.12),
+        0 10px 30px rgba(0,0,0,.15) !important;
+    background: rgba(255,255,255,.07) !important;
+    outline: none;
+}
+
+textarea.ultra-input {
+    min-height: 115px;
+    resize: vertical;
+}
+
+/* Order Summary */
+
+.summary-card {
+    position: sticky;
+    top: 25px;
+}
+
+.summary-header {
+    padding: 28px 28px 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-title {
+    margin: 0;
+    font-size: 21px;
+    font-weight: 900;
+}
+
+.summary-items {
+    padding: 20px 28px;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-icon {
+    width: 48px;
+    height: 58px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        rgba(212,175,55,.18),
+        rgba(255,255,255,.04)
+    );
+    border: 1px solid rgba(212,175,55,.15);
+    color: var(--gold-light);
+}
+
+.item-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.item-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #f5f5f5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-qty {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.item-price {
+    font-weight: 800;
+    color: white;
+    white-space: nowrap;
+}
+
+.price-box {
+    margin: 0 28px 28px;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 12px;
+    color: #b7bbc4;
+    font-size: 14px;
+}
+
+.price-row:last-child {
+    margin-bottom: 0;
+}
+
+.price-total {
+    padding-top: 16px;
+    margin-top: 15px;
+    border-top: 1px solid rgba(255,255,255,.10);
+    font-size: 20px;
+    color: white;
+    font-weight: 950;
+}
+
+.price-total strong {
+    color: var(--gold-light);
+}
+
+/* Payment info */
+
+.payment-info {
+    margin: 0 28px 28px;
+    padding: 17px;
+    border-radius: 17px;
+    border: 1px solid rgba(53,208,127,.18);
+    background: rgba(53,208,127,.055);
+}
+
+.payment-info-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 900;
+    color: #eafff2;
+}
+
+.payment-info-text {
+    margin: 7px 0 0;
+    color: #9fb3a6;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* Button */
+
+.place-order-btn {
+    width: 100%;
+    min-height: 58px;
+    border: none;
+    border-radius: 17px;
+    background: linear-gradient(
+        135deg,
+        var(--gold-dark),
+        var(--gold),
+        var(--gold-light)
+    );
+    color: #111;
+    font-size: 15px;
+    font-weight: 950;
+    letter-spacing: .2px;
+    box-shadow: 0 15px 40px rgba(212,175,55,.18);
+    transition: .3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.place-order-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.45),
+        transparent
+    );
+    transform: skewX(-20deg);
+    transition: .7s ease;
+}
+
+.place-order-btn:hover::before {
+    left: 150%;
+}
+
+.place-order-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 50px rgba(212,175,55,.30);
+}
+
+.place-order-btn:active {
+    transform: translateY(0);
+}
+
+/* Security */
+
+.security-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 20px 10px 0;
+    color: #7f8591;
+    font-size: 11px;
+}
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.security-item i {
+    color: var(--success);
+}
+
+/* Back */
+
+.back-cart {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    color: var(--gold-light);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 800;
+    transition: .2s;
+}
+
+.back-cart:hover {
+    color: white;
+    transform: translateX(-3px);
+}
+
+/* Divider */
+
+.luxury-divider {
+    height: 1px;
+    margin: 5px 0 25px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(212,175,55,.3),
+        transparent
+    );
+}
+
+/* Mobile */
+
+@media (max-width: 991px) {
+    .summary-card {
+        position: relative;
+        top: 0;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .checkout-page {
+        padding: 30px 0 55px;
+    }
+
+    .checkout-progress {
+        margin-bottom: 25px;
+    }
+
+    .progress-label {
+        display: none;
+    }
+
+    .progress-line {
+        margin: 0 8px;
+    }
+
+    .progress-number {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .card-section {
+        padding: 22px;
+    }
+
+    .summary-header,
+    .summary-items {
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+
+    .price-box,
+    .payment-info {
+        margin-left: 22px;
+        margin-right: 22px;
+    }
+
+    .checkout-title {
+        font-size: 34px;
+    }
+}
+</style>
+
+
+<div class="checkout-page">
+
+    <div class="container">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="checkout-header">
+
+            <div class="checkout-eyebrow">
+                <i class="bi bi-shield-lock-fill"></i>
+                Secure Checkout
+            </div>
+
+            <h1 class="checkout-title">
+                Complete Your <span>Order</span>
+            </h1>
+
+            <p class="checkout-subtitle">
+                Enter your delivery details and review your order before proceeding to payment.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+             CHECKOUT PROGRESS
+        ====================================================== -->
+
+        <div class="checkout-progress">
+
+            <div class="progress-step active">
+                <div class="progress-number">
+                    <i class="bi bi-geo-alt-fill"></i>
+                </div>
+
+                <div class="progress-label">
+                    Delivery
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step active">
+                <div class="progress-number">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+                <div class="progress-label">
+                    Review
+                </div>
+            </div>
+
+            <div class="progress-line"></div>
+
+            <div class="progress-step">
+                <div class="progress-number">
+                    <i class="bi bi-credit-card"></i>
+                </div>
+
+                <div class="progress-label">
+                    Payment
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="row g-4 g-xl-5">
+
+
+            <!-- =================================================
+                 LEFT — SHIPPING DETAILS
+            ================================================== -->
+
+            <div class="col-lg-7">
+
+                <div class="checkout-card">
+
+                    <div class="card-section">
+
+                        <div class="section-header">
+
+                            <div class="section-icon">
+                                <i class="bi bi-truck"></i>
+                            </div>
+
+                            <div>
+                                <h2 class="section-title">
+                                    Delivery Details
+                                </h2>
+
+                                <p class="section-description">
+                                    Where should we deliver your order?
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="luxury-divider"></div>
+
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+
+                            <!-- PERSONAL INFORMATION -->
+
+                            <div class="mb-4">
+
+                                <div class="d-flex align-items-center gap-2 mb-3">
+                                    <i class="bi bi-person-circle text-warning"></i>
+
+                                    <span class="fw-bold">
+                                        Personal Information
+                                    </span>
+                                </div>
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            Full Name
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="full_name"
+                                            class="ultra-input"
+                                            placeholder="Enter your full name"
+                                            required
+                                            value="{{ user.get_full_name }}"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            Email Address
+                                        </label>
+
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            class="ultra-input"
+                                            placeholder="you@example.com"
+                                            required
+                                            value="{{ user.email }}"
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            Phone Number
+                                        </label>
+
+                                        <input
+                                            type="tel"
+                                            name="phone"
+                                            class="ultra-input"
+                                            placeholder="Enter mobile number"
+                                            maxlength="15"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            Pincode
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="pincode"
+                                            class="ultra-input"
+                                            placeholder="6-digit pincode"
+                                            maxlength="6"
+                                            inputmode="numeric"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ADDRESS -->
+
+                            <div class="mb-4">
+
+                                <div class="d-flex align-items-center gap-2 mb-3">
+
+                                    <i class="bi bi-house-door-fill text-warning"></i>
+
+                                    <span class="fw-bold">
+                                        Shipping Address
+                                    </span>
+
+                                </div>
+
+
+                                <div class="row g-3">
+
+                                    <div class="col-12">
+
+                                        <label class="form-label">
+                                            Complete Address
+                                        </label>
+
+                                        <textarea
+                                            name="address"
+                                            class="ultra-input"
+                                            placeholder="House / Flat No., Street, Area, Landmark..."
+                                            required
+                                        ></textarea>
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            City
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="city"
+                                            class="ultra-input"
+                                            placeholder="Enter city"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-md-6">
+
+                                        <label class="form-label">
+                                            State
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="state"
+                                            class="ultra-input"
+                                            placeholder="Enter state"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- DELIVERY NOTE -->
+
+                            <div class="mb-4">
+
+                                <div class="p-3 rounded-4"
+                                     style="
+                                     background:rgba(212,175,55,.05);
+                                     border:1px solid rgba(212,175,55,.12);
+                                     ">
+
+                                    <div class="d-flex gap-3">
+
+                                        <i class="bi bi-info-circle-fill text-warning fs-5"></i>
+
+                                        <div>
+
+                                            <div class="fw-bold small">
+                                                Delivery Information
+                                            </div>
+
+                                            <div class="text-secondary small mt-1">
+                                                Please make sure your name, phone number
+                                                and complete address are correct before
+                                                proceeding.
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SUBMIT -->
+
+                            <button
+                                type="submit"
+                                class="place-order-btn"
+                            >
+
+                                <i class="bi bi-lock-fill me-2"></i>
+
+                                Place Order & Continue to Payment
+
+                                <i class="bi bi-arrow-right ms-2"></i>
+
+                            </button>
+
+
+                            <!-- SECURITY -->
+
+                            <div class="security-row">
+
+                                <div class="security-item">
+                                    <i class="bi bi-shield-check"></i>
+                                    Secure Checkout
+                                </div>
+
+                                <div class="security-item">
+                                    <i class="bi bi-lock-fill"></i>
+                                    Protected Data
+                                </div>
+
+                                <div class="security-item">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Verified Order
+                                </div>
+
+                            </div>
+
+
+                        </form>
+
+
+                        <!-- BACK -->
+
+                        <a
+                            href="{% url 'cart:view' %}"
+                            class="back-cart"
+                        >
+                            <i class="bi bi-arrow-left"></i>
+                            Back to Cart
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 RIGHT — ORDER SUMMARY
+            ================================================== -->
+
+            <div class="col-lg-5">
+
+                <div class="checkout-card summary-card">
+
+
+                    <!-- SUMMARY HEADER -->
+
+                    <div class="summary-header">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h2 class="summary-title">
+                                    Order Summary
+                                </h2>
+
+                                <div class="text-secondary small mt-1">
+                                    Review your items
+                                </div>
+
+                            </div>
+
+                            <div
+                                class="rounded-circle d-flex align-items-center justify-content-center"
+                                style="
+                                width:46px;
+                                height:46px;
+                                background:rgba(212,175,55,.10);
+                                color:#f7df8a;
+                                "
+                            >
+                                <i class="bi bi-bag-check-fill"></i>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ITEMS -->
+
+                    <div class="summary-items">
+
+                        {% for item in cart.items.all %}
+
+                        <div class="order-item">
+
+                            <div class="item-icon">
+
+                                <i class="bi bi-book-half"></i>
+
+                            </div>
+
+
+                            <div class="item-info">
+
+                                <div class="item-title">
+                                    {{ item.book.title }}
+                                </div>
+
+                                <div class="item-qty">
+                                    Quantity: {{ item.quantity }}
+                                </div>
+
+                            </div>
+
+
+                            <div class="item-price">
+                                ₹{{ item.get_total_price }}
+                            </div>
+
+                        </div>
+
+                        {% empty %}
+
+                        <div class="text-center py-4">
+
+                            <i class="bi bi-bag-x fs-1 text-secondary"></i>
+
+                            <p class="text-secondary mt-2 mb-0">
+                                Your cart is empty.
+                            </p>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- PRICE -->
+
+                    <div class="price-box">
+
+                        <div class="price-row">
+
+                            <span>
+                                Subtotal
+                            </span>
+
+                            <span>
+                                ₹{{ cart.get_total_price }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="price-row">
+
+                            <span>
+                                Delivery
+                            </span>
+
+                            <span class="text-success">
+                                Calculated at checkout
+                            </span>
+
+                        </div>
+
+
+                        <div class="price-row">
+
+                            <span>
+                                Taxes
+                            </span>
+
+                            <span>
+                                Included
+                            </span>
+
+                        </div>
+
+
+                        <div class="price-row price-total">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong>
+                                ₹{{ cart.get_total_price }}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PAYMENT INFO -->
+
+                    <div class="payment-info">
+
+                        <div class="payment-info-title">
+
+                            <i class="bi bi-shield-lock-fill"></i>
+
+                            Secure Payment
+
+                        </div>
+
+
+                        <p class="payment-info-text">
+
+                            Payment options include UPI, Net Banking and
+                            Bank Transfer. After payment, you may be asked
+                            to provide your transaction screenshot and UTR
+                            number for verification.
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- PAYMENT METHODS -->
+
+                    <div class="px-4 pb-4">
+
+                        <div class="small text-secondary mb-2 fw-bold">
+                            ACCEPTED PAYMENT METHODS
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <span
+                                class="badge rounded-pill px-3 py-2"
+                                style="
+                                background:rgba(255,255,255,.06);
+                                color:#ddd;
+                                "
+                            >
+                                <i class="bi bi-phone me-1"></i>
+                                UPI
+                            </span>
+
+                            <span
+                                class="badge rounded-pill px-3 py-2"
+                                style="
+                                background:rgba(255,255,255,.06);
+                                color:#ddd;
+                                "
+                            >
+                                <i class="bi bi-bank me-1"></i>
+                                Net Banking
+                            </span>
+
+                            <span
+                                class="badge rounded-pill px-3 py-2"
+                                style="
+                                background:rgba(255,255,255,.06);
+                                color:#ddd;
+                                "
+                            >
+                                <i class="bi bi-credit-card me-1"></i>
+                                Bank Transfer
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
